@@ -7,7 +7,9 @@
 namespace asiant {
     class kinematic {
     public:
-        kinematic() {}
+        kinematic() {
+            orientation = 0;
+        }
         kinematic(vector pos) {
             position = pos;
             orientation = 0;
@@ -49,7 +51,7 @@ namespace asiant {
             position += velocity * time;
             velocity += s.get_linear() * time;
             auto velocity_direction = real_atan(-1 * velocity[0], velocity[1]);
-            orientation = orientation + (velocity_direction - orientation) / smoothness;
+            orientation = orientation + (velocity_direction - orientation) / (float)smoothness;
         }
 
         

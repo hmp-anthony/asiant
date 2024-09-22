@@ -79,9 +79,9 @@ basic_steering_demo::basic_steering_demo() {
 
 void basic_steering_demo::update() {
     float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
-    c[0].kin.smooth_update_to_face_velocity(c[0].s, duration, 80);
+    c[0].kin.smooth_update_to_face_velocity(c[0].s, duration, 110);
     c[1].kin.smooth_update_to_face_velocity(c[1].s, duration, 100);
-    c[2].kin.smooth_update_to_face_velocity(c[2].s, duration, 90);
+    c[2].kin.smooth_update_to_face_velocity(c[2].s, duration, 105);
     application::update();
 }
 
