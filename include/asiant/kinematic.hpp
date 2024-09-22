@@ -26,13 +26,33 @@ namespace asiant {
         void set_position(vector& v) {
             position = v;
         }
-    
+
+        void set_velocity(vector& v) {
+            velocity = v;
+        }
+   
         void update(steering s, real time) {
             position += velocity * time;
             orientation += rotation * time;
             velocity += s.get_linear() * time;
             rotation += s.get_angular() * time;
         }
+
+        void update_to_face_velocity(steering s, real time) {
+            position += velocity * time;
+            velocity += s.get_linear() * time;
+            auto velocity_direction = real_atan(-1 * velocity[0], velocity[1]);
+            orientation = velocity_direction;
+        }
+
+        void smooth_update_to_face_velocity(steering s, real time, int smoothness) {
+            position += velocity * time;
+            velocity += s.get_linear() * time;
+            auto velocity_direction = real_atan(-1 * velocity[0], velocity[1]);
+            orientation = orientation + (velocity_direction - orientation) / smoothness;
+        }
+
+        
     private:
         vector position;
         real   orientation;

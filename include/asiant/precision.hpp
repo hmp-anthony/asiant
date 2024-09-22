@@ -4,4 +4,5 @@
 namespace asiant {
     typedef float real;
     #define real_sqrt sqrtf
+    #define real_atan  atan2
 }
