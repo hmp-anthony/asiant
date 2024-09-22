@@ -3,4 +3,5 @@
 
 namespace asiant {
     typedef float real;
+    #define real_sqrt sqrtf
 }

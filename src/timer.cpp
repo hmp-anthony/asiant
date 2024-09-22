@@ -1,9 +1,9 @@
-#include <ffiseg/timer.hpp>
+#include <asiant/timer.hpp>
 
 #include <stdlib.h>
 #include <sys/time.h>
 
-using namespace ffiseg;
+using namespace asiant;
 
 typedef unsigned long long	LONGLONG;
 

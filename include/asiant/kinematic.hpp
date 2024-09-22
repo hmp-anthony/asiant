@@ -17,8 +17,8 @@ namespace asiant {
         void update(steering s, real time) {
             position += velocity * time;
             orientation += rotation * time;
-            velocity += steering.linear * time;
-            rotation += steering.angular * time;
+            velocity += s.get_linear() * time;
+            rotation += s.get_angular() * time;
         }
     private:
         vector position;

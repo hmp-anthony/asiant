@@ -1,7 +1,7 @@
 #include "ogl_headers.hpp"
 #include "application.hpp"
 
-//#include <asiant/asiant.hpp>
+#include <asiant/asiant.hpp>
 
 extern application* get_application();
 
@@ -16,7 +16,7 @@ void create_window(const char* title)
 }
 
 void update() {
-    //asiant::timer::get().update();
+    asiant::timer::get().update();
     app->update();
 }
 
@@ -44,7 +44,7 @@ void motion(int x, int y) {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-//    asiant::timer::init();
+    asiant::timer::init();
 
     app = get_application();
     create_window(app->get_title());
@@ -61,5 +61,5 @@ int main(int argc, char** argv) {
 
     app->deinit();
     delete app;
-//  asiant::timer::deinit();
+    asiant::timer::deinit();
 }

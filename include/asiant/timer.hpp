@@ -1,6 +1,6 @@
-#ifndef TIMER_H
-#define TIMER_H
-namespace ffiseg {
+#ifndef TIMER_HPP
+#define TIMER_HPP
+namespace asiant {
 class timer {
 public:
     unsigned frame_number;

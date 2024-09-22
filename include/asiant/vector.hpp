@@ -23,27 +23,27 @@ namespace asiant {
         }
 
         void operator+=(const vector& v) {
-            x += v.get_x();
-            y += v.get_y();
-            z += v.get_z();
+            x += v[0];
+            y += v[1];
+            z += v[2];
         }
 
         vector operator+(const vector& v) const {
-            return vector(x + v.get_x(), y + v.get_y(), z + v.get_z()); 
+            return vector(x + v[0], y + v[1], z + v[2]); 
         }
 
         void operator-=(const vector& v) {
-            x -= v.get_x();
-            y -= v.get_y();
-            z -= v.get_z();
+            x -= v[0];
+            y -= v[1];
+            z -= v[2];
         }
 
         vector operator-(const vector& v) const {
-            return vector(x - v.get_x(), y - v.get_y(), z - v.get_z());
+            return vector(x - v[0], y - v[1], z - v[2]);
         }
 
         real operator*(const vector& v) const {
-            return x * v.get_x() + y * v.get_y() + z * v.get_z();
+            return x * v[0] + y * v[1] + z * v[2];
         }
 
         void operator %=(const vector& v) {
@@ -51,9 +51,9 @@ namespace asiant {
         }
 
         vector operator%(const vector& v) const {
-            return vector(y * v.get_z() - z * v.get_y(),
-                          z * v.get_x() - x * v.get_z(),
-                          x * v.get_y() - y * v.get_x());
+            return vector(y * v[2] - z * v[1],
+                          z * v[0] - x * v[2],
+                          x * v[1] - y * v[0]);
         }
 
         real operator [](int i) const {
@@ -92,35 +92,35 @@ namespace asiant {
         }
 
         void add_scaled_vector(const vector& v, real scale) {
-            x += v.get_x() * scale;
-            y += v.get_y() * scale;
-            z += v.get_z() * scale;
+            x += v[0] * scale;
+            y += v[1] * scale;
+            z += v[2] * scale;
         }
     
         vector component_product(const vector& v) const {
-            return vector(x * v.get_x(), y * v.get_y(), z * v.get_z());
+            return vector(x * v[0], y * v[1], z * v[2]);
         }
 
         void component_product_update(const vector& v) {
-            x *= v.get_x();
-            y *= v.get_y();
-            z *= v.get_z();
+            x *= v[0];
+            y *= v[1];
+            z *= v[2];
         }
 
         real scalar_product(const vector& v) const {
-            return x * v.get_x() + y * v.get_y() + z * v.get_z();
+            return x * v[0] + y * v[1] + z * v[2];
         }
 
         vector vector_product(const vector& v) const {
-            return vector(y * v.get_z() - z * v.get_y(),
-                          z * v.get_x() - x * v.get_z(),
-                          x * v.get_y() - y * v.get_x());
+            return vector(y * v[2] - z * v[1],
+                          z * v[0] - x * v[2],
+                          x * v[1] - y * v[0]);
         }
 
         void clear() {
-            set_x(0);
-            set_y(0);
-            set_z(0);
+            x = 0;
+            y = 0;
+            z = 0;
         }
     private:
         real x;
