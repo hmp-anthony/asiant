@@ -70,7 +70,6 @@ void application::mouse_drag(int x, int y)
 {
 }
 
-// The following methods aren't intended to be overloaded
 void application::render_text(float x, float y, const char *text, void *font)
 {
     glDisable(GL_DEPTH_TEST);
@@ -114,4 +113,3 @@ void application::render_text(float x, float y, const char *text, void *font)
 
     glEnable(GL_DEPTH_TEST);
 }
-
