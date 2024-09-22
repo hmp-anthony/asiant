@@ -7,6 +7,7 @@
 namespace asiant {
     class kinematic {
     public:
+        kinematic() {}
         kinematic(vector pos) {
             position = pos;
             orientation = 0;
@@ -14,6 +15,18 @@ namespace asiant {
             rotation = 0;
         }
 
+        vector get_position() {
+            return position;
+        }
+
+        real get_orientation() {
+            return orientation;
+        }
+
+        void set_position(vector& v) {
+            position = v;
+        }
+    
         void update(steering s, real time) {
             position += velocity * time;
             orientation += rotation * time;

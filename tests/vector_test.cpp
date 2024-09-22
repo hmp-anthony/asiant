@@ -13,7 +13,9 @@ TEST(vector, assigning_values) {
     v[0] = 0.4;
     v[1] = 0.6;
     v[2] = 0.9;
-    ASSERT_EQ(v[0], 0.4);
+    ASSERT_NEAR(v[0], 0.4, 0.0001);
+    ASSERT_NEAR(v[1], 0.6, 0.0001);
+    ASSERT_NEAR(v[2], 0.9, 0.0001);
 }
 
 TEST(vector, scalar_multiplication) {
