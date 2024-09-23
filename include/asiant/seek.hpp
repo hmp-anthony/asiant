@@ -1,5 +1,5 @@
-#ifndef KINEMATIC_HPP
-#define KINEMATIC_HPP
+#ifndef SEEK_HPP
+#define SEEK_HPP
 
 #include <asiant/kinematic.hpp>
 #include <asiant/steering.hpp>
@@ -19,11 +19,11 @@ namespace asiant {
             target = k;
         }
         
-        kinematic& get_character() const {
+        kinematic& get_character() {
             return character;
         }
 
-        kinematic& get_target() const {
+        kinematic& get_target() {
             return target;
         }
 

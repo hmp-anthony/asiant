@@ -37,6 +37,11 @@ namespace asiant {
             orientation = o;
         }
 
+        void update(real time) {
+            position += velocity * time;
+            orientation += rotation * time;
+        }
+
         void update(steering s, real time) {
             position += velocity * time;
             orientation += rotation * time;

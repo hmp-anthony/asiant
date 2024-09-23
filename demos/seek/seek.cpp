@@ -30,21 +30,24 @@ public:
 
             // let's draw the character first
             auto pos = character.get_position();
+            auto ori = character.get_orientation();
             glPushMatrix();
             glTranslatef(pos[0], pos[1], 0);
             glRotatef(ori * 180 / 3.14159, 0, 0, 1);
             glColor3f(1, 0, 0);
-            circle(0.0, 0.0, 20.0, 3);
+            circle(0.0, 0.0, 20.0, 9);
             glColor3f(0, 1, 0);
             circle(0.0, 20.0, 5.0, 20);
             glPopMatrix();
-
+    
+            // draw target
             pos = target.get_position();
+            ori = target.get_orientation();
             glPushMatrix();
             glTranslatef(pos[0], pos[1], 0);
             glRotatef(ori * 180 / 3.14159, 0, 0, 1);
             glColor3f(0, 0, 1);
-            circle(0.0, 0.0, 20.0, 3);
+            circle(0.0, 0.0, 20.0, 9);
             glColor3f(0, 1, 0);
             circle(0.0, 20.0, 5.0, 20);
             glPopMatrix();
@@ -60,17 +63,27 @@ public:
 };
 
 seek_demo::seek_demo() {
+    asiant::kinematic character;
     auto pos = asiant::vector(300, 300, 0);
-    auto vel = asiant::vector(1.0, -2.0, 0);
-    c[0].kin.set_position(pos);
-    c[0].kin.set_velocity(vel);
-    auto acc = asiant::vector(0.01, 0.001, 0.0);
-    asiant::real ang_acc = 0.0;
-    c[0].s.set_linear(acc);
-    c[0].s.set_angular(ang_acc);
+    auto vel = asiant::vector(3.0, 7.0, 0);
+    character.set_position(pos);
+    character.set_velocity(vel);
+    sk.seek_max_speed.set_character(character);
+
+    asiant::kinematic target;
+    pos = asiant::vector(700, 500, 0);
+    vel = asiant::vector(-5.0, -4.0, 0.0);
+    target.set_position(pos);
+    target.set_velocity(vel);
+    sk.seek_max_speed.set_target(target);
+
+    sk.seek_max_speed.set_max_speed(3.5);
 }
 
 void seek_demo::update() {
+    float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
+    sk.seek_max_speed.get_target().update(duration);
+    sk.seek_max_speed.get_character().update(duration);
     sk.seek_max_speed.update();
     application::update();
 }
