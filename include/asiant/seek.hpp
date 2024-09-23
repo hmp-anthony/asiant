@@ -45,7 +45,7 @@ namespace asiant {
         }
     };
 
-    class seek_with_soft_arrival : public seek {
+    class seek_with_satisfaction_radius : public seek {
     public:
         void set_radius(real r) {
             radius = r; 
