@@ -9,6 +9,7 @@ namespace asiant {
     public:
         kinematic() {
             orientation = 0;
+            rotation = 0;
         }
         kinematic(vector pos) {
             position = pos;
@@ -35,6 +36,10 @@ namespace asiant {
 
         void set_orientataion(real o) {
             orientation = o;
+        }
+
+        void set_rotation(real r) {
+            rotation = r;
         }
 
         void update(real time) {
