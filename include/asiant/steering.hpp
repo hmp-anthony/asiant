@@ -20,7 +20,6 @@ namespace asiant {
             angular = r;
         }
 
-
     private:
         vector linear;
         real   angular;

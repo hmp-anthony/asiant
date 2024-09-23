@@ -32,12 +32,24 @@ namespace asiant {
         void set_velocity(vector& v) {
             velocity = v;
         }
-   
+
+        void set_orientataion(real o) {
+            orientation = o;
+        }
+
         void update(steering s, real time) {
             position += velocity * time;
             orientation += rotation * time;
             velocity += s.get_linear() * time;
             rotation += s.get_angular() * time;
+        }
+        
+        void update_to_face_velocity() {
+            orientation = real_atan(-1 * velocity[0], velocity[1]);
+        }
+
+        void update_to_face_velocity(vector vel) {
+            orientation = real_atan(-1 * vel[0], vel[1]);
         }
 
         void update_to_face_velocity(steering s, real time) {
