@@ -26,6 +26,10 @@ namespace asiant {
             return orientation;
         }
 
+        vector get_velocity() {
+            return velocity;
+        }
+
         void set_position(vector& v) {
             position = v;
         }
