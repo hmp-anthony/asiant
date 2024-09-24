@@ -77,8 +77,18 @@ namespace asiant {
 
     class seek_with_max_acceleration : public seek {
     public:
-        void update() {
+        void set_max_acceleration(real a) {
+            max_acceleration = a;
         }
+
+        void update() {
+            auto velocity = target.get_position() - character.get_position();
+            velocity.normalize();
+            velocity *= max_acceleration;
+            character.set_velocity(velocity);
+        }
+    private:
+        real max_acceleration;
     };
 };
 
