@@ -7,3 +7,4 @@ target_link_libraries(application timer)
 
 add_subdirectory(basic_steering)
 add_subdirectory(seek)
+add_subdirectory(wander)

@@ -1,5 +1,5 @@
-#ifndef SEEK_HPP
-#define SEEK_HPP
+#ifndef WANDER_HPP
+#define WANDER_HPP
 
 #include <asiant/kinematic.hpp>
 #include <asiant/steering.hpp>
@@ -21,29 +21,24 @@ namespace asiant {
         void set_character(kinematic& k) {
             character = k;
         }
-        
-        void set_target(kinematic& k) {
-            target = k;
-        }
-        
         kinematic& get_character() {
             return character;
         }
 
-        kinematic& get_target() {
-            return target;
-        }
-
         void update() { 
             auto o = character.get_orientation();
-            auto v = vector(max_speed * real_cos(o), max_speed * real_sin(o), 0);
+            auto v = vector(-1 * max_speed * real_sin(o), max_speed * real_cos(o), 0);
             character.set_velocity(v);
-            r = random_real() * max_rotation;
+            auto r = random_real() * max_rotation;
             character.set_rotation(r);
         }
     private:
         real random_real() {
             // return a random number between -1 and 1.
+            std::random_device seeder;
+            std::mt19937 engine(seeder());
+            std::uniform_real_distribution<real> dist(-1, 1);
+            return dist(engine);
         }
 
         kinematic character;

@@ -34,7 +34,7 @@ namespace asiant {
             velocity = v;
         }
 
-        void set_orientataion(real o) {
+        void set_orientation(real o) {
             orientation = o;
         }
 

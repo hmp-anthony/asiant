@@ -4,3 +4,4 @@
 #include "timer.hpp"
 #include "vector.hpp"
 #include "seek.hpp"
+#include "wander.hpp"
