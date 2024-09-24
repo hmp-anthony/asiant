@@ -53,7 +53,19 @@ namespace asiant {
             velocity += s.get_linear() * time;
             rotation += s.get_angular() * time;
         }
-        
+
+        void update(steering s, real max_speed, real time) {
+            position += velocity * time;
+            orientation += rotation * time;
+            velocity += s.get_linear() * time;
+            rotation += s.get_angular() * time;
+
+            if(velocity.magnitude() > max_speed) {
+                velocity.normalize();
+                velocity *= max_speed;
+            }
+        }
+
         void update_to_face_velocity() {
             orientation = real_atan(-1 * velocity[0], velocity[1]);
         }

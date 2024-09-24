@@ -55,12 +55,12 @@ wander_demo::wander_demo() {
     character.set_velocity(vel);
     wd.w.set_character(character);
 
-    wd.w.set_max_speed(3.0);
-    wd.w.set_max_rotation(1.0);
+    wd.w.set_max_speed(100.0);
+    wd.w.set_max_rotation(3.0);
 }
 
 void wander_demo::update() {
-    float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
+    float duration = (float)asiant::timer::get().last_frame_duration * 0.001f;
     wd.w.get_character().update(duration);
 
     // Make the environment toroidial.

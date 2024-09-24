@@ -74,6 +74,12 @@ namespace asiant {
         real radius;
         real time_to_target;
     };
+
+    class seek_with_max_acceleration : public seek {
+    public:
+        void update() {
+        }
+    };
 };
 
 #endif
