@@ -4,6 +4,8 @@
 #include <asiant/kinematic.hpp>
 #include <asiant/steering.hpp>
 
+#include<iostream>
+
 namespace asiant {
     class seek {
     public:
@@ -121,7 +123,7 @@ namespace asiant {
                 target_speed = max_speed;
             } else {
                 // we are in the slow zone.
-                target_speed = max_speed * distance / slow_radius;
+                target_speed = max_speed * (distance / slow_radius);
             }
 
             auto target_velocity = direction;
