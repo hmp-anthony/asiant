@@ -77,10 +77,10 @@ seek_demo::seek_demo() {
     sk.seek_velocity_radius.set_target(target);
 
     sk.seek_velocity_radius.set_max_speed(20.0);
-    sk.seek_velocity_radius.set_max_acceleration(20.0);
+    sk.seek_velocity_radius.set_max_acceleration(25.0);
     sk.seek_velocity_radius.set_target_radius(10.0);
     sk.seek_velocity_radius.set_slow_radius(300.0);
-    sk.seek_velocity_radius.set_time_to_target(0.1);
+    sk.seek_velocity_radius.set_time_to_target(0.8);
 }
 
 void seek_demo::update() {

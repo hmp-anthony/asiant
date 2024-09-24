@@ -130,14 +130,14 @@ namespace asiant {
             target_velocity.normalize();
             target_velocity *= target_speed;
             
-            auto velocity = target_velocity - character.get_velocity();
-            velocity *= (1.0 / time_to_target);
-
-            if(velocity.magnitude() > max_acceleration) {
-                velocity.normalize();
-                velocity *= max_acceleration;
+            target_velocity *= (1.0 / time_to_target);
+            
+            if(target_velocity.magnitude() > max_acceleration) {
+                target_velocity.normalize();
+                target_velocity *= max_acceleration;
             }
-            character.set_velocity(velocity);
+           
+            character.set_velocity(target_velocity);
             character.update_to_face_velocity(direction); 
         }
     private:
