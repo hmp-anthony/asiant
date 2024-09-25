@@ -2,6 +2,7 @@
 #define ALIGN_HPP
 
 #include <asiant/kinematic.hpp>
+#include <asiant/utils.hpp>
 
 namespace asiant {
     class align {
@@ -36,8 +37,7 @@ namespace asiant {
         
         void update() {
             rotation = target.get_orientation() - character.get_orientation();
-            // perfect example of why we need to test!
-            rotation = map_to_range(rotation);
+            rotation = utils::map_to_range_pi_minus_pi(rotation);
         }
     private:
         kinematic character;
