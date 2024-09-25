@@ -97,14 +97,14 @@ pursue_demo::pursue_demo() {
 
     asiant::kinematic target;
     pos = asiant::vector(750, 550, 0);
-    vel = asiant::vector(-5.0, -8.0, 0.0);
+    vel = asiant::vector(-5.0, -9.0, 0.0);
     target.set_position(pos);
     target.set_velocity(vel);
     pvsd.prsu.set_target(target);
     pvsd.swms.set_target(target);
 
-    pvsd.swms.set_max_speed(6.0);
-    pvsd.prsu.set_max_speed(6.0);
+    pvsd.swms.set_max_speed(9.0);
+    pvsd.prsu.set_max_speed(9.0);
     pvsd.prsu.set_max_prediction(0.05);
 }
 
