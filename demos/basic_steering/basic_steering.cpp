@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 #include <math.h> 
-#include <iostream>
 
 void circle(float x, float y, float r, int segments)
 {

@@ -36,8 +36,20 @@ namespace asiant {
         }
         
         void update() {
-            rotation = target.get_orientation() - character.get_orientation();
-            rotation = utils::map_to_range_pi_minus_pi(rotation);
+            auto rotation = target.get_orientation() - character.get_orientation();
+            rotation = map_to_range_pi_minus_pi(rotation);
+            auto rotation_size = abs(rotation);
+            if(rotation_size < target_radius) {
+                return;
+            }
+
+            real target_rotation;
+            if(rotation_size > slow_radius) {
+                target_rotation = max_rotation;
+            } else {
+                target_rotation = max_rotation * rotation_size / slow_radius;
+            }
+            character.set_rotation(target_rotation);
         }
     private:
         kinematic character;
