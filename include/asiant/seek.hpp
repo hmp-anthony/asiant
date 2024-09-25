@@ -150,17 +150,17 @@ namespace asiant {
     class pursue : public seek_with_max_speed {
     public:
         void set_max_prediction(real p) {
-            max_predicition = p;
+            max_prediction = p;
         }
         kinematic& get_explicit_target() {
             return explicit_target;
         }
         void update() {
-            direction = target.get_position() - character.get_position();
-            distance = directiion.magnitude();
-            speed = character.get_velocity().magnitude();
+            auto direction = target.get_position() - character.get_position();
+            auto distance = direction.magnitude();
+            auto speed = character.get_velocity().magnitude();
 
-            real predicition;
+            real prediction;
             if(speed < (distance / max_prediction)) {
                 prediction = max_prediction;
             } else {
@@ -169,7 +169,9 @@ namespace asiant {
              
             explicit_target = target;
 
-            auto new_position = target.get_velocity() * prediction;
+            auto delta_position = target.get_velocity() * prediction;
+            auto position = target.get_position();
+            auto new_position = position + delta_position;
             target.set_position(new_position);
             seek_with_max_speed::update();    
         }
