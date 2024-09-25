@@ -146,6 +146,37 @@ namespace asiant {
         real time_to_target;
         real max_acceleration;
     };
+
+    class pursue : public seek_with_max_speed {
+    public:
+        void set_max_prediction(real p) {
+            max_predicition = p;
+        }
+        kinematic& get_explicit_target() {
+            return explicit_target;
+        }
+        void update() {
+            direction = target.get_position() - character.get_position();
+            distance = directiion.magnitude();
+            speed = character.get_velocity().magnitude();
+
+            real predicition;
+            if(speed < (distance / max_prediction)) {
+                prediction = max_prediction;
+            } else {
+                prediction = distance / speed;
+            }
+             
+            explicit_target = target;
+
+            auto new_position = target.get_velocity() * prediction;
+            target.set_position(new_position);
+            seek_with_max_speed::update();    
+        }
+    private:
+        kinematic explicit_target;
+        real max_prediction;
+    };
 };
 
 #endif
