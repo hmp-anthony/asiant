@@ -33,6 +33,38 @@ namespace asiant {
             }
             return a * (1 - t) + b * t;
         }
+
+        // We need to return distance from point to line_segment 
+        // and the parameter value of the point on the line that
+        // is closest to the point.
+        struct parameter_data {
+            real distance_between_line_and_point;
+            real parameter;
+        };
+        
+        parameter_data minimum_distance_to_point(const vector& p) {
+            parameter_data pd;
+            auto v = p - a;
+            auto u = b - a;
+            u.normalize();
+            auto t = v * u;
+            if(t >= 0 && t <= 1) {
+                auto distance_vector = v - u * t;
+                pd.distance_between_line_and_point = distance_vector.magnitude();
+                pd.parameter = t;
+            } else {
+                if(t > 1) {
+                    auto l = p - b; 
+                    pd.distance_between_line_and_point = l.magnitude();
+                    pd.parameter = 1;
+                } else {
+                    auto l = p - a; 
+                    pd.distance_between_line_and_point = l.magnitude();
+                    pd.parameter = 0;   
+                }
+            }
+            return pd;
+        }
     private:
         // a is the "start" of the line segment.
         vector a;

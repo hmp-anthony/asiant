@@ -81,3 +81,22 @@ TEST(line_segment, at) {
     ASSERT_NEAR(beyond_end[1], 0, 0.0001);
     ASSERT_NEAR(beyond_end[2], 0, 0.0001);
 }
+
+TEST(line_segment, minimum_distance_to_point) {
+    auto ls = line_segment(vector(0,0,0), vector(1,0,0));
+    auto p = vector(0.5, 1, 0);
+    auto params = ls.minimum_distance_to_point(p);
+    ASSERT_NEAR(params.distance_between_line_and_point, 1.0, 0.0001);
+    ASSERT_NEAR(params.parameter, 0.5, 0.0001);
+    
+    p = vector(2, 1, 0);
+    params = ls.minimum_distance_to_point(p);
+    ASSERT_NEAR(params.distance_between_line_and_point, 1.41421, 0.0001);
+    ASSERT_NEAR(params.parameter, 1, 0.0001);
+
+    p = vector(-1, 1, 0);
+    params = ls.minimum_distance_to_point(p);
+    ASSERT_NEAR(params.distance_between_line_and_point, 1.41421, 0.0001);
+    ASSERT_NEAR(params.parameter, 0, 0.0001);
+}
+
