@@ -55,29 +55,29 @@ TEST(line_segment, bracket_operator) {
 TEST(line_segment, at) {
     auto ls = line_segment(vector(0,0,0), vector(1,0,0));
 
-    auto start = ls[0.0];
-    ASSERT_NEAR(start.at(0], 0, 0.0001);
-    ASSERT_NEAR(start.at(1], 0, 0.0001);
-    ASSERT_NEAR(start.at2], 0, 0.0001);
+    auto start = ls.at(0.0);
+    ASSERT_NEAR(start[0], 0, 0.0001);
+    ASSERT_NEAR(start[1], 0, 0.0001);
+    ASSERT_NEAR(start[2], 0, 0.0001);
 
-    auto end = ls[1.0];
+    auto end = ls.at(1.0);
     ASSERT_NEAR(end[0], 1, 0.0001);
     ASSERT_NEAR(end[1], 0, 0.0001);
     ASSERT_NEAR(end[2], 0, 0.0001);
 
-    auto mid_point = ls[0.5];
+    auto mid_point = ls.at(0.5);
     ASSERT_NEAR(mid_point[0], 0.5, 0.0001);
     ASSERT_NEAR(mid_point[1], 0, 0.0001);
     ASSERT_NEAR(mid_point[2], 0, 0.0001);
 
     // here we want to go beyond the end points
-    auto beyond_begin = ls[-0.5];
-    ASSERT_NEAR(beyond_begin[0], -0.5, 0.0001);
+    auto beyond_begin = ls.at(-0.5);
+    ASSERT_NEAR(beyond_begin[0], 0, 0.0001);
     ASSERT_NEAR(beyond_begin[1], 0, 0.0001);
     ASSERT_NEAR(beyond_begin[2], 0, 0.0001);
 
-    auto beyond_end = ls[1.5];
-    ASSERT_NEAR(beyond_end[0], 1.5, 0.0001);
+    auto beyond_end = ls.at(1.5);
+    ASSERT_NEAR(beyond_end[0], 1, 0.0001);
     ASSERT_NEAR(beyond_end[1], 0, 0.0001);
     ASSERT_NEAR(beyond_end[2], 0, 0.0001);
 }
