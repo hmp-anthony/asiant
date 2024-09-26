@@ -13,3 +13,7 @@ add_test(NAME utils_test COMMAND utils_test)
 add_executable(line_segment_test line_segment_test.cpp)
 target_link_libraries(line_segment_test gtest_main)
 add_test(NAME line_segment_test COMMAND line_segment_test)
+
+add_executable(path_test path_test.cpp)
+target_link_libraries(path_test gtest_main)
+add_test(NAME path_test COMMAND path_test)
