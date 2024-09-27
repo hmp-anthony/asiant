@@ -4,6 +4,7 @@
 #include "steering.hpp"
 #include "timer.hpp"
 #include "vector.hpp"
+#include "path.hpp"
 #include "seek.hpp"
 #include "wander.hpp"
 #include "align.hpp"

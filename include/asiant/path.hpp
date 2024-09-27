@@ -5,6 +5,9 @@
 namespace asiant {
     class path {
     public:
+        int path_length() {
+            return line_segments.size();
+        }
         void add_line_segment(line_segment ls){
             line_segments.push_back(ls);
         }

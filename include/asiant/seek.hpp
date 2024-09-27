@@ -179,6 +179,26 @@ namespace asiant {
         kinematic explicit_target;
         real max_prediction;
     };
+
+    class follow_path : public seek_with_max_speed {
+    public:
+        void set_path(path& pth) {
+            p = pth;
+        }
+        void set_path_offset(real o) {
+            path_offset = o;
+        }
+        void update() {
+           auto current_param = p.get_parameter(character.get_position());
+           auto target_parameter = current_param + path_offset;
+           auto position = p.get_position(target_parameter);
+           target.set_position(position);
+           seek_with_max_speed::update();
+       }
+    private:
+        path p;
+        real path_offset;
+    };
 };
 
 #endif
