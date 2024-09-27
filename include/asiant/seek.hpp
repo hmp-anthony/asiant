@@ -180,7 +180,7 @@ namespace asiant {
         real max_prediction;
     };
 
-    class follow_path : public seek_with_max_speed {
+    class follow_path : public seek_with_velocity_radius {
     public:
         void set_path(path& pth) {
             p = pth;
@@ -193,7 +193,7 @@ namespace asiant {
            auto target_parameter = current_param + path_offset;
            auto position = p.get_position(target_parameter);
            target.set_position(position);
-           seek_with_max_speed::update();
+           seek_with_velocity_radius::update();
        }
     private:
         path p;

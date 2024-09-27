@@ -68,18 +68,24 @@ follow_path_demo::follow_path_demo() {
     f.fp.set_character(character);
 
     asiant::path p;
-    asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(600, 100, 0));
+    asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(700, 100, 0));
     p.add_line_segment(l1);
-    asiant::line_segment l2(asiant::vector(600, 100, 0), asiant::vector(600, 500, 0));
+    asiant::line_segment l2(asiant::vector(700, 100, 0), asiant::vector(700, 500, 0));
     p.add_line_segment(l2);
-    asiant::line_segment l3(asiant::vector(600, 500, 0), asiant::vector(100, 500, 0));
+    asiant::line_segment l3(asiant::vector(700, 500, 0), asiant::vector(100, 500, 0));
     p.add_line_segment(l3);
     asiant::line_segment l4(asiant::vector(100, 500, 0), asiant::vector(100, 100, 0));
     p.add_line_segment(l4);
 
+    p.set_smoothing(0.975);
+
     f.fp.set_path(p);
-    f.fp.set_max_speed(10.0);
-    f.fp.set_path_offset(0.1);
+    f.fp.set_max_speed(20.0);
+    f.fp.set_target_radius(10.0);
+    f.fp.set_slow_radius(300.0);
+    f.fp.set_time_to_target(0.5);
+    f.fp.set_max_acceleration(20.0);
+    f.fp.set_path_offset(0.3);
 }
 
 void follow_path_demo::update() {
