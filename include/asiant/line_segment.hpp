@@ -46,8 +46,9 @@ namespace asiant {
             parameter_data pd;
             auto v = p - a;
             auto u = b - a;
-            u.normalize();
+            auto mag = u.magnitude();
             auto t = v * u;
+            t = t * (1 / (mag * mag));
             if(t >= 0 && t <= 1) {
                 auto distance_vector = v - u * t;
                 pd.distance_between_line_and_point = distance_vector.magnitude();

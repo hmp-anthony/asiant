@@ -100,12 +100,18 @@ TEST(line_segment, minimum_distance_to_point) {
     ASSERT_NEAR(params.parameter, 0, 0.0001);
 }
 
-#include<iostream>
-
-TEST(line_segment, example_square) {
+TEST(line_segment, right_angle_line_segments) {
     line_segment l1(vector(100, 100, 0), vector(400, 100,0));
     vector v(250, 110, 0);
     auto params = l1.minimum_distance_to_point(v);
-    std::cout << params.distance_between_line_and_point << std::endl;
-    std::cout << params.parameter << std::endl;
+    ASSERT_NEAR(params.distance_between_line_and_point, 10, 0.0001);
+    ASSERT_NEAR(params.parameter, 0.5, 0.0001);
+
+    line_segment l2(vector(400, 100, 0), vector(400, 400,0));
+    params = l2.minimum_distance_to_point(v);
+    ASSERT_NEAR(params.distance_between_line_and_point, 150, 0.0001);
+    ASSERT_NEAR(params.parameter, 0.0333333, 0.0001);
+    ASSERT_NEAR(l2[params.parameter][0], 400, 0.0001);
+    ASSERT_NEAR(l2[params.parameter][1], 110, 0.0001);
+    ASSERT_NEAR(l2[params.parameter][2], 0, 0.0001);
 }
