@@ -26,6 +26,12 @@ namespace asiant {
             }
             return params.parameter + index_of_closest_line_segment;
         }
+
+        vector get_position(real param) {
+            int line_segment_index = int(param);
+            real line_segment_parameter = param - line_segment_index;
+            return line_segments[line_segment_index][line_segment_parameter];
+        }
     private:
         std::vector<line_segment> line_segments; 
     };
