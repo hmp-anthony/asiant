@@ -189,7 +189,8 @@ namespace asiant {
             path_offset = o;
         }
         void update() {
-           auto current_param = p.get_parameter(character.get_position());
+           auto future_pos = character.get_position();// + character.get_velocity() * 0.1;
+           auto current_param = p.get_parameter(future_pos);
            auto target_parameter = current_param + path_offset;
            auto position = p.get_position(target_parameter);
            target.set_position(position);

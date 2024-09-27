@@ -61,7 +61,7 @@ public:
 
 follow_path_demo::follow_path_demo() {
     asiant::kinematic character;
-    auto pos = asiant::vector(100, 100, 0);
+    auto pos = asiant::vector(120, 110, 0);
     auto vel = asiant::vector(0.0, 0.0, 0);
     character.set_position(pos);
     character.set_velocity(vel);
@@ -76,9 +76,18 @@ follow_path_demo::follow_path_demo() {
     p.add_line_segment(l3);
     asiant::line_segment l4(asiant::vector(100, 500, 0), asiant::vector(100, 100, 0));
     p.add_line_segment(l4);
-
-    p.set_smoothing(0.975);
-
+    
+    /*
+    asiant::path p;
+    asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(500, 100, 0));
+    p.add_line_segment(l1);
+    asiant::line_segment l2(asiant::vector(500, 100, 0), asiant::vector(700, 200, 0));
+    p.add_line_segment(l2);
+    asiant::line_segment l3(asiant::vector(700, 200, 0), asiant::vector(700, 500, 0));
+    p.add_line_segment(l3);
+    asiant::line_segment l4(asiant::vector(700, 500, 0), asiant::vector(100, 100, 0));
+    p.add_line_segment(l4);
+    */
     f.fp.set_path(p);
     f.fp.set_max_speed(20.0);
     f.fp.set_target_radius(10.0);

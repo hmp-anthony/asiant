@@ -5,20 +5,15 @@
 
 #include <vector>
 
+#include <iostream>
 namespace asiant {
     class path {
     public:
-        path() {
-            smoothing = 0.99;
-        }
         int path_length() {
             return line_segments.size();
         }
         void add_line_segment(line_segment ls){
             line_segments.push_back(ls);
-        }
-        void set_smoothing(real s) {
-            smoothing = s;
         }
         std::vector<line_segment> get_line_segments() {
             return line_segments;
@@ -37,12 +32,7 @@ namespace asiant {
                 i++;
             }
             auto new_param_value = params.parameter + index_of_closest_line_segment;
-            auto delta = abs(new_param_value - old_param_value);
-            if(delta > 0.1) {
-                new_param_value -= smoothing * delta;
-            }
-            old_param_value = new_param_value;
-            return old_param_value;
+            return new_param_value;
         }
 
         vector get_position(real param) {
@@ -51,8 +41,6 @@ namespace asiant {
             return line_segments[line_segment_index][line_segment_parameter];
         }
     private:
-        real old_param_value;
-        real smoothing;
         std::vector<line_segment> line_segments; 
     };
 };
