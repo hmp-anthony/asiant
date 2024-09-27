@@ -182,23 +182,17 @@ namespace asiant {
 
     class follow_path : public seek_with_velocity_radius {
     public:
-        void set_path(path& pth) {
-            p = pth;
-        }
-        void set_path_offset(real o) {
-            path_offset = o;
+        void set_path_constrained_entity(path_constrained_entity& pce) {
+            p = pce;
         }
         void update() {
-           auto future_pos = character.get_position();// + character.get_velocity() * 0.1;
-           auto current_param = p.get_parameter(future_pos);
-           auto target_parameter = current_param + path_offset;
-           auto position = p.get_position(target_parameter);
+           p.update();
+           auto position = p.get_position();
            target.set_position(position);
            seek_with_velocity_radius::update();
        }
     private:
-        path p;
-        real path_offset;
+        path_constrained_entity p;
     };
 };
 

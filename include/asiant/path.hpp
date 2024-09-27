@@ -5,7 +5,6 @@
 
 #include <vector>
 
-#include <iostream>
 namespace asiant {
     class path {
     public:
@@ -15,33 +14,43 @@ namespace asiant {
         void add_line_segment(line_segment ls){
             line_segments.push_back(ls);
         }
-        std::vector<line_segment> get_line_segments() {
+        std::vector<line_segment>& get_line_segments() {
             return line_segments;
         }
-           
-        real get_parameter(const vector& v) {
-            auto params = line_segments[0].minimum_distance_to_point(v);
-            int i = 0;
-            int index_of_closest_line_segment = 0;
-            for(auto& ls : line_segments) {
-                auto ps = ls.minimum_distance_to_point(v);
-                if(ps.distance_between_line_and_point < params.distance_between_line_and_point) {
-                    params = ps;
-                    index_of_closest_line_segment = i;
-                }
-                i++;
-            }
-            auto new_param_value = params.parameter + index_of_closest_line_segment;
-            return new_param_value;
-        }
 
-        vector get_position(real param) {
-            int line_segment_index = int(param);
-            real line_segment_parameter = param - line_segment_index;
-            return line_segments[line_segment_index][line_segment_parameter];
+        vector operator [](const real t) const {
+            auto int_part = int(t);
+            auto remainder = t - int_part;
+            return line_segments[int_part][remainder];
         }
     private:
         std::vector<line_segment> line_segments; 
+    };
+
+    class path_constrained_entity {
+    public:
+        path_constrained_entity() {
+            position_parameter = 0;
+        }
+       
+        void set_path(path pth) {
+            p = pth;
+        }
+
+        void update() {
+            position_parameter += 0.01;
+            auto size = p.get_line_segments().size();
+            if(position_parameter > size) {
+                position_parameter -= size;
+            }
+        }
+
+        vector get_position() {
+            return p[position_parameter];
+        }
+    private:
+        path p;
+        real position_parameter;
     };
 };
 

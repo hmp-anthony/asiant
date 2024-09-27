@@ -88,13 +88,16 @@ follow_path_demo::follow_path_demo() {
     asiant::line_segment l4(asiant::vector(700, 500, 0), asiant::vector(100, 100, 0));
     p.add_line_segment(l4);
     */
-    f.fp.set_path(p);
+
+    asiant::path_constrained_entity pce;
+    pce.set_path(p);
+    f.fp.set_path_constrained_entity(pce);
+
     f.fp.set_max_speed(20.0);
     f.fp.set_target_radius(10.0);
     f.fp.set_slow_radius(300.0);
     f.fp.set_time_to_target(0.5);
     f.fp.set_max_acceleration(20.0);
-    f.fp.set_path_offset(0.3);
 }
 
 void follow_path_demo::update() {
