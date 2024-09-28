@@ -67,6 +67,7 @@ follow_path_demo::follow_path_demo() {
     character.set_velocity(vel);
     f.fp.set_character(character);
 
+    /*
     asiant::path p;
     asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(700, 100, 0));
     p.add_line_segment(l1);
@@ -76,8 +77,7 @@ follow_path_demo::follow_path_demo() {
     p.add_line_segment(l3);
     asiant::line_segment l4(asiant::vector(100, 500, 0), asiant::vector(100, 100, 0));
     p.add_line_segment(l4);
-    
-    /*
+    */
     asiant::path p;
     asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(500, 100, 0));
     p.add_line_segment(l1);
@@ -87,7 +87,6 @@ follow_path_demo::follow_path_demo() {
     p.add_line_segment(l3);
     asiant::line_segment l4(asiant::vector(700, 500, 0), asiant::vector(100, 100, 0));
     p.add_line_segment(l4);
-    */
 
     asiant::path_constrained_entity pce;
     pce.set_path(p);
