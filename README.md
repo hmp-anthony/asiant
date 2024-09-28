@@ -15,4 +15,5 @@ I will list points here that need addressing:
 - [ ] Add random number generation to utils.
 - [ ] path_constrained_entity suffers from variable speeds that depend on line_segment length. Fix this.
 - [ ] Our code is organised as mostly a header-only project. Weigh up the pros and cons of putting implementation code in .cpp files.
-- [ ] When starting out I used the `steering` object to transfer velocitys and accelerations. I quickly found this to be more of a hassle than useful. Either delete the object and be done with it or commit to using steering object. 
+- [ ] When starting out I used the `steering` object to transfer velocitys and accelerations. I quickly found this to be more of a hassle than useful. Either delete the object and be done with it or commit to using steering object. Maybe the purpose of using a returned steering object is so that the `Seek` object (or whatever) does not change the associated objects. When you have decided explain yourself above.
+
