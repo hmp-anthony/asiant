@@ -51,6 +51,15 @@ namespace asiant {
             orientation += rotation * time;
         }
 
+        void update(real time, real max_speed) {
+            position += velocity * time;
+            orientation += rotation * time;
+            if(velocity.magnitude() > max_speed) {
+                velocity.normalize();
+                velocity *= max_speed;
+            }
+        }
+
         void update(steering s, real time) {
             position += velocity * time;
             orientation += rotation * time;

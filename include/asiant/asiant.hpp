@@ -8,3 +8,4 @@
 #include "seek.hpp"
 #include "wander.hpp"
 #include "align.hpp"
+#include "separation.hpp"
