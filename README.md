@@ -13,7 +13,7 @@ I will list points here that need addressing:
 - [ ] Major refactor of seek class. I think we need to make a more general base class to get wander, seek, flee etc. all
 under the same ABC. Maybe call the ABC 'movement' or something like that.
 
-- [ ] While `vector`, `utils` and `timer` are tested, most of the other components are not. Fix that.
+- [ ] Most components are tested, but not all. Fix that.
 - [ ] Update old demos to use pi etc. from `utils`.
 - [ ] Add random number generation to utils.
 - [ ] path_constrained_entity suffers from variable speeds that depend on line_segment length. Fix this.
