@@ -35,14 +35,14 @@ class separation : public boid_steering_behaviour {
 public:
     virtual std::shared_ptr<steering> get_steering();
 private:
-    asiant::flee;
+    asiant::flee flee_;
 };
 
 class cohesion : public boid_steering_behaviour {
 public:
     virtual std::shared_ptr<steering> get_steering();
 private:
-    asiant::seek;
+    asiant::seek seek_;
 };
 
 class velocity_match_and_align : public boid_steering_behaviour {

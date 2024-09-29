@@ -22,6 +22,14 @@ namespace asiant {
             return vector(a*x, a*y, a*z);
         }
 
+        vector(const vector& from, const vector& to)
+        {
+            x = to.x - from.x;
+            y = to.y - from.y;
+            z = to.z - from.z;
+        }
+
+
         void operator+=(const vector& v) {
             x += v[0];
             y += v[1];
@@ -121,6 +129,11 @@ namespace asiant {
             x = 0;
             y = 0;
             z = 0;
+        }
+
+        real distance(const vector &other) const
+        {
+            return vector(*this, other).magnitude();
         }
     private:
         real x;
