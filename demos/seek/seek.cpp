@@ -28,8 +28,8 @@ public:
             auto target = sk.get_target();
 
             // let's draw the character first
-            auto pos = character.get_position();
-            auto ori = character.get_orientation();
+            auto pos = character->get_position();
+            auto ori = character->get_orientation();
             glPushMatrix();
             glTranslatef(pos[0], pos[1], 0);
             glRotatef(ori * 180 / 3.14159, 0, 0, 1);
@@ -40,15 +40,10 @@ public:
             glPopMatrix();
     
             // draw target
-            pos = target.get_position();
-            ori = target.get_orientation();
             glPushMatrix();
-            glTranslatef(pos[0], pos[1], 0);
-            glRotatef(ori * 180 / 3.14159, 0, 0, 1);
-            glColor3f(0, 0, 1);
-            circle(0.0, 0.0, 20.0, 9);
+            glTranslatef((*target)[0], (*target)[1], 0);
             glColor3f(0, 1, 0);
-            circle(0.0, 20.0, 5.0, 20);
+            circle(0.0, 0.0, 5.0, 20);
             glPopMatrix();
 
         }
@@ -56,8 +51,8 @@ public:
 
     seek_demo();
     seek_data skd;
-    std::shared_ptr<kinematic> character;
-    std::shared_ptr<vector> target;
+    std::shared_ptr<asiant::kinematic> character;
+    std::shared_ptr<asiant::vector> target;
     virtual void display();
     virtual void update();
 
@@ -66,7 +61,7 @@ public:
 seek_demo::seek_demo() {
     character = std::make_shared<asiant::kinematic>();
     auto pos = asiant::vector(300, 300, 0);
-    auto vel = asiant::vector(3.0, 7.0, 0);
+    auto vel = asiant::vector(0.0, 0.0, 0);
     character->set_position(pos);
     character->set_velocity(vel);
     skd.sk.set_character(character);
@@ -78,14 +73,16 @@ seek_demo::seek_demo() {
 void seek_demo::update() {
     float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
     auto s = skd.sk.get_steering();
-    character->update(s, duration);
+    auto l = s->get_linear();
+    character->update(s, duration, 10.0);
+    character->update_to_face_velocity();
     application::update();
 }
 
 void seek_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    sk.render();
+    skd.render();
 }
 
 application* get_application() {

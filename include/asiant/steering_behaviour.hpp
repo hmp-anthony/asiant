@@ -1,5 +1,5 @@
-#ifndef STEERING_HPP
-#define STEERING_HPP
+#ifndef STEERING_BEHAVIOUR_HPP
+#define STEERING_BEHAVIOUR_HPP
 
 #include <asiant/precision.hpp>
 #include <asiant/vector.hpp>
@@ -24,7 +24,7 @@ namespace asiant {
 
     class seek : public steering_behaviour {
     public:
-        std::shared_ptr<vector> get_target() {
+        std::shared_ptr<const vector> get_target() {
             return target;
         }
         void set_target(std::shared_ptr<vector> v) {
@@ -33,13 +33,12 @@ namespace asiant {
         virtual std::shared_ptr<steering> get_steering();
     protected:
         std::shared_ptr<const vector> target;
-    }
+    };
 
     class flee : public seek {
     public:
         virtual std::shared_ptr<steering> get_steering();
-    }
-};
+    };
 };
 
 #endif

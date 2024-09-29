@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include "kinematic.hpp"
 #include "steering.hpp"
+#include "steering_behaviour.hpp"
 #include "timer.hpp"
 #include "vector.hpp"
 #include "path.hpp"
