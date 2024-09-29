@@ -6,3 +6,4 @@ target_link_libraries(application ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} )
 target_link_libraries(application timer utils steering_behaviour)
 
 add_subdirectory(seek)
+add_subdirectory(flocking)

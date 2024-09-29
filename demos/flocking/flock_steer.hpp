@@ -8,13 +8,12 @@
 using asiant::kinematic;
 using asiant::real; 
 using asiant::vector;
+using asiant::steering;
 
 class flock {
 public:
     std::vector<std::shared_ptr<kinematic>> boids;
     std::vector<bool> in_neighbourhood;
-
-    flock();
 
     unsigned prepare_neighbourhood(const std::shared_ptr<kinematic> of,
                                    real size, real,
