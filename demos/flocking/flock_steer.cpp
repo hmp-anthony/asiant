@@ -1,5 +1,7 @@
 #include "flock_steer.hpp"
 
+
+#include <iostream>
 unsigned flock::prepare_neighbourhood(const std::shared_ptr<kinematic> of,
                                       real size,
                                       real min_dot_product) {
@@ -8,6 +10,7 @@ unsigned flock::prepare_neighbourhood(const std::shared_ptr<kinematic> of,
         look = of->get_orientation_as_vector();
     }
 
+    std::cout << "in prepare neigh" << std::endl;
     flock result;
     unsigned i = 0, count = 0;
     for(auto& boid : boids) {
@@ -51,13 +54,15 @@ vector flock::get_neighbourhood_average_velocity() {
     return center;
 }
 
+#include<iostream>
+
 std::shared_ptr<steering> separation::get_steering() {
+    std::cout << "in sep" << std::endl;
     auto no_steering = std::make_shared<steering>(); 
     auto count = the_flock->prepare_neighbourhood(character, 
                                                   neighbourhood_size,
                                                   neighbourhood_minimum_dot_product);
     if(count <= 0) return no_steering;
-
     auto center_of_mass = std::make_shared<vector>(the_flock->get_neighbourhood_center());
     
     flee_.set_max_acceleration(max_acceleration);

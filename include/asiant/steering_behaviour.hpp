@@ -50,11 +50,9 @@ namespace asiant {
         struct behaviour_and_weight {
             std::shared_ptr<steering_behaviour> behaviour;
             real weight;
-            behaviour_and_weight(std::shared_ptr<steering_behaviour> b, real w = 1.0)
-                : behaviour(b), weight(w) {}
         };
 
-        std::vector<behaviour_and_weight> behaviours;
+        std::vector<std::shared_ptr<behaviour_and_weight>> behaviours;
         virtual std::shared_ptr<steering> get_steering();
     };
 };
