@@ -101,7 +101,9 @@ namespace asiant {
             orientation = orientation + (velocity_direction - orientation) / (float)smoothness;
         }
 
-        
+        vector get_orientation_as_vector() {
+            return vector(std::cos(orientation), std::sin(orientation), 0);
+        }
     private:
         vector position;
         real   orientation;

@@ -16,7 +16,7 @@ public:
 
     flock();
 
-    unsigned prepare_neighbourhood(std::shared_ptr<kinematic> of,
+    unsigned prepare_neighbourhood(const std::shared_ptr<kinematic> of,
                                    real size, real,
                                    real min_dot_product = -1.0);
 
