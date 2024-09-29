@@ -7,15 +7,9 @@
 #include <stdio.h>
 #include <math.h> 
 #include <iostream>
-// This is the size of the world in both directions from 0 (i.e. from
-// -WORLD_SIZE to +WORLD_SIZE)
-#define WORLD_SIZE 50
-
-// This is the gap between grid lines
-#define GRID_SIZE 5
 
 // The number of boids in the simulation
-#define BOIDS 30
+#define BOIDS 50
 
 // The relative blend weights
 #define SEPARATION_WEIGHT ((real)1.0)
@@ -86,19 +80,19 @@ flocking_demo::flocking_demo() : application() {
 
     separation_ = std::make_shared<separation>();
     separation_->max_acceleration = accel;
-    separation_->neighbourhood_size = (real)5.0;
+    separation_->neighbourhood_size = (real)20.0;
     separation_->neighbourhood_minimum_dot_product = (real)-1.0;
     separation_->the_flock = flock_;
 
     cohesion_ = std::make_shared<cohesion>();
     cohesion_->max_acceleration = accel;
-    cohesion_->neighbourhood_size = (real)10.0;
+    cohesion_->neighbourhood_size = (real)20.0;
     cohesion_->neighbourhood_minimum_dot_product = (real)0.0;
     cohesion_->the_flock = flock_;
 
     velocity_match_and_align_ = std::make_shared<velocity_match_and_align>();
     velocity_match_and_align_->max_acceleration = accel;
-    velocity_match_and_align_->neighbourhood_size = (real)15.0;
+    velocity_match_and_align_->neighbourhood_size = (real)25.0;
     velocity_match_and_align_->neighbourhood_minimum_dot_product = (real)0.0;
     velocity_match_and_align_->the_flock = flock_;
 
@@ -170,7 +164,7 @@ void flocking_demo::update() {
         auto steering = blended_steering_->get_steering();
         boid->integrate(*steering, 0.999, duration);
         boid->update_to_face_velocity();
-        boid->trim_max_speed(5.0);
+        boid->trim_max_speed(3.0);
         
         auto pos_in = boid->get_position();
         auto pos_out = trim_world(pos_in);
