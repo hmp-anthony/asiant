@@ -60,18 +60,18 @@ namespace asiant {
             }
         }
 
-        void update(steering s, real time) {
+        void update(std::shared_ptr<steering> s, real time) {
             position += velocity * time;
             orientation += rotation * time;
-            velocity += s.get_linear() * time;
-            rotation += s.get_angular() * time;
+            velocity += s->get_linear() * time;
+            rotation += s->get_angular() * time;
         }
 
-        void update(steering s, real max_speed, real time) {
+        void update(std::shared_ptr<steering> s, real max_speed, real time) {
             position += velocity * time;
             orientation += rotation * time;
-            velocity += s.get_linear() * time;
-            rotation += s.get_angular() * time;
+            velocity += s->get_linear() * time;
+            rotation += s->get_angular() * time;
 
             if(velocity.magnitude() > max_speed) {
                 velocity.normalize();

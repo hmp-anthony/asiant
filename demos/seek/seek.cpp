@@ -20,12 +20,12 @@ void circle(float x, float y, float r, int segments)
 
 class seek_demo : public application {
 public:
-    struct seek {
-        asiant::seek_with_satisfaction_radius seek_satisfaction_radius;
+    struct seek_data {
+        asiant::seek sk;
 
         void render() {
-            auto character = seek_satisfaction_radius.get_character();
-            auto target = seek_satisfaction_radius.get_target();
+            auto character = sk.get_character();
+            auto target = sk.get_target();
 
             // let's draw the character first
             auto pos = character.get_position();
@@ -55,37 +55,30 @@ public:
     };
 
     seek_demo();
-    seek sk;
+    seek_data skd;
+    std::shared_ptr<kinematic> character;
+    std::shared_ptr<vector> target;
     virtual void display();
     virtual void update();
 
 };
 
 seek_demo::seek_demo() {
-    asiant::kinematic character;
+    character = std::make_shared<asiant::kinematic>();
     auto pos = asiant::vector(300, 300, 0);
     auto vel = asiant::vector(3.0, 7.0, 0);
-    character.set_position(pos);
-    character.set_velocity(vel);
-    sk.seek_satisfaction_radius.set_character(character);
+    character->set_position(pos);
+    character->set_velocity(vel);
+    skd.sk.set_character(character);
 
-    asiant::kinematic target;
-    pos = asiant::vector(700, 500, 0);
-    vel = asiant::vector(-5.0, -4.0, 0.0);
-    target.set_position(pos);
-    target.set_velocity(vel);
-    sk.seek_satisfaction_radius.set_target(target);
-
-    sk.seek_satisfaction_radius.set_max_speed(6.0);
-    sk.seek_satisfaction_radius.set_radius(100.0);
-    sk.seek_satisfaction_radius.set_time_to_target(0.1);
+    target = std::make_shared<asiant::vector>(700, 500, 0);
+    skd.sk.set_target(target);
 }
 
 void seek_demo::update() {
     float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
-    sk.seek_satisfaction_radius.get_target().update(duration);
-    sk.seek_satisfaction_radius.get_character().update(duration);
-    sk.seek_satisfaction_radius.update();
+    auto s = skd.sk.get_steering();
+    character->update(s, duration);
     application::update();
 }
 
