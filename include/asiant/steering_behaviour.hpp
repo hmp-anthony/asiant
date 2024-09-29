@@ -30,6 +30,10 @@ namespace asiant {
         void set_target(std::shared_ptr<vector> v) {
             target = v;
         }
+        void set_max_acceleration(real a) {
+            max_acceleration = a;
+        }
+        real max_acceleration;
         virtual std::shared_ptr<steering> get_steering();
     protected:
         std::shared_ptr<const vector> target;
