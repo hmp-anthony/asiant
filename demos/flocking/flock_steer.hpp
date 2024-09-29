@@ -24,6 +24,7 @@ public:
 };
 
 class boid_steering_behaviour : public asiant::steering_behaviour {
+public:
     std::shared_ptr<flock> the_flock;
     real neighbourhood_size;
     real neighbourhood_minimum_dot_product;

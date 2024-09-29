@@ -22,19 +22,7 @@
 #define COHESION_WEIGHT ((aicore::real)1.0)
 #define VMA_WEIGHT ((aicore::real)2.0)
 
-
 using asiant::kinematic;
-
-void circle(float x, float y, float r, int segments)
-{
-    glBegin( GL_TRIANGLE_FAN );
-    glVertex2f(x, y);
-    for( int n = 0; n < segments + 1; ++n) {
-        float const t = 2 * 3.14159 * (float)n / (float)segments;
-        glVertex2f(x + sin(t) * r, y + cos(t) * r);
-    }
-    glEnd();
-}
 
 real random_real(real max)
 {
@@ -45,16 +33,11 @@ class flocking_demo : public application {
 public:
     flocking_demo();
 
-    virtual bool key(unsigned char key);
     virtual void update();
     virtual void display();
-    virtual const char* get_title();
-    virtual void get_help_text(const char*** lines, unsigned *lineCount);
-    virtual unsigned get_status_count();
-    virtual const char* get_status_text(unsigned slot);
 
 private:
-    flock flock_;
+    std::shared_ptr<flock> flock_;
 
     bool separation_on;
     bool cohesion_on;
@@ -62,7 +45,7 @@ private:
 
     std::shared_ptr<separation> separation_;
     std::shared_ptr<cohesion> cohesion_;
-    std::shared_ptr<velocity_match_and_align> separation_;
+    std::shared_ptr<velocity_match_and_align> velocity_match_and_align_;
     std::shared_ptr<blended_steering> blended_steering_;
 };
 
@@ -71,6 +54,8 @@ flocking_demo::flocking_demo() : application(),
                                  cohesion_on(true),
                                  velocity_match(true) {
     static const real accel = (real) 10.0;
+
+    flock_ = std::make_shared<flock>();
 
     for(unsigned i = 0; i < BOIDS; ++i) {
         auto k = std::make_shared<kinematic>();
@@ -90,7 +75,31 @@ flocking_demo::flocking_demo() : application(),
         flock_.boids.push_back(k);
     }
 
+    separation_ = std::make_shared<separation>();
+    separation_->set_max_acceleration = accel;
+    separation_->neighbourhood_size = (real)5.0;
+    separation_->neighbourhood_minimum_dot_product = (real)0.0;
+    separation_->the_flock = flock_;
 
+    cohesion_ = std::make_shared<cohesion>();
+    cohesion_->set_max_acceleration = accel;
+    cohesion_->neighbourhood_size = (real)5.0;
+    cohesion_->neighbourhood_minimum_dot_product = (real)0.0;
+    cohesion_->the_flock = flock_;
+
+    velocity_match_and_align_ = std::make_shared<velocity_match_and_align>();
+    velocity_match_and_align_->set_max_acceleration = accel;
+    velocity_match_and_align_->neighbourhood_size = (real)5.0;
+    velocity_match_and_align_->neighbourhood_minimum_dot_product = (real)0.0;
+    velocity_match_and_align_->the_flock = flock_;
+
+    blended_steering_ = std::make_shared<blended_steering>();
+    blended_steering::behaviour_and_weight baw_sep(separation_, SEPARATION_WEIGHT);
+    blended_steering_->behaviours.push_back(baw_sep);
+    blended_steering::behaviour_and_weight baw_coh(cohesion_, COHESION_WEIGHT);
+    blended_steering_->behaviours.push_back(baw_coh);
+    blended_steering::behaviour_and_weight baw_vma(velocity_match_and_align_, VMA_WEIGHT);
+    blended_steering_->behaviours.push_back(baw_vma);
 }
 
 application* get_application()
