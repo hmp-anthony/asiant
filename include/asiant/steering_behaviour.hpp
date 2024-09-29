@@ -6,6 +6,7 @@
 #include <asiant/kinematic.hpp>
 
 #include <memory>
+#include <vector>
 
 namespace asiant {
 
@@ -55,6 +56,7 @@ namespace asiant {
 
         std::vector<behaviour_and_weight> behaviours;
         virtual std::shared_ptr<steering> get_steering();
+    };
 };
 
 #endif

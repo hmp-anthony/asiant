@@ -1,4 +1,4 @@
-#include <asiant/asiant.hpp>
+#include <asiant/steering_behaviour.hpp>
 
 namespace asiant {
     std::shared_ptr<steering> seek::get_steering() {
@@ -21,7 +21,7 @@ namespace asiant {
         real total_weight = 0;
         auto temp = std::make_shared<steering>();
 
-        vector linear_output = 0;
+        vector linear_output = vector(0, 0 ,0);
         auto angular_output = 0;
         for(auto& baw : behaviours) {
             // set character
@@ -42,4 +42,4 @@ namespace asiant {
         output->set_angular(angular_output);
         return output;
     }
-}
+};

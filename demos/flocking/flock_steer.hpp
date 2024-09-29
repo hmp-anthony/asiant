@@ -16,7 +16,7 @@ public:
     std::vector<bool> in_neighbourhood;
 
     unsigned prepare_neighbourhood(const std::shared_ptr<kinematic> of,
-                                   real size, real,
+                                   real size,
                                    real min_dot_product = -1.0);
 
     vector get_neighbourhood_center();

@@ -1,6 +1,6 @@
 #include "flock_steer.hpp"
 
-unsigned flock::prepare_neighbourhood(std::shared_ptr<kinematic> of,
+unsigned flock::prepare_neighbourhood(const std::shared_ptr<kinematic> of,
                                       real size,
                                       real min_dot_product) {
     vector look;
@@ -26,7 +26,7 @@ unsigned flock::prepare_neighbourhood(std::shared_ptr<kinematic> of,
 };
 
 vector flock::get_neighbourhood_center() {
-    vector centre;
+    vector center;
     unsigned i = 0, count = 0;
     for(auto& boid : boids) {
         if(in_neighbourhood[i++]) {
@@ -39,7 +39,7 @@ vector flock::get_neighbourhood_center() {
 }
 
 vector flock::get_neighbourhood_average_velocity() {
-    vector centre;
+    vector center;
     unsigned i = 0, count = 0;
     for(auto& boid : boids) {
         if(in_neighbourhood[i++]) {
@@ -78,7 +78,7 @@ std::shared_ptr<steering> cohesion::get_steering() {
     seek_.set_max_acceleration(max_acceleration);
     seek_.set_character(character);
     seek_.set_target(center_of_mass);
-    return flee_.get_steering();
+    return seek_.get_steering();
 }
 
 std::shared_ptr<steering> velocity_match_and_align::get_steering() {
@@ -94,10 +94,11 @@ std::shared_ptr<steering> velocity_match_and_align::get_steering() {
 
     auto output = vel - character->get_velocity();
     if(output.magnitude() > max_acceleration) {
-        output.normalise();
-        ouput *= max_acceleration;
+        output.normalize();
+        output *= max_acceleration;
     }
 
     steering_output->set_linear(output);
+    return steering_output;
 }
 
