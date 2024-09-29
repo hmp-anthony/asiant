@@ -7,6 +7,10 @@
 namespace asiant {
     class steering {
     public:
+        steering() {
+            linear = vector(0, 0, 0);
+            angular = 0;
+        }
         vector get_linear() const {
             return linear;
         }
