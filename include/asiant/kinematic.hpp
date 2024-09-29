@@ -4,6 +4,8 @@
 #include <asiant/vector.hpp>
 #include <asiant/steering.hpp>
 
+
+
 namespace asiant {
     class kinematic {
     public:
@@ -60,18 +62,18 @@ namespace asiant {
             }
         }
 
-        void update(steering s, real time) {
+        void update(std::shared_ptr<steering> s, real time) {
             position += velocity * time;
             orientation += rotation * time;
-            velocity += s.get_linear() * time;
-            rotation += s.get_angular() * time;
+            velocity += s->get_linear() * time;
+            rotation += s->get_angular() * time;
         }
 
-        void update(steering s, real max_speed, real time) {
+        void update(std::shared_ptr<steering> s, real max_speed, real time) {
             position += velocity * time;
             orientation += rotation * time;
-            velocity += s.get_linear() * time;
-            rotation += s.get_angular() * time;
+            velocity += s->get_linear() * time;
+            rotation += s->get_angular() * time;
 
             if(velocity.magnitude() > max_speed) {
                 velocity.normalize();
@@ -87,21 +89,48 @@ namespace asiant {
             orientation = real_atan(-1 * vel[0], vel[1]);
         }
 
-        void update_to_face_velocity(steering s, real time) {
+        void update_to_face_velocity(steering& s, real time) {
             position += velocity * time;
             velocity += s.get_linear() * time;
             auto velocity_direction = real_atan(-1 * velocity[0], velocity[1]);
             orientation = velocity_direction;
         }
 
-        void smooth_update_to_face_velocity(steering s, real time, int smoothness) {
+        void smooth_update_to_face_velocity(steering& s, real time, int smoothness) {
             position += velocity * time;
             velocity += s.get_linear() * time;
             auto velocity_direction = real_atan(-1 * velocity[0], velocity[1]);
             orientation = orientation + (velocity_direction - orientation) / (float)smoothness;
         }
 
-        
+        vector get_orientation_as_vector() {
+            return vector(std::cos(orientation), std::sin(orientation), 0);
+        }
+
+        void integrate(const steering& s, real drag, real duration) {
+            position[0] += velocity[0] * duration;
+            position[1] += velocity[1] * duration;
+            position[2] += velocity[2] * duration;
+            orientation += rotation*duration;
+
+            drag = std::pow(drag, duration);
+            velocity *= drag;
+            rotation *= drag * drag;
+
+            auto linear = s.get_linear();
+            velocity[0] += linear[0] * duration;
+            velocity[1] += linear[1] * duration;
+            velocity[2] += linear[2] * duration;
+            rotation += s.get_angular() * duration;
+
+        }
+
+        void trim_max_speed(real max_speed) {
+        if (velocity.magnitude() > max_speed) {
+            velocity.normalize();
+            velocity *= max_speed;
+        }
+    }
     private:
         vector position;
         real   orientation;

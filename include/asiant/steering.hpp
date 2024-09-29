@@ -3,10 +3,17 @@
 
 #include <asiant/precision.hpp>
 #include <asiant/vector.hpp>
+#include <asiant/kinematic.hpp>
+
+#include <memory>
 
 namespace asiant {
     class steering {
     public:
+        steering() {
+            linear = vector(0,0,0);
+            angular = 0;
+        }
         vector get_linear() const {
             return linear;
         }
@@ -19,7 +26,6 @@ namespace asiant {
         void set_angular(const real r) {
             angular = r;
         }
-
     private:
         vector linear;
         real   angular;
