@@ -6,4 +6,4 @@ add_library(flock_steer flock_steer.cpp flock_steer.hpp)
 
 include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
 target_link_libraries(flocking ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} )
-target_link_libraries(flocking flock_steer application)
+target_link_libraries(flocking flock_steer utils application)

@@ -33,7 +33,7 @@ void application::display()
 
 const char* application::get_title()
 {
-    return "Cyclone Demo";
+    return "asiant";
 }
 
 void application::deinit()

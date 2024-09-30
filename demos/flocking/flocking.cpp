@@ -8,13 +8,12 @@
 #include <math.h> 
 #include <iostream>
 
-// The number of boids in the simulation
-#define BOIDS 50
-
-// The relative blend weights
-#define SEPARATION_WEIGHT ((real)1.0)
-#define COHESION_WEIGHT ((real)1.0)
-#define VMA_WEIGHT ((real)2.0)
+namespace flocking_info {
+    constexpr int number_of_boids = 50;
+    constexpr real separation_weight = 1.0;
+    constexpr real cohesion_weight = 1.0;
+    constexpr real vma_weight = 2.0;
+}
 
 void circle(float x, float y, float r, int segments)
 {
@@ -27,13 +26,24 @@ void circle(float x, float y, float r, int segments)
     glEnd();
 }
 
+void render_agent(std::shared_ptr<kinematic> k)
+{
+    auto pos = k->get_position();
+    auto ori = k->get_orientation();
+    glPushMatrix();
+    glTranslatef(pos[0], pos[1], 0);
+    glRotatef(ori * 180 / 3.14159, 0, 0, 1);
+    glColor3f(1, 0, 0);
+    circle(0.0, 0.0, 20.0, 9);
+    glColor3f(0, 1, 0);
+    circle(0.0, 20.0, 5.0, 20);
+    glPopMatrix();
+}
+
 using asiant::kinematic;
 using asiant::blended_steering;
-
-real random_real(real max)
-{
-   return max * (real(rand()) / RAND_MAX);
-}
+using asiant::random_real;
+using asiant::trim_world;
 
 class flocking_demo : public application {
 public:
@@ -59,7 +69,7 @@ flocking_demo::flocking_demo() : application() {
     int height = 600;
     int width = 800;
 
-    for(unsigned i = 0; i < BOIDS; ++i) {
+    for(unsigned i = 0; i < flocking_info::number_of_boids; ++i) {
         auto k = std::make_shared<kinematic>();
 
         auto position = vector(random_real(width), random_real(height), 0);
@@ -100,33 +110,20 @@ flocking_demo::flocking_demo() : application() {
 
     auto baw_sep = std::make_shared<blended_steering::behaviour_and_weight>();
     baw_sep->behaviour = separation_;
-    baw_sep->weight = SEPARATION_WEIGHT;
+    baw_sep->weight = flocking_info::separation_weight;
     blended_steering_->behaviours.push_back(baw_sep);
 
     auto baw_coh = std::make_shared<blended_steering::behaviour_and_weight>();
     baw_coh->behaviour = cohesion_;
-    baw_coh->weight = COHESION_WEIGHT;
+    baw_coh->weight = flocking_info::cohesion_weight;
     blended_steering_->behaviours.push_back(baw_coh);
 
     auto baw_vma = std::make_shared<blended_steering::behaviour_and_weight>();
     baw_vma->behaviour = velocity_match_and_align_;
-    baw_vma->weight = VMA_WEIGHT;
+    baw_vma->weight = flocking_info::vma_weight;
     blended_steering_->behaviours.push_back(baw_vma);
 }
 
-void render_agent(std::shared_ptr<kinematic> k)
-{
-    auto pos = k->get_position();
-    auto ori = k->get_orientation();
-    glPushMatrix();
-    glTranslatef(pos[0], pos[1], 0);
-    glRotatef(ori * 180 / 3.14159, 0, 0, 1);
-    glColor3f(1, 0, 0);
-    circle(0.0, 0.0, 20.0, 9);
-    glColor3f(0, 1, 0);
-    circle(0.0, 20.0, 5.0, 20);
-    glPopMatrix();
-}
 
 
 void flocking_demo::display() {
@@ -138,23 +135,6 @@ void flocking_demo::display() {
     }
 }
 
-vector trim_world(vector& v) {
-    real x = v[0];
-    real y = v[1];
-    if(v[0] > 800) {
-        x = 0;
-    }
-    if(v[0] < 0) {
-        x = 800;
-    }
-    if(v[1] > 600) {
-        y = 0;
-    }
-    if(v[1] < 0) {
-        y = 600;
-    }
-    return vector(x, y, 0);
-}
 
 void flocking_demo::update() {
     float duration = asiant::timer::get().last_frame_duration * 0.01f;
@@ -168,7 +148,7 @@ void flocking_demo::update() {
         boid->trim_max_speed(3.0);
         
         auto pos_in = boid->get_position();
-        auto pos_out = trim_world(pos_in);
+        auto pos_out = trim_world(pos_in, width, height);
         boid->set_position(pos_out);
     } 
     application::update();
