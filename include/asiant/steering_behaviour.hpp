@@ -13,31 +13,31 @@ namespace asiant {
     class steering_behaviour {
     public:
         std::shared_ptr<kinematic> get_character() {
-            return character;
+            return character_;
         }
         void set_character(std::shared_ptr<kinematic> c) {
-            character = c;
+            character_ = c;
         }
         virtual void get_steering(std::shared_ptr<steering> steer) = 0;
     protected:
-        std::shared_ptr<kinematic> character;
+        std::shared_ptr<kinematic> character_;
     };
 
     class seek : public steering_behaviour {
     public:
         std::shared_ptr<const vector> get_target() {
-            return target;
+            return target_;
         }
         void set_target(std::shared_ptr<vector> v) {
-            target = v;
+            target_ = v;
         }
         void set_max_acceleration(real a) {
-            max_acceleration = a;
+            max_acceleration_ = a;
         }
-        real max_acceleration;
         virtual void get_steering(std::shared_ptr<steering> steer);
     protected:
-        std::shared_ptr<const vector> target;
+        std::shared_ptr<const vector> target_;
+        real max_acceleration_;
     };
 
     class flee : public seek {
@@ -48,11 +48,11 @@ namespace asiant {
     class blended_steering : public steering_behaviour {
     public:
         struct behaviour_and_weight {
-            std::shared_ptr<steering_behaviour> behaviour;
-            real weight;
+            std::shared_ptr<steering_behaviour> behaviour_;
+            real weight_;
         };
 
-        std::vector<std::shared_ptr<behaviour_and_weight>> behaviours;
+        std::vector<std::shared_ptr<behaviour_and_weight>> behaviours_;
         virtual void get_steering(std::shared_ptr<steering> s);
     };
 };
