@@ -72,9 +72,9 @@ seek_demo::seek_demo() {
 
 void seek_demo::update() {
     float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
-    auto s = skd.sk.get_steering();
-    auto l = s->get_linear();
-    character->update(s, duration, 10.0);
+    auto steer = std::make_shared<asiant::steering>();
+    skd.sk.get_steering(steer);
+    character->update(steer, duration, 10.0);
     character->update_to_face_velocity();
     application::update();
 }

@@ -159,10 +159,11 @@ vector trim_world(vector& v) {
 void flocking_demo::update() {
     float duration = asiant::timer::get().last_frame_duration * 0.01f;
     auto boids = flock_->boids;
+    auto steer = std::make_shared<steering>();
     for(auto & boid : boids) {
         blended_steering_->set_character(boid);
-        auto steering = blended_steering_->get_steering();
-        boid->integrate(*steering, 0.999, duration);
+        blended_steering_->get_steering(steer);
+        boid->integrate(*steer, 0.999, duration);
         boid->update_to_face_velocity();
         boid->trim_max_speed(3.0);
         

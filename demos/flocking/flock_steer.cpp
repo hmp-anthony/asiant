@@ -1,7 +1,5 @@
 #include "flock_steer.hpp"
 
-
-#include <iostream>
 unsigned flock::prepare_neighbourhood(const std::shared_ptr<kinematic> of,
                                       real size,
                                       real min_dot_product) {
@@ -10,7 +8,6 @@ unsigned flock::prepare_neighbourhood(const std::shared_ptr<kinematic> of,
         look = of->get_orientation_as_vector();
     }
 
-    std::cout << "in prepare neigh" << std::endl;
     flock result;
     unsigned i = 0, count = 0;
     for(auto& boid : boids) {
@@ -54,56 +51,45 @@ vector flock::get_neighbourhood_average_velocity() {
     return center;
 }
 
-#include<iostream>
-
-std::shared_ptr<steering> separation::get_steering() {
-    std::cout << "in sep" << std::endl;
-    auto no_steering = std::make_shared<steering>(); 
+void separation::get_steering(std::shared_ptr<steering> steer) {
     auto count = the_flock->prepare_neighbourhood(character, 
                                                   neighbourhood_size,
                                                   neighbourhood_minimum_dot_product);
-    if(count <= 0) return no_steering;
+    if(count <= 0) return;
     auto center_of_mass = std::make_shared<vector>(the_flock->get_neighbourhood_center());
     
     flee_.set_max_acceleration(max_acceleration);
     flee_.set_character(character);
     flee_.set_target(center_of_mass);
-    return flee_.get_steering();
+    flee_.get_steering(steer);
 }
 
-std::shared_ptr<steering> cohesion::get_steering() {
-    auto no_steering = std::make_shared<steering>(); 
+void cohesion::get_steering(std::shared_ptr<steering> steer) {
     auto count = the_flock->prepare_neighbourhood(character, 
                                                   neighbourhood_size,
                                                   neighbourhood_minimum_dot_product);
-    if(count <= 0) return no_steering;
+    if(count <= 0) return;
 
     auto center_of_mass = std::make_shared<vector>(the_flock->get_neighbourhood_center());
     
     seek_.set_max_acceleration(max_acceleration);
     seek_.set_character(character);
     seek_.set_target(center_of_mass);
-    return seek_.get_steering();
+    seek_.get_steering(steer);
 }
 
-std::shared_ptr<steering> velocity_match_and_align::get_steering() {
-    auto no_steering = std::make_shared<steering>(); 
+void velocity_match_and_align::get_steering(std::shared_ptr<steering> steer) {
     auto count = the_flock->prepare_neighbourhood(character, 
                                                   neighbourhood_size,
                                                   neighbourhood_minimum_dot_product);
-    if(count <= 0) return no_steering;
+    if(count <= 0) return;
 
     vector vel = the_flock->get_neighbourhood_average_velocity();
-
-    auto steering_output = std::make_shared<steering>();
-
     auto output = vel - character->get_velocity();
     if(output.magnitude() > max_acceleration) {
         output.normalize();
         output *= max_acceleration;
     }
-
-    steering_output->set_linear(output);
-    return steering_output;
+    steer->set_linear(output);
 }
 

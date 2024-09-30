@@ -26,6 +26,11 @@ namespace asiant {
         void set_angular(const real r) {
             angular = r;
         }
+
+        void clear() {
+            linear = vector(0,0,0);
+            angular = 0;
+        }
     private:
         vector linear;
         real   angular;
