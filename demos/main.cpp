@@ -38,10 +38,6 @@ void keyboard(unsigned char key, int x, int y) {
     app->key(key);
 }
 
-void motion(int x, int y) {
-    app->mouse_drag(x, y);
-}
-
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     asiant::timer::init();
@@ -54,7 +50,6 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutIdleFunc(update);
     glutMouseFunc(mouse);
-    glutMotionFunc(motion);
 
     app->init_graphics();
     glutMainLoop();

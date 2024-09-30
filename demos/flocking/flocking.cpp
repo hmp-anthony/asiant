@@ -25,12 +25,19 @@ using asiant::trim_world;
 class flocking_demo : public application {
 public:
     flocking_demo();
-
-    virtual void update();
     virtual void display();
-
+    virtual void update();
+    virtual bool key(unsigned char key);
+    virtual void get_help_text(const char*** lines, unsigned *line_count);
+    virtual const char* get_title();
+    virtual unsigned get_status_count();
+    virtual const char* get_status_text(unsigned slot);
 private:
     std::shared_ptr<flock> flock_;
+
+    bool separation_on_;
+    bool cohesion_on_;
+    bool velocity_match_on_;
 
     std::shared_ptr<separation> separation_;
     std::shared_ptr<cohesion> cohesion_;
@@ -38,7 +45,9 @@ private:
     std::shared_ptr<blended_steering> blended_steering_;
 };
 
-flocking_demo::flocking_demo() : application() {
+flocking_demo::flocking_demo() : application(),
+    separation_on_(true), cohesion_on_(true), velocity_match_on_(true) {
+
     static const real accel = (real) 10.0;
 
     flock_ = std::make_shared<flock>();
@@ -67,19 +76,19 @@ flocking_demo::flocking_demo() : application() {
 
     separation_ = std::make_shared<separation>();
     separation_->max_acceleration_ = accel;
-    separation_->neighbourhood_size_ = (real)20.0;
+    separation_->neighbourhood_size_ = (real)25.0;
     separation_->neighbourhood_minimum_dot_product_ = (real)-1.0;
     separation_->the_flock_ = flock_;
 
     cohesion_ = std::make_shared<cohesion>();
     cohesion_->max_acceleration_ = accel;
-    cohesion_->neighbourhood_size_ = (real)20.0;
+    cohesion_->neighbourhood_size_ = (real)30.0;
     cohesion_->neighbourhood_minimum_dot_product_ = (real)0.0;
     cohesion_->the_flock_ = flock_;
 
     velocity_match_and_align_ = std::make_shared<velocity_match_and_align>();
     velocity_match_and_align_->max_acceleration_ = accel;
-    velocity_match_and_align_->neighbourhood_size_ = (real)25.0;
+    velocity_match_and_align_->neighbourhood_size_ = (real)35.0;
     velocity_match_and_align_->neighbourhood_minimum_dot_product_ = (real)0.0;
     velocity_match_and_align_->the_flock_ = flock_;
 
@@ -101,7 +110,15 @@ flocking_demo::flocking_demo() : application() {
     blended_steering_->behaviours_.push_back(baw_vma);
 }
 
-
+static const char *default_help[] = {
+    "asiant: flocking demo",
+    "H - Toggle help.",
+    "",
+    "Toggle behaviour element:",
+    "Q - Separation",
+    "W - Cohesion",
+    "E - Velocity Match / Align",
+};
 
 void flocking_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -110,6 +127,7 @@ void flocking_demo::display() {
     for(auto & boid : flock_->boids_) {
         render_agent(boid);
     }
+    display_help();
 }
 
 
@@ -125,10 +143,64 @@ void flocking_demo::update() {
         boid->trim_max_speed(3.0);
         
         auto pos_in = boid->get_position();
-        auto pos_out = trim_world(pos_in, width, height);
+        auto pos_out = trim_world(pos_in, width_, height_);
         boid->set_position(pos_out);
     } 
     application::update();
+}
+
+bool flocking_demo::key(unsigned char key) {
+    if(application::key(key)) return true;
+    real weight = 0;
+    switch(key) {
+        case 'q':
+            separation_on_ = !separation_on_;
+            weight = separation_on_ ? flocking_info::separation_weight : 0;
+            blended_steering_->behaviours_[0]->weight_ = weight;
+            return true;
+        case 'w':
+            cohesion_on_ = !cohesion_on_;
+            weight = cohesion_on_ ? flocking_info::cohesion_weight : 0;
+            blended_steering_->behaviours_[1]->weight_ = weight;
+            return true;
+        case 'e':
+            velocity_match_on_ = !velocity_match_on_;
+            weight = velocity_match_on_ ? flocking_info::vma_weight : 0;
+            blended_steering_->behaviours_[2]->weight_ = weight;
+            return true;
+    }
+    return false;
+}
+
+void flocking_demo::get_help_text(const char*** lines, unsigned *line_count) {
+    *lines = default_help;
+    *line_count = sizeof(default_help) / sizeof(const char*);
+}
+
+const char* flocking_demo::get_title()
+{
+    return default_help[0];
+}
+
+unsigned flocking_demo::get_status_count() {
+    return 3;
+}
+
+const char* flocking_demo::get_status_text(unsigned slot) {
+    glColor3f(0.0f, 0.0f, 0.0f);
+    
+    switch(slot) {
+    case 0:
+        if (separation_on_) return "Separation On";
+        else return "Separation Off";
+    case 1:
+        if (cohesion_on_) return "Cohesion On";
+        else return "Cohesion Off";
+    case 2:
+        if (velocity_match_on_) return "Velocity Match / Align On";
+        else return "Velocity Match / Align Off";
+    }
+    return "";
 }
 
 application* get_application()
