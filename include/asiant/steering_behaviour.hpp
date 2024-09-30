@@ -45,6 +45,20 @@ namespace asiant {
         virtual void get_steering(std::shared_ptr<steering> steer);
     };
 
+    class seek_with_velocity_radius : public seek {
+    public:
+        void set_target_radius(real r);
+        void set_slow_radius(real r);
+        void set_time_to_target(real t);
+        void set_max_acceleration(real a);
+        virtual void get_steering(std::shared_ptr<steering> steer);
+    protected:
+        real target_radius_;
+        real slow_radius_;
+        real time_to_target_;
+        real max_acceleration_;
+    }
+
     class blended_steering : public steering_behaviour {
     public:
         struct behaviour_and_weight {
