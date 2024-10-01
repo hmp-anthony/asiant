@@ -12,7 +12,7 @@ class seek_demo : public application {
 public:
 
     seek_demo();
-    asiant::seek seek_;
+    asiant::seek_with_velocity_radius seek_;
     virtual void display();
     virtual void update();
 
@@ -28,6 +28,12 @@ seek_demo::seek_demo() {
 
     auto target = std::make_shared<asiant::vector>(700, 500, 0);
     seek_.set_target(target);
+
+    seek_.set_target_radius(100.0);
+    seek_.set_slow_radius(400.0);
+    seek_.set_time_to_target(10.0);
+    seek_.set_max_acceleration(10.0);
+    seek_.set_max_speed(5.0);
 }
 
 void seek_demo::update() {

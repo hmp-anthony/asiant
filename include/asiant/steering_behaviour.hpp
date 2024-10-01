@@ -12,12 +12,8 @@ namespace asiant {
 
     class steering_behaviour {
     public:
-        std::shared_ptr<kinematic> get_character() {
-            return character_;
-        }
-        void set_character(std::shared_ptr<kinematic> c) {
-            character_ = c;
-        }
+        std::shared_ptr<kinematic> get_character();
+        void set_character(std::shared_ptr<kinematic> c);
         virtual void get_steering(std::shared_ptr<steering> steer) = 0;
     protected:
         std::shared_ptr<kinematic> character_;
@@ -25,18 +21,12 @@ namespace asiant {
 
     class seek : public steering_behaviour {
     public:
-        std::shared_ptr<const vector> get_target() {
-            return target_;
-        }
-        void set_target(std::shared_ptr<vector> v) {
-            target_ = v;
-        }
-        void set_max_acceleration(real a) {
-            max_acceleration_ = a;
-        }
+        std::shared_ptr<vector> get_target();
+        void set_target(std::shared_ptr<vector> v);
+        void set_max_acceleration(real a);
         virtual void get_steering(std::shared_ptr<steering> steer);
     protected:
-        std::shared_ptr<const vector> target_;
+        std::shared_ptr<vector> target_;
         real max_acceleration_;
     };
 
@@ -51,13 +41,15 @@ namespace asiant {
         void set_slow_radius(real r);
         void set_time_to_target(real t);
         void set_max_acceleration(real a);
+        void set_max_speed(real s);
         virtual void get_steering(std::shared_ptr<steering> steer);
     protected:
         real target_radius_;
         real slow_radius_;
         real time_to_target_;
         real max_acceleration_;
-    }
+        real max_speed_;
+    };
 
     class blended_steering : public steering_behaviour {
     public:
