@@ -30,7 +30,11 @@ namespace asiant {
             }
             return a * (1 - t) + b * t;
         }
-
+    
+        real length() {
+            auto temp = b - a;
+            return temp.magnitude();
+        }
     private:
         vector a;
         vector b;

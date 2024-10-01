@@ -53,7 +53,7 @@ void follow_path_demo::update() {
     seek_.get_steering(steer);
     seek_.get_character()->update(steer, duration, 10.0);
     seek_.get_character()->update_to_face_velocity();
-    seek_.get_path_constrained_entity()->update();
+    seek_.get_path_constrained_entity()->update(duration, path_velocity_);
     application::update();
 }
 
