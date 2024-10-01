@@ -76,19 +76,19 @@ flocking_demo::flocking_demo() : application(),
 
     separation_ = std::make_shared<separation>();
     separation_->max_acceleration_ = accel;
-    separation_->neighbourhood_size_ = (real)25.0;
+    separation_->neighbourhood_size_ = (real)5.0;
     separation_->neighbourhood_minimum_dot_product_ = (real)-1.0;
     separation_->the_flock_ = flock_;
 
     cohesion_ = std::make_shared<cohesion>();
     cohesion_->max_acceleration_ = accel;
-    cohesion_->neighbourhood_size_ = (real)30.0;
+    cohesion_->neighbourhood_size_ = (real)10.0;
     cohesion_->neighbourhood_minimum_dot_product_ = (real)0.0;
     cohesion_->the_flock_ = flock_;
 
     velocity_match_and_align_ = std::make_shared<velocity_match_and_align>();
     velocity_match_and_align_->max_acceleration_ = accel;
-    velocity_match_and_align_->neighbourhood_size_ = (real)35.0;
+    velocity_match_and_align_->neighbourhood_size_ = (real)15.0;
     velocity_match_and_align_->neighbourhood_minimum_dot_product_ = (real)0.0;
     velocity_match_and_align_->the_flock_ = flock_;
 
