@@ -8,17 +8,17 @@
 
 using namespace graphics_utils;
 
-class seek_demo : public application {
+class path_follow_demo : public application {
 public:
 
-    seek_demo();
+    path_follow_demo();
     asiant::follow_path_seek seek_;
     virtual void display();
     virtual void update();
 
 };
 
-seek_demo::seek_demo() {
+path_follow_demo::path_follow_demo() {
     auto character = std::make_shared<asiant::kinematic>();
     auto pos = asiant::vector(300, 300, 0);
     auto vel = asiant::vector(0.0, 0.0, 0);
@@ -41,7 +41,7 @@ seek_demo::seek_demo() {
     seek_.set_path_constrained_entity(pce);
 }
 
-void seek_demo::update() {
+void path_follow_demo::update() {
     float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
     auto steer = std::make_shared<asiant::steering>();
     seek_.get_steering(steer);
@@ -50,7 +50,7 @@ void seek_demo::update() {
     application::update();
 }
 
-void seek_demo::display() {
+void path_follow_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     render_agent(seek_.get_character());
@@ -58,6 +58,6 @@ void seek_demo::display() {
 }
 
 application* get_application() {
-    return new seek_demo();
+    return new path_follow_demo();
 }
 

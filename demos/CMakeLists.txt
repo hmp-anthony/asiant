@@ -5,5 +5,5 @@ include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
 target_link_libraries(application ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} )
 target_link_libraries(application timer utils steering_behaviour)
 
-add_subdirectory(seek)
+add_subdirectory(path_follow)
 add_subdirectory(flocking)
