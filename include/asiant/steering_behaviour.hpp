@@ -55,10 +55,11 @@ namespace asiant {
     class follow_path_seek : public seek {
     public:
         follow_path_seek();
-        void set_path_constrained_entity(path_constrained_entity p);
+        void set_path_constrained_entity(std::shared_ptr<path_constrained_entity> p);
+        std::shared_ptr<path_constrained_entity> get_path_constrained_entity();
         virtual void get_steering(std::shared_ptr<steering> steer);
     protected:
-        path_constrained_entity path_constrained_entity_;
+        std::shared_ptr<path_constrained_entity> path_constrained_entity_;
     };
 
     class blended_steering : public steering_behaviour {

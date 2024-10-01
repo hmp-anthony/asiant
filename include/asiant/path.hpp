@@ -30,27 +30,27 @@ namespace asiant {
     class path_constrained_entity {
     public:
         path_constrained_entity() {
-            position_parameter = 0;
+            position_ = 0;
         }
        
-        void set_path(path pth) {
-            p = pth;
+        void set_path(path path) {
+            path_ = path;
         }
 
         void update() {
-            position_parameter += 0.01;
-            auto size = p.get_line_segments().size();
-            if(position_parameter > size) {
-                position_parameter -= size;
+            position_ += 0.01;
+            auto size = path_.get_line_segments().size();
+            if(position_ > size) {
+                position_ -= size;
             }
         }
 
         vector get_position() {
-            return p[position_parameter];
+            return path_[position_];
         }
     private:
-        path p;
-        real position_parameter;
+        path path_;
+        real position_;
     };
 };
 

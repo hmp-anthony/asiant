@@ -121,7 +121,7 @@ void application::display_help()
 
         const char *c = help_text[i];
         while (*c) {
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *c);
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
             c++;
         }
     }
@@ -131,16 +131,15 @@ void application::display_help()
     for (unsigned i = 0; i < slots; i++)
     {
         const char *text = get_status_text(i);
-        int textWidth = glutBitmapLength(GLUT_BITMAP_HELVETICA_10,
+        int textWidth = glutBitmapLength(GLUT_BITMAP_HELVETICA_18,
                                          (const unsigned char*)text);
-
         // Right align the string
         glRasterPos2i(width_-10-textWidth, height_-20-i*15);
 
         // And render
         const char *c = text;
         while (*c) {
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *c);
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
             c++;
         }
     }
