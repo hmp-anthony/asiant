@@ -31,6 +31,8 @@ follow_path_demo::follow_path_demo() {
     character->set_position(pos);
     character->set_velocity(vel);
     seek_.set_character(character);
+    
+    seek_.set_max_acceleration(20.0);
 
     asiant::path p;
     asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(500, 100, 0));

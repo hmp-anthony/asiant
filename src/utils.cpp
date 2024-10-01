@@ -10,6 +10,10 @@ asiant::real asiant::random_real(asiant::real max) {
     return max * (real(rand()) / RAND_MAX);
 }
 
+asiant::real asiant::random_binomial(asiant::real max) {
+    return random_real(max) - random_real(max);
+}
+
 asiant::vector asiant::trim_world(asiant::vector& v, asiant::real width, asiant::real height) {
     asiant::real x = v[0];
     asiant::real y = v[1];

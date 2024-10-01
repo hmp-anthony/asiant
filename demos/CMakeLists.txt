@@ -7,3 +7,4 @@ target_link_libraries(application timer utils steering_behaviour)
 
 add_subdirectory(follow_path)
 add_subdirectory(flocking)
+add_subdirectory(steering)

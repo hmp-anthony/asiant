@@ -1,4 +1,5 @@
 #include <asiant/steering_behaviour.hpp>
+#include <asiant/utils.hpp>
 
 namespace asiant {
     std::shared_ptr<kinematic> steering_behaviour::get_character() {
@@ -23,12 +24,51 @@ namespace asiant {
 
     void seek::get_steering(std::shared_ptr<steering> steer) {
         auto linear = *target_ - character_->get_position();
+        if(linear.square_magnitude() > 0) {
+            linear.normalize();
+            linear *= max_acceleration_;
+        }
         steer->set_linear(linear);
     }
 
     void flee::get_steering(std::shared_ptr<steering> steer) {
         auto linear = character_->get_position() - *target_;
+        if(linear.square_magnitude() > 0) {
+            linear.normalize();
+            linear *= max_acceleration_;
+        }
         steer->set_linear(linear);
+    }
+
+    void wander::set_volatility(asiant::real v) {
+        volatility_ = v;
+    }
+
+    void wander::set_turn_speed(asiant::real s) {
+        turn_speed_ = s;
+    }
+
+    void wander::get_steering(std::shared_ptr<steering> steer) {
+        if(target_->square_magnitude() == 0) {
+            *target_ = character_->get_position();
+            (*target_)[0] += volatility_;
+        }
+
+        auto offset = *target_ - character_->get_position();
+        real angle;
+        if(offset.square_magnitude() > 0) {
+            angle = real_atan(offset[1], offset[0]);
+        } else {
+            angle = 0;
+        }
+
+        *target_ = character_->get_position();
+        (*target_)[0] += volatility_ * real_cos(angle);
+        (*target_)[1] += volatility_ * real_sin(angle);
+        (*target_)[0] += random_binomial(turn_speed_);
+        (*target_)[1] += random_binomial(turn_speed_);
+
+        seek::get_steering(steer);
     }
 
     void seek_with_velocity_radius::set_target_radius(real r) {
@@ -55,6 +95,7 @@ namespace asiant {
         auto direction = *target_ - character_->get_position();
         auto distance = direction.magnitude();
         if(distance < target_radius_) {
+            steer->clear();
             return;
         }
 

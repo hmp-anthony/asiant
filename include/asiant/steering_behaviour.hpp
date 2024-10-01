@@ -35,6 +35,16 @@ namespace asiant {
     public:
         virtual void get_steering(std::shared_ptr<steering> steer);
     };
+    
+    class wander : public seek {
+    public:
+        void set_volatility(real v);
+        void set_turn_speed(real s);
+        virtual void get_steering(std::shared_ptr<steering> steer);
+    protected:
+        real volatility_;
+        real turn_speed_;
+    };
 
     class seek_with_velocity_radius : public seek {
     public:
