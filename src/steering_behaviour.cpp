@@ -65,11 +65,10 @@ namespace asiant {
             target_speed = max_speed_ * (distance / slow_radius_);
         }
 
-        
         auto target_velocity = direction;
         target_velocity.normalize();
         target_velocity *= target_speed;
-        
+       
         target_velocity *= (1.0 / time_to_target_);
         
         if(target_velocity.magnitude() > max_acceleration_) {
@@ -79,7 +78,22 @@ namespace asiant {
 
         steer->set_linear(target_velocity);
     }
-    
+
+    follow_path_seek::follow_path_seek() {
+        target_ = std::make_shared<vector>();
+    }
+
+    void follow_path_seek::set_path_constrained_entity(path_constrained_entity p) {
+        path_constrained_entity_ = p;
+    }
+        
+    void follow_path_seek::get_steering(std::shared_ptr<steering> steer) {
+        path_constrained_entity_.update();
+        auto position = path_constrained_entity_.get_position();
+        *target_ = position;
+        seek::get_steering(steer);
+    }
+
     void blended_steering::get_steering(std::shared_ptr<steering> steer) {
         steer->clear();
         real total_weight = 0;

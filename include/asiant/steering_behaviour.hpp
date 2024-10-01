@@ -4,6 +4,7 @@
 #include <asiant/precision.hpp>
 #include <asiant/vector.hpp>
 #include <asiant/kinematic.hpp>
+#include <asiant/path.hpp>
 
 #include <memory>
 #include <vector>
@@ -49,6 +50,15 @@ namespace asiant {
         real time_to_target_;
         real max_acceleration_;
         real max_speed_;
+    };
+
+    class follow_path_seek : public seek {
+    public:
+        follow_path_seek();
+        void set_path_constrained_entity(path_constrained_entity p);
+        virtual void get_steering(std::shared_ptr<steering> steer);
+    protected:
+        path_constrained_entity path_constrained_entity_;
     };
 
     class blended_steering : public steering_behaviour {
