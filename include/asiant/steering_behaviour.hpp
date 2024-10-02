@@ -49,13 +49,13 @@ namespace asiant {
     class seek_with_velocity_radius : public seek {
     public:
         void set_target_radius(real r);
-        void set_slow_radius(real r);
+        void set_velocity_radius(real r);
         void set_time_to_target(real t);
         void set_max_speed(real s);
         virtual void get_steering(std::shared_ptr<steering> steer);
     protected:
         real target_radius_;
-        real slow_radius_;
+        real velocity_radius_;
         real time_to_target_;
         real max_speed_;
     };

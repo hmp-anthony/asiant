@@ -44,7 +44,7 @@ private:
 steering_demo::steering_demo() : application() {
     static const real accel = (real)20.0;
     static const real target_radius = 100.0;
-    static const real slow_radius = 300.0;
+    static const real velocity_radius = 300.0;
     static const real time_to_target = 1.0;
     static const real max_speed = 15.0;
 
@@ -76,7 +76,7 @@ steering_demo::steering_demo() : application() {
         seeks_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         seeks_[i]->set_max_acceleration(accel);
         seeks_[i]->set_target_radius(target_radius);
-        seeks_[i]->set_slow_radius(slow_radius);
+        seeks_[i]->set_velocity_radius(velocity_radius);
         seeks_[i]->set_time_to_target(time_to_target);
         seeks_[i]->set_max_speed(max_speed);
         
@@ -84,7 +84,7 @@ steering_demo::steering_demo() : application() {
         flees_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         flees_[i]->set_max_acceleration(accel);
         flees_[i]->set_target_radius(target_radius);
-        flees_[i]->set_slow_radius(slow_radius);
+        flees_[i]->set_velocity_radius(velocity_radius);
         flees_[i]->set_time_to_target(time_to_target);
         flees_[i]->set_max_speed(max_speed);
 

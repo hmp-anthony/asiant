@@ -65,8 +65,8 @@ namespace asiant {
         target_radius_ = r;
     }
 
-    void seek_with_velocity_radius::set_slow_radius(real r) {
-        slow_radius_ = r;
+    void seek_with_velocity_radius::set_velocity_radius(real r) {
+        velocity_radius_ = r;
     }
 
     void seek_with_velocity_radius::set_time_to_target(real t) {
@@ -80,16 +80,20 @@ namespace asiant {
     void seek_with_velocity_radius::get_steering(std::shared_ptr<steering> steer) {
         auto direction = *target_ - character_->get_position();
         auto distance = direction.magnitude();
+        // if we are inside the target radius then we do nothing.
         if(distance < target_radius_) {
             steer->clear();
             return;
         }
 
         real target_speed = 0;
-        if(distance > slow_radius_) {
+        if(distance > velocity_radius_) {
+            // if we are outside the velocity radius then we approach at full speed.
             target_speed = max_speed_;
         } else {
-            target_speed = max_speed_ * (distance / slow_radius_);
+            // we want to factor to linearly increase inside the velocity/target annulus. 
+            auto factor = (distance - target_radius_) / (velocity_radius_ - target_radius_);
+            target_speed = max_speed_ * factor;
         }
 
         auto target_velocity = direction;
@@ -107,18 +111,23 @@ namespace asiant {
     }
 
     void flee_with_velocity_radius::get_steering(std::shared_ptr<steering> steer) {
-        auto direction = *target_ - character_->get_position();
+        auto direction = character_->get_position() - *target_;
         auto distance = direction.magnitude();
-        if(distance < target_radius_) {
+        // if we are outside the larger of the radi - do nothing.
+        if(distance > velocity_radius_) {
             steer->clear();
             return;
         }
 
         real target_speed = 0;
-        if(distance > slow_radius_) {
+        if(distance < target_radius_) {
+            // if we are in the target_radius we are close (very, relatively speaking).
+            // We need to get out as quick as we can.
             target_speed = max_speed_;
         } else {
-            target_speed = max_speed_ * (distance / slow_radius_);
+            // we want to factor to linearly decrease inside the velocity/target annulus. 
+            auto factor = (velocity_radius_ - distance) / (velocity_radius_ - target_radius_);
+            target_speed = max_speed_ * factor;
         }
 
         auto target_velocity = direction;
