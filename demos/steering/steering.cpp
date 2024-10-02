@@ -43,8 +43,8 @@ private:
 
 steering_demo::steering_demo() : application() {
     static const real accel = (real)20.0;
-    static const real target_radius = 100.0;
-    static const real velocity_radius = 300.0;
+    static const real target_radius = 50.0;
+    static const real velocity_radius = 150.0;
     static const real time_to_target = 1.0;
     static const real max_speed = 15.0;
 
@@ -73,6 +73,8 @@ steering_demo::steering_demo() : application() {
 
     for(unsigned i = 0; i < 2; ++i) {
         seeks_[i]->set_character(kinematics_[i]);
+
+        // this is a bit ugly, i know. I am just not smart enough.
         seeks_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         seeks_[i]->set_max_acceleration(accel);
         seeks_[i]->set_target_radius(target_radius);
@@ -91,7 +93,7 @@ steering_demo::steering_demo() : application() {
         wanders_[i]->set_character(kinematics_[i]);
         wanders_[i]->set_max_acceleration(accel);
         wanders_[i]->set_max_rotation((real)2.0);
-        wanders_[i]->set_max_speed((real)15.0);
+        wanders_[i]->set_max_speed(max_speed);
     }
     
     current_behaviours_[0] = wanders_[0];
@@ -142,6 +144,7 @@ bool steering_demo::key(unsigned char key)
 		return true;
     }
 
+
     return false;
 }
 
@@ -161,7 +164,7 @@ void steering_demo::update()
         kinematics_[i]->update_to_face_velocity();
 
         // Check for maximum speed
-        kinematics_[i]->trim_max_speed((real)25.0);
+        kinematics_[i]->trim_max_speed((real)30.0);
 
         // Keep in bounds of the world
         auto pos_in = kinematics_[i]->get_position();
@@ -185,7 +188,7 @@ void steering_demo::display()
 }
 
 static const char *default_help[] = {
-    "AI4G: Steering Demo",
+    "asiant: Steering Demo",
     "H - Toggle help.",
     "",
     "Red character:",
