@@ -38,12 +38,12 @@ namespace asiant {
     
     class wander : public seek {
     public:
-        void set_volatility(real v);
-        void set_turn_speed(real s);
+        void set_max_rotation(real r);
+        void set_max_speed(real s);
         virtual void get_steering(std::shared_ptr<steering> steer);
     protected:
-        real volatility_;
-        real turn_speed_;
+        real max_rotation_;
+        real max_speed_;
     };
 
     class seek_with_velocity_radius : public seek {
@@ -51,15 +51,18 @@ namespace asiant {
         void set_target_radius(real r);
         void set_slow_radius(real r);
         void set_time_to_target(real t);
-        void set_max_acceleration(real a);
         void set_max_speed(real s);
         virtual void get_steering(std::shared_ptr<steering> steer);
     protected:
         real target_radius_;
         real slow_radius_;
         real time_to_target_;
-        real max_acceleration_;
         real max_speed_;
+    };
+
+    class flee_with_velocity_radius : public seek_with_velocity_radius {
+    public:
+        virtual void get_steering(std::shared_ptr<steering> steer);
     };
 
     class follow_path_seek : public seek {

@@ -15,8 +15,8 @@ using asiant::vector;
 using asiant::kinematic;
 using asiant::steering;
 using asiant::steering_behaviour;
-using asiant::seek;
-using asiant::flee;
+using asiant::seek_with_velocity_radius;
+using asiant::flee_with_velocity_radius;
 using asiant::wander;
 
 class steering_demo : public application {
@@ -33,8 +33,8 @@ public:
 private:
     // holds the kinematic of the agents.
     std::array<std::shared_ptr<kinematic>, 2> kinematics_;
-    std::array<std::shared_ptr<seek>, 2> seeks_;
-    std::array<std::shared_ptr<flee>, 2> flees_;
+    std::array<std::shared_ptr<seek_with_velocity_radius>, 2> seeks_;
+    std::array<std::shared_ptr<flee_with_velocity_radius>, 2> flees_;
     std::array<std::shared_ptr<wander>, 2> wanders_;
 
     std::array<std::shared_ptr<steering_behaviour>, 2> current_behaviours_;
@@ -43,6 +43,10 @@ private:
 
 steering_demo::steering_demo() : application() {
     static const real accel = (real)20.0;
+    static const real target_radius = 100.0;
+    static const real slow_radius = 300.0;
+    static const real time_to_target = 1.0;
+    static const real max_speed = 15.0;
 
     kinematics_[0] = std::make_shared<kinematic>();
     kinematics_[1] = std::make_shared<kinematic>();
@@ -60,10 +64,10 @@ steering_demo::steering_demo() : application() {
     kinematics_[1]->set_velocity(vel);
     kinematics_[1]->set_rotation(0.0);
 
-    seeks_[0] = std::make_shared<seek>();
-    seeks_[1] = std::make_shared<seek>();
-    flees_[0] = std::make_shared<flee>();
-    flees_[1] = std::make_shared<flee>();
+    seeks_[0] = std::make_shared<seek_with_velocity_radius>();
+    seeks_[1] = std::make_shared<seek_with_velocity_radius>();
+    flees_[0] = std::make_shared<flee_with_velocity_radius>();
+    flees_[1] = std::make_shared<flee_with_velocity_radius>();
     wanders_[0] = std::make_shared<wander>();
     wanders_[1] = std::make_shared<wander>();
 
@@ -71,21 +75,29 @@ steering_demo::steering_demo() : application() {
         seeks_[i]->set_character(kinematics_[i]);
         seeks_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         seeks_[i]->set_max_acceleration(accel);
+        seeks_[i]->set_target_radius(target_radius);
+        seeks_[i]->set_slow_radius(slow_radius);
+        seeks_[i]->set_time_to_target(time_to_target);
+        seeks_[i]->set_max_speed(max_speed);
         
         flees_[i]->set_character(kinematics_[i]);
         flees_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         flees_[i]->set_max_acceleration(accel);
+        flees_[i]->set_target_radius(target_radius);
+        flees_[i]->set_slow_radius(slow_radius);
+        flees_[i]->set_time_to_target(time_to_target);
+        flees_[i]->set_max_speed(max_speed);
 
         wanders_[i]->set_character(kinematics_[i]);
         wanders_[i]->set_max_acceleration(accel);
-        wanders_[i]->set_volatility((real)20.0);
-        wanders_[i]->set_turn_speed((real)2.0);
+        wanders_[i]->set_max_rotation((real)2.0);
+        wanders_[i]->set_max_speed((real)15.0);
     }
     
-    current_behaviours_[0] = seeks_[0];
-    status_[0] = "Seek";
-    current_behaviours_[1] = seeks_[1];
-    status_[1] = "Seek";
+    current_behaviours_[0] = wanders_[0];
+    status_[0] = "Wander";
+    current_behaviours_[1] = wanders_[1];
+    status_[1] = "Wander";
     
 }
 

@@ -40,34 +40,24 @@ namespace asiant {
         steer->set_linear(linear);
     }
 
-    void wander::set_volatility(asiant::real v) {
-        volatility_ = v;
+    void wander::set_max_rotation(asiant::real r) {
+        max_rotation_ = r;
     }
 
-    void wander::set_turn_speed(asiant::real s) {
-        turn_speed_ = s;
+    void wander::set_max_speed(asiant::real s) {
+        max_speed_ = s;
     }
 
     void wander::get_steering(std::shared_ptr<steering> steer) {
-        if(target_->square_magnitude() == 0) {
-            *target_ = character_->get_position();
-            (*target_)[0] += volatility_;
+        if(!target_) {
+            target_ = std::make_shared<vector>();
         }
-
-        auto offset = *target_ - character_->get_position();
-        real angle;
-        if(offset.square_magnitude() > 0) {
-            angle = real_atan(offset[1], offset[0]);
-        } else {
-            angle = 0;
-        }
-
-        *target_ = character_->get_position();
-        (*target_)[0] += volatility_ * real_cos(angle);
-        (*target_)[1] += volatility_ * real_sin(angle);
-        (*target_)[0] += random_binomial(turn_speed_);
-        (*target_)[1] += random_binomial(turn_speed_);
-
+        //get a random angle between -pi and pi;
+        auto o = random_binomial(1) * max_rotation_;
+        //get a random number to move the target;
+        auto r = random_real(1) * max_speed_;
+        auto delta = vector(r * real_sin(o), r * real_cos(o), 0);
+        *target_ = character_->get_position() + delta;
         seek::get_steering(steer);
     }
 
@@ -83,15 +73,40 @@ namespace asiant {
         time_to_target_ = t;
     }
 
-    void seek_with_velocity_radius::set_max_acceleration(real a) {
-        max_acceleration_ = a;
-    }
-
     void seek_with_velocity_radius::set_max_speed(real s) {
         max_speed_ = s;
     }
 
     void seek_with_velocity_radius::get_steering(std::shared_ptr<steering> steer) {
+        auto direction = *target_ - character_->get_position();
+        auto distance = direction.magnitude();
+        if(distance < target_radius_) {
+            steer->clear();
+            return;
+        }
+
+        real target_speed = 0;
+        if(distance > slow_radius_) {
+            target_speed = max_speed_;
+        } else {
+            target_speed = max_speed_ * (distance / slow_radius_);
+        }
+
+        auto target_velocity = direction;
+        target_velocity.normalize();
+        target_velocity *= target_speed;
+       
+        target_velocity *= (1.0 / time_to_target_);
+        
+        if(target_velocity.magnitude() > max_acceleration_) {
+            target_velocity.normalize();
+            target_velocity *= max_acceleration_;
+        }
+
+        steer->set_linear(target_velocity);
+    }
+
+    void flee_with_velocity_radius::get_steering(std::shared_ptr<steering> steer) {
         auto direction = *target_ - character_->get_position();
         auto distance = direction.magnitude();
         if(distance < target_radius_) {
