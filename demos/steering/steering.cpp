@@ -68,13 +68,12 @@ steering_demo::steering_demo() : application() {
     wanders_[1] = std::make_shared<wander>();
 
     for(unsigned i = 0; i < 2; ++i) {
-        auto target = std::make_shared<vector>(kinematics_[1-i]->get_position());
         seeks_[i]->set_character(kinematics_[i]);
-        seeks_[i]->set_target(target);
+        seeks_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         seeks_[i]->set_max_acceleration(accel);
         
         flees_[i]->set_character(kinematics_[i]);
-        flees_[i]->set_target(target);
+        flees_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         flees_[i]->set_max_acceleration(accel);
 
         wanders_[i]->set_character(kinematics_[i]);
@@ -85,8 +84,8 @@ steering_demo::steering_demo() : application() {
     
     current_behaviours_[0] = seeks_[0];
     status_[0] = "Seek";
-    current_behaviours_[1] = flees_[1];
-    status_[1] = "Flee";
+    current_behaviours_[1] = seeks_[1];
+    status_[1] = "Seek";
     
 }
 
