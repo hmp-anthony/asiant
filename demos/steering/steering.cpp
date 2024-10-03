@@ -43,9 +43,11 @@ private:
 
 steering_demo::steering_demo() : application() {
     static const real accel = (real)20.0;
-    static const real target_radius = 50.0;
-    static const real velocity_radius = 150.0;
-    static const real time_to_target = 1.0;
+    static const real target_radius_seek = 10.0;
+    static const real velocity_radius_seek = 50.0;
+    static const real target_radius_flee = 100.0;
+    static const real velocity_radius_flee = 200.0;
+    static const real time_to_target = 0.5;
     static const real max_speed = 15.0;
 
     kinematics_[0] = std::make_shared<kinematic>();
@@ -77,16 +79,16 @@ steering_demo::steering_demo() : application() {
         // this is a bit ugly, i know. I am just not smart enough.
         seeks_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         seeks_[i]->set_max_acceleration(accel);
-        seeks_[i]->set_target_radius(target_radius);
-        seeks_[i]->set_velocity_radius(velocity_radius);
+        seeks_[i]->set_target_radius(target_radius_seek);
+        seeks_[i]->set_velocity_radius(velocity_radius_seek);
         seeks_[i]->set_time_to_target(time_to_target);
         seeks_[i]->set_max_speed(max_speed);
         
         flees_[i]->set_character(kinematics_[i]);
         flees_[i]->set_target(kinematics_[1-i]->get_position_pointer());
         flees_[i]->set_max_acceleration(accel);
-        flees_[i]->set_target_radius(target_radius);
-        flees_[i]->set_velocity_radius(velocity_radius);
+        flees_[i]->set_target_radius(target_radius_flee);
+        flees_[i]->set_velocity_radius(velocity_radius_flee);
         flees_[i]->set_time_to_target(time_to_target);
         flees_[i]->set_max_speed(max_speed);
 

@@ -125,6 +125,7 @@ void flocking_demo::display() {
     glLoadIdentity();
 	glColor3f(0.0f, 0.3f, 0.6f);
     for(auto & boid : flock_->boids_) {
+        glColor3f(1.0, 0.0, 0.0);
         render_agent(boid);
     }
     display_help();

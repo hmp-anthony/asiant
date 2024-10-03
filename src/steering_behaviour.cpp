@@ -159,7 +159,7 @@ namespace asiant {
     void follow_path_seek::get_steering(std::shared_ptr<steering> steer) {
         auto position = path_constrained_entity_->get_position();
         *target_ = position;
-        seek::get_steering(steer);
+        seek_with_velocity_radius::get_steering(steer);
     }
 
     void blended_steering::get_steering(std::shared_ptr<steering> steer) {

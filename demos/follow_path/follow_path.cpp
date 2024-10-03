@@ -23,7 +23,7 @@ public:
 };
 
 follow_path_demo::follow_path_demo() {
-    path_velocity_ = 10.0;
+    path_velocity_ = 20.0;
 
     auto character = std::make_shared<asiant::kinematic>();
     auto pos = asiant::vector(300, 300, 0);
@@ -33,6 +33,10 @@ follow_path_demo::follow_path_demo() {
     seek_.set_character(character);
     
     seek_.set_max_acceleration(20.0);
+    seek_.set_target_radius(50.0);
+    seek_.set_velocity_radius(100.0);
+    seek_.set_time_to_target(1.0);
+    seek_.set_max_speed(50.0);
 
     asiant::path p;
     asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(500, 100, 0));
@@ -53,7 +57,7 @@ void follow_path_demo::update() {
     float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
     auto steer = std::make_shared<asiant::steering>();
     seek_.get_steering(steer);
-    seek_.get_character()->update(steer, duration, 10.0);
+    seek_.get_character()->update(steer, duration, 20.0);
     seek_.get_character()->update_to_face_velocity();
     seek_.get_path_constrained_entity()->update(duration, path_velocity_);
     application::update();
@@ -71,6 +75,7 @@ static const char *default_help[] = {
 void follow_path_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    glColor3f(0.6f, 0.0f, 0.6f);
     render_agent(seek_.get_character());
     render_agent(seek_.get_target());
     display_help();

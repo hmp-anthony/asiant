@@ -7,4 +7,4 @@ My code improves on that suggested in the book in the following ways:
 - In seek with velocity radius that appears in the book, the factor that provides a gradient between full speed and zero is incorrect. I have corrected it in my implementation. 
 - I have improved the demo code for steering to use more advanced techniques. 
 
-To build and execute just type `make` and then `./build/demos/seek/seek`, for instance.
+To build and execute just type `make` and then `./build/demos/steering/steering`, for instance.

@@ -20,7 +20,6 @@ namespace graphics_utils {
         glPushMatrix();
         glTranslatef(pos[0], pos[1], 0);
         glRotatef(ori * 180.0 / asiant::pi, 0, 0, 1);
-        glColor3f(1, 0, 0); 
         circle(0.0, 0.0, 10.0, 9);
         glColor3f(0, 1, 0);
         circle(0.0, 12.0, 4.0, 9);
