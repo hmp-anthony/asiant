@@ -53,17 +53,14 @@ steering_demo::steering_demo() : application() {
     kinematics_[0] = std::make_shared<kinematic>();
     kinematics_[1] = std::make_shared<kinematic>();
    
-    auto pos = vector(10.0, 10.0, 0.0);
-    auto vel = vector(0.0, 0.0, 0.0);
-    kinematics_[0]->set_position(pos);
+    kinematics_[0]->set_position(vector(10.0, 10.0, 0.0));
     kinematics_[0]->set_orientation(2.1);
-    kinematics_[0]->set_velocity(vel);
+    kinematics_[0]->set_velocity(vector(0.0, 0.0, 0.0));
     kinematics_[0]->set_rotation(0.0);
 
-    pos = vector(500.0, 500.0, 0.0);
-    kinematics_[1]->set_position(pos);
+    kinematics_[1]->set_position(vector(500.0, 500.0, 0.0));
     kinematics_[1]->set_orientation(0.75);
-    kinematics_[1]->set_velocity(vel);
+    kinematics_[1]->set_velocity(vector(0.0, 0.0, 0.0));
     kinematics_[1]->set_rotation(0.0);
 
     seeks_[0] = std::make_shared<seek_with_velocity_radius>();

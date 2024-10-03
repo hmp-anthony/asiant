@@ -23,13 +23,11 @@ public:
 };
 
 follow_path_demo::follow_path_demo() {
-    path_velocity_ = 20.0;
+    path_velocity_ = 35.0;
 
     auto character = std::make_shared<asiant::kinematic>();
-    auto pos = asiant::vector(300, 300, 0);
-    auto vel = asiant::vector(0.0, 0.0, 0);
-    character->set_position(pos);
-    character->set_velocity(vel);
+    character->set_position(asiant::vector(300, 300, 0));
+    character->set_velocity(asiant::vector(0, 0, 0));
     seek_.set_character(character);
     
     seek_.set_max_acceleration(20.0);

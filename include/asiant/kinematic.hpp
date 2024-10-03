@@ -43,11 +43,23 @@ namespace asiant {
         void set_position(vector& v) {
             *position = v;
         }
+        
+        void set_position(vector&& v) {
+            (*position)[0] = v[0];
+            (*position)[1] = v[1];
+            (*position)[2] = v[2];
+        }
 
         void set_velocity(vector& v) {
             *velocity = v;
-        }   
+        }  
 
+        void set_velocity(vector&& v) {
+            (*velocity)[0] = v[0];
+            (*velocity)[1] = v[1];
+            (*velocity)[2] = v[2];
+        }
+       
         void set_orientation(real o) {
             orientation = o;
         }
