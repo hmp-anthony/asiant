@@ -98,6 +98,12 @@ namespace asiant {
                 (*this) *= 1.0/m; 
             }
         }
+        
+        vector unit() {
+            vector v = *this;
+            v.normalize();
+            return v;
+        }
 
         void add_scaled_vector(const vector& v, real scale) {
             x += v[0] * scale;

@@ -170,7 +170,7 @@ namespace asiant {
         // is it mathematically incorrect. Even though it is incorrect, it
         // is more efficient as it calculates square_mag instead of mag. 
         vector movement_normal = character_->get_velocity().unit();
-        vector character_to_sphere_center = sphere->center_ - character_->get_positon();
+        vector character_to_sphere_center = *(sphere_->center_) - character_->get_position();
 
         // this tells us how much the char_to_sphere vector projects onto
         // the movement vector.
@@ -188,8 +188,8 @@ namespace asiant {
         }
 
         auto closest_point = character_->get_position() + movement_normal * projection;
-        auto delta = (closest_point - sphere_->center).unit();
-        target_ = sphere_->center + delta * (sphere_->radius_ + avoid_margin_); 
+        auto delta = (closest_point - *(sphere_->center_)).unit();
+        *target_ = *sphere_->center_ + delta * (sphere_->radius_ + avoid_margin_); 
         seek::get_steering(steer);
     }
 
@@ -214,10 +214,11 @@ namespace asiant {
     void blended_steering::get_steering(std::shared_ptr<steering> steer) {
         steer->clear();
         real total_weight = 0;
-        auto temp = std::make_shared<steering>();
 
-        vector linear_output = vector(0, 0 ,0);
-        auto angular_output = 0;
+        auto temp = std::make_shared<steering>();
+        vector linear_output = steer->get_linear();
+        auto angular_output = steer->get_angular();
+
         for(auto& baw : behaviours_) {
             // set character
             baw->behaviour_->set_character(character_);

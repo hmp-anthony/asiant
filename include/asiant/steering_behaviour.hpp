@@ -76,7 +76,7 @@ namespace asiant {
         std::shared_ptr<sphere> sphere_;
         real avoid_margin_;
         real max_look_ahead_;
-    }
+    };
 
     class follow_path_seek : public seek_with_velocity_radius {
     public:

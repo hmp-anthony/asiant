@@ -27,6 +27,10 @@ namespace asiant {
             angular = r;
         }
 
+        real square_magnitude() {
+            return linear.square_magnitude() + angular * angular;
+        }
+
         void clear() {
             linear = vector(0,0,0);
             angular = 0;
