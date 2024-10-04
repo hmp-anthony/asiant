@@ -171,6 +171,9 @@ namespace asiant {
         // is more efficient as it calculates square_mag instead of mag. 
         vector movement_normal = character_->get_velocity().unit();
         vector character_to_sphere_center = sphere->center_ - character_->get_positon();
+
+        // this tells us how much the char_to_sphere vector projects onto
+        // the movement vector.
         auto projection = movement_normal * character_to_sphere_center;
         auto distance = character_to_sphere_center.magnitude() - projection;
 
@@ -231,5 +234,26 @@ namespace asiant {
         }
         steer->set_linear(linear_output);
         steer->set_angular(angular_output);
+    }
+
+    void priority_steering::set_epsilon(real e) {
+        epsilon_ = e;
+    }
+
+    void priority_steering::add_behaviour(std::shared_ptr<steering_behaviour> b) {
+        behaviours_.push_back(b);
+    }
+
+    void priority_steering::get_steering(std::shared_ptr<steering> steer) {
+        real epsilon_squared = epsilon_ * epsilon_;
+        steer->clear();
+        for(auto& behaviour : behaviours_) {
+            behaviour->set_character(character_);
+            behaviour->get_steering(steer);
+            if(steer->square_magnitude() > epsilon_squared) {
+                last_used_ = behaviour;
+                return;
+            }
+        }
     }
 };

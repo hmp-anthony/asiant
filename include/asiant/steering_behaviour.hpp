@@ -98,6 +98,17 @@ namespace asiant {
         std::vector<std::shared_ptr<behaviour_and_weight>> behaviours_;
         virtual void get_steering(std::shared_ptr<steering> s);
     };
+
+    class priority_steering : public steering_behaviour {
+    public:
+        void set_epsilon(real e);
+        void add_behaviour(std::shared_ptr<steering_behaviour> s);
+        void get_steering(std::shared_ptr<steering> steer);
+    protected:
+        std::vector<std::shared_ptr<steering_behaviour>> behaviours_;
+        std::shared_ptr<steering_behaviour> last_used_;
+        real epsilon_;
+    };
 };
 
 #endif
