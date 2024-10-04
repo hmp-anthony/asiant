@@ -5,6 +5,7 @@
 #include <asiant/vector.hpp>
 #include <asiant/kinematic.hpp>
 #include <asiant/path.hpp>
+#include <asiant/primitives.hpp>
 
 #include <memory>
 #include <vector>
@@ -64,6 +65,18 @@ namespace asiant {
     public:
         virtual void get_steering(std::shared_ptr<steering> steer);
     };
+
+    class avoid_sphere : public seek {
+    public:
+        void set_sphere(std::shared_ptr<sphere> s);
+        void set_avoid_margin(real m);
+        void set_max_look_ahead(real m);
+        virtual void get_steering(std::shared_ptr<steering> steer);
+    protected:
+        std::shared_ptr<sphere> sphere_;
+        real avoid_margin_;
+        real max_look_ahead_;
+    }
 
     class follow_path_seek : public seek_with_velocity_radius {
     public:

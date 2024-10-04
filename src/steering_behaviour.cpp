@@ -144,6 +144,43 @@ namespace asiant {
         steer->set_linear(target_velocity);
     }
 
+    void avoid_sphere::set_sphere(std::shared_ptr<sphere> s) {
+        sphere_ = s;
+    }
+
+    void avoid_sphere::set_avoid_margin(real m) {
+        avoid_margin_ = m;
+    }
+
+    void avoid_sphere::set_max_look_ahead(real m) {
+        max_look_ahead_ = m;
+    }
+
+    void avoid_sphere::get_steering(std::shared_ptr<steering> steer) {
+        if(!target_) {
+            target_ = std::make_shared<vector>();
+        }
+
+        steer->clear();
+        if(character_->get_velocity().square_magnitude() <= 0) {
+            return;
+        }
+
+        // the code in the original repo is different to what follows and
+        // is it mathematically incorrect. Even though it is incorrect, it
+        // is more efficient as it calculates square_mag instead of mag. 
+        vector movement_normal = character_->get_velocity().unit();
+        vector character_to_sphere_center = sphere->center_ - character_->get_positon();
+        auto projection = movement_normal * character_to_sphere_center;
+        auto distance = character_to_sphere_center.magnitude() - projection;
+
+        auto radius = sphere_->radius_ + avoid_margin_;
+        if(distance < radius) {
+            // we have intersection.
+
+        }
+    }
+
     follow_path_seek::follow_path_seek() {
         target_ = std::make_shared<vector>();
     }

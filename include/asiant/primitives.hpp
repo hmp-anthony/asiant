@@ -5,7 +5,7 @@
 
 namespace asiant{
     struct sphere {
-        vector position_;
+        std::shared_ptr<vector> center_;
         real radius_;
     };
 };
