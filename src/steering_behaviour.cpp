@@ -175,10 +175,19 @@ namespace asiant {
         auto distance = character_to_sphere_center.magnitude() - projection;
 
         auto radius = sphere_->radius_ + avoid_margin_;
-        if(distance < radius) {
-            // we have intersection.
-
+        if(distance >= radius) {
+            // if we are clear of the sphere, do nothing.
+            return;
         }
+        if(projection < 0 || projection > max_look_ahead_) {
+            // if the sphere is behind the direction of motion, do nothing.
+            return;
+        }
+
+        auto closest_point = character_->get_position() + movement_normal * projection;
+        auto delta = (closest_point - sphere_->center).unit();
+        target_ = sphere_->center + delta * (sphere_->radius_ + avoid_margin_); 
+        seek::get_steering(steer);
     }
 
     follow_path_seek::follow_path_seek() {
