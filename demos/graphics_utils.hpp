@@ -26,7 +26,7 @@ namespace graphics_utils {
         glPopMatrix();
     } 
 
-    void render_agent(std::shared_ptr<const asiant::vector> pos) {
+    void render_spot(std::shared_ptr<const asiant::vector> pos) {
         glPushMatrix();
         glTranslatef((*pos)[0], (*pos)[1], 0);
         glColor3f(0, 1, 0);

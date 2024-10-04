@@ -21,7 +21,7 @@ public:
 
     virtual bool key(unsigned char key);
     virtual void update();
-    //virtual void display();
+    virtual void display();
     //virtual const char* get_title();
     //virtual void get_help_text(const char*** lines, unsigned *line_count);
     //virtual unsigned get_status_count();
@@ -96,20 +96,93 @@ bool priority_demo::key(unsigned char key) {
 
 void priority_demo::update() {
     auto duration = timer::get().last_frame_duration * 0.01f;
-    steering wander_steering;
-    steering avoid_steering;
-    steering steer;
 
-    avoid_steering.clear();
-    steer.clear();
+    auto wander_steer = std::make_shared<steering>();
+    auto steer = std::make_shared<steering>();
+
+    wander_->get_steering(wander_steer);
+    steer->clear();
 
     if(is_blended) {
         blended_steering_->get_steering(steer);
     } else {
         priority_steering_->get_steering(steer);
+
     }
     
-    
+    kinematic_->integrate(*steer, (real)0.1, duration);
+    kinematic_->update_to_face_velocity();
+    kinematic_->trim_max_speed((real)20.0);
+    kinematic_->set_position(trim_world(kinematic_->get_position(), width_, height_));
+
+    // Avoid penetration of obstacles
+    for (std::size_t i = 0; i < number_of_obstacles; i++)
+    {
+		auto s = *(spheres_[i]);
+		auto distance = kinematic_->get_position().distance(s.center_);
+		if (distance < s.radius_ + 1.0f)
+		{
+			auto offset = s.center_ - kinematic_->get_position();
+			offset.normalize();
+			offset *= (s.radius_ + 1.0f);
+			kinematic_->set_position(s.center_ - offset);
+		}
+    }
+
+    glutPostRedisplay();
+}
+
+void priority_demo::display() {
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(-53.0f, 53.0f, 0.0f,
+              0.0f, -30.0f, 0.0f,
+              0.0f, 1.0f, 0.0f);
+
+    // Draw the character
+    glColor3f(0.6f, 0.0f, 0.0f);
+    render_agent(kinematic_);
+
+    // Create the obstacle quadric
+    GLUquadricObj* qobj = gluNewQuadric();
+
+    // Draw the obstacles
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glColor3f(0.4f, 0.4f, 0.4f);
+    for (std::size_t i = 0; i < number_of_obstacles; ++i) {
+		auto s = spheres_[i];	
+        glPushMatrix();
+        glTranslatef(s->center_[0], s->center_[1], s->center_[2]);
+        glRotatef(90, -1.0f, 0.0f, 0.0f);
+        gluCylinder(qobj,
+                    s->radius_, s->radius_*0.85f,
+                    1.0f,
+                    36, 1);
+        glTranslatef(0.0f, 0.0f, 1.0f);
+        gluDisk(qobj, 0.0f, s->radius_*0.85f, 36, 1);
+        glPopMatrix();
+	}
+    glDisable(GL_LIGHTING);
+
+	// Free the quadric
+	gluDeleteQuadric(qobj);
+
+	// Draw a spot where the avoid steering's target was.
+	if (!is_blended && priority_steering_->get_last_used() != wander_)
+	{
+		glColor3f(1,0,0);
+        auto seek_ptr = std::static_pointer_cast<seek>(priority_steering_->get_last_used());
+        auto t = seek_ptr->get_target();
+        render_spot(t);
+	}
+
+	// Draw a spot where the wander wants to go.
+	glColor3f(0,0.5f,0);
+	render_spot(wander_->get_target());
+
+    // Draw the help (the method decides if it should be displayed)
+    display_help();
 }
 
 application* get_application() {

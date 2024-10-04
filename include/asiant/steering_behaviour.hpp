@@ -104,6 +104,7 @@ namespace asiant {
         void set_epsilon(real e);
         void add_behaviour(std::shared_ptr<steering_behaviour> s);
         void get_steering(std::shared_ptr<steering> steer);
+        std::shared_ptr<steering_behaviour> get_last_used();
     protected:
         std::vector<std::shared_ptr<steering_behaviour>> behaviours_;
         std::shared_ptr<steering_behaviour> last_used_;

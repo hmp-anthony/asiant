@@ -75,7 +75,7 @@ void follow_path_demo::display() {
     glLoadIdentity();
     glColor3f(0.6f, 0.0f, 0.6f);
     render_agent(seek_.get_character());
-    render_agent(seek_.get_target());
+    render_spot(seek_.get_target());
     display_help();
     print_velocity();
 }

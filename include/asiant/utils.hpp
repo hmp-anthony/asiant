@@ -9,6 +9,7 @@ namespace asiant {
     real random_real(real max);
     real random_binomial(real max);
     vector trim_world(vector& v, real width, real height);
+    vector trim_world(vector&& v, real width, real height);
 };
 
 #endif

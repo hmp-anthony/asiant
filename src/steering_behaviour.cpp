@@ -244,6 +244,10 @@ namespace asiant {
     void priority_steering::add_behaviour(std::shared_ptr<steering_behaviour> b) {
         behaviours_.push_back(b);
     }
+    
+    std::shared_ptr<steering_behaviour> priority_steering::get_last_used() {
+        return last_used_;
+    }
 
     void priority_steering::get_steering(std::shared_ptr<steering> steer) {
         real epsilon_squared = epsilon_ * epsilon_;
