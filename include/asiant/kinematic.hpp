@@ -35,6 +35,10 @@ namespace asiant {
         real get_orientation() {
             return orientation;
         }
+        
+        vector get_orientation_as_vector() const {
+            return vector(-1.0 * real_sin(orientation), real_cos(orientation), 0.0);
+        }
 
         vector get_velocity() {
             return *velocity;

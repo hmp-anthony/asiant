@@ -12,7 +12,7 @@ using namespace graphics_utils;
 using namespace asiant;
 
 namespace {
-    constexpr int number_of_obstacles = 30;
+    constexpr int number_of_obstacles = 50;
 }
 
 class priority_demo : public application {
@@ -22,10 +22,10 @@ public:
     virtual bool key(unsigned char key);
     virtual void update();
     virtual void display();
-    //virtual const char* get_title();
-    //virtual void get_help_text(const char*** lines, unsigned *line_count);
-    //virtual unsigned get_status_count();
-    //virtual const char* get_status_text(unsigned slot);
+    virtual const char* get_title();
+    virtual void get_help_text(const char*** lines, unsigned *line_count);
+    virtual unsigned get_status_count();
+    virtual const char* get_status_text(unsigned slot);
 private:
     std::shared_ptr<kinematic> kinematic_;
     std::array<std::shared_ptr<sphere>, number_of_obstacles> spheres_;
@@ -45,13 +45,14 @@ priority_demo::priority_demo() : application(), is_blended(false) {
     kinematic_->set_rotation(0.0);
 
     wander_ = std::make_shared<wander>();
+    wander_->set_max_acceleration(accel);
     wander_->set_character(kinematic_);
-    wander_->set_max_rotation(1.0);
+    wander_->set_max_rotation(3.0);
     wander_->set_max_speed(15.0);
 
     for(std::size_t i = 0; i < number_of_obstacles; ++i) {
         spheres_[i] = std::make_shared<sphere>();
-        spheres_[i]->center_ = vector(random_real(700), random_real(500), (real)0.0);
+        spheres_[i]->center_ = vector(random_real(800), random_real(600), (real)0.0);
         spheres_[i]->radius_ = random_real((real)10.0, (real)20.0);
 
         avoids_[i] = std::make_shared<avoid_sphere>();
@@ -95,7 +96,7 @@ bool priority_demo::key(unsigned char key) {
 }
 
 void priority_demo::update() {
-    auto duration = timer::get().last_frame_duration * 0.01f;
+    auto duration = timer::get().last_frame_duration * 0.005f;
     
     auto wander_steer = std::make_shared<steering>();
     auto steer = std::make_shared<steering>();
@@ -103,7 +104,6 @@ void priority_demo::update() {
     wander_->get_steering(wander_steer);
     steer->clear();
 
-    
     if(is_blended) {
         blended_steering_->get_steering(steer);
     } else {
@@ -111,7 +111,7 @@ void priority_demo::update() {
 
     }
    
-    kinematic_->integrate(*steer, (real)1.0, duration);
+    kinematic_->integrate(*wander_steer, (real)1.0, duration);
     kinematic_->update_to_face_velocity();
     kinematic_->trim_max_speed((real)20.0);
     kinematic_->set_position(trim_world(kinematic_->get_position(), width_, height_));
@@ -161,13 +161,59 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	// Draw a spot where the wander wants to go.
-	glColor3f(0,0.5f,0);
+	glColor3f(0,0.5f,0.5f);
     if(wander_->get_target()) { 
 	    render_spot(wander_->get_target());
     }
 
     // Draw the help (the method decides if it should be displayed)
     display_help();
+}
+static const char *default_help[] = {
+    "AI4G: Steering Priority Demo",
+    "H - Toggle help.",
+    "",
+    "B - Toggle behaviour blending / priority",
+};
+
+const char* priority_demo::get_title()
+{
+    return default_help[0];
+}
+
+void priority_demo::get_help_text(const char*** lines,
+                                        unsigned *line_count)
+{
+    *lines = default_help;
+    *line_count = sizeof(default_help) / sizeof(const char*);
+}
+
+unsigned priority_demo::get_status_count()
+{
+    if (is_blended) return 1;
+    else return number_of_obstacles + 1;
+}
+
+const char* priority_demo::get_status_text(unsigned slot)
+{
+
+    if (is_blended) {
+        glColor3f(0.0f, 0.0f, 0.0f);
+        return "Blended";
+    } else {
+        glColor3f(0.8f, 0.8f, 0.8f);
+		if (slot < number_of_obstacles)
+		{
+			if (priority_steering_->get_last_used() == avoids_[slot]) glColor3f(0.6f,0,0);
+			return "Avoid Obstacle";
+		}
+		else
+		{
+			if (priority_steering_->get_last_used() == wander_) glColor3f(0.6f,0,0);
+			return "Wandering";
+		}
+    }
+    return "";
 }
 
 application* get_application() {
