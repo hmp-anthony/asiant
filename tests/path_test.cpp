@@ -29,3 +29,15 @@ TEST(path, constructor) {
     ASSERT_NEAR(segments[3].get_start()[1], 400, 0.0001);
 }
 
+TEST(path_character, get_position) {
+    auto p = std::make_shared<path>();
+    line_segment l1(vector(100, 100, 0), vector(400, 100, 0));
+    p->add_line_segment(l1);
+    path_character pc;
+    pc.set_path(p);
+    auto v = pc.get_position() - vector(100, 100, 0);
+    ASSERT_NEAR(v.square_magnitude(), 0, 0.001);
+    pc.update(300.0, 300.0);
+    v = pc.get_position() - vector(400, 100, 0); 
+    ASSERT_NEAR(v.square_magnitude(), 0, 0.001);
+}

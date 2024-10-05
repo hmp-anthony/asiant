@@ -77,7 +77,13 @@ namespace asiant {
             if(i == 2) { return z; }
             throw std::invalid_argument("vector index out of range!");
         }
-        
+
+        bool operator == (const vector& v) {
+            auto temp = (*this) - v;
+            auto mag = temp.square_magnitude();
+            return mag < 0.001;
+        }
+
         void invert() {
             x = -x;
             y = -y;
