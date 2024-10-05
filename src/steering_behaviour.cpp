@@ -197,16 +197,16 @@ namespace asiant {
         target_ = std::make_shared<vector>();
     }
 
-    void follow_path_seek::set_path_constrained_entity(std::shared_ptr<path_constrained_entity> p) {
-        path_constrained_entity_ = p;
+    void follow_path_seek::set_path_character(std::shared_ptr<path_character> p) {
+        path_character_ = p;
     }
 
-    std::shared_ptr<path_constrained_entity> follow_path_seek::get_path_constrained_entity() {
-        return path_constrained_entity_;
+    std::shared_ptr<path_character> follow_path_seek::get_path_character() {
+        return path_character_;
     }
         
     void follow_path_seek::get_steering(std::shared_ptr<steering> steer) {
-        auto position = path_constrained_entity_->get_position();
+        auto position = path_character_->get_position();
         *target_ = position;
         seek_with_velocity_radius::get_steering(steer);
     }

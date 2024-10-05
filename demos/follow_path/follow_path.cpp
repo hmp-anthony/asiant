@@ -36,19 +36,19 @@ follow_path_demo::follow_path_demo() {
     seek_.set_time_to_target(1.0);
     seek_.set_max_speed(50.0);
 
-    asiant::path p;
+    auto p = std::make_shared<asiant::path>();
     asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(500, 100, 0));
-    p.add_line_segment(l1);
+    p->add_line_segment(l1);
     asiant::line_segment l2(asiant::vector(500, 100, 0), asiant::vector(700, 200, 0));
-    p.add_line_segment(l2);
+    p->add_line_segment(l2);
     asiant::line_segment l3(asiant::vector(700, 200, 0), asiant::vector(700, 500, 0));
-    p.add_line_segment(l3);
+    p->add_line_segment(l3);
     asiant::line_segment l4(asiant::vector(700, 500, 0), asiant::vector(100, 100, 0));
-    p.add_line_segment(l4);
+    p->add_line_segment(l4);
 
-    auto pce = std::make_shared<asiant::path_constrained_entity>();
+    auto pce = std::make_shared<asiant::path_character>();
     pce->set_path(p);
-    seek_.set_path_constrained_entity(pce);
+    seek_.set_path_character(pce);
 }
 
 void follow_path_demo::update() {
@@ -57,7 +57,7 @@ void follow_path_demo::update() {
     seek_.get_steering(steer);
     seek_.get_character()->update(steer, duration, 20.0);
     seek_.get_character()->update_to_face_velocity();
-    seek_.get_path_constrained_entity()->update(duration, path_velocity_);
+    seek_.get_path_character()->update(duration, path_velocity_);
     application::update();
 }
 
