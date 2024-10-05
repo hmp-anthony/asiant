@@ -12,7 +12,7 @@ using namespace graphics_utils;
 using namespace asiant;
 
 namespace {
-    constexpr int number_of_obstacles = 10;
+    constexpr int number_of_obstacles = 30;
 }
 
 class priority_demo : public application {
@@ -36,12 +36,12 @@ private:
     bool is_blended; 
 };
 
-priority_demo::priority_demo() : application(), is_blended(true) {
-    static const real accel = (real) 50.0;
+priority_demo::priority_demo() : application(), is_blended(false) {
+    static const real accel = (real)20.0;
     kinematic_ = std::make_shared<kinematic>();
-    kinematic_->set_position(vector((real)5.0,(real)5.0,(real)0.0));
+    kinematic_->set_position(vector((real)100.0,(real)100.0,(real)0.0));
     kinematic_->set_orientation(random_real(pi));
-    kinematic_->set_velocity(vector((real)0.0,(real)1.0,(real)0.0));
+    kinematic_->set_velocity(vector((real)0.0,(real)10.0,(real)0.0));
     kinematic_->set_rotation(0.0);
 
     wander_ = std::make_shared<wander>();
@@ -66,7 +66,7 @@ priority_demo::priority_demo() : application(), is_blended(true) {
     blended_steering_->set_character(kinematic_);
 
     priority_steering_ = std::make_shared<priority_steering>();
-    priority_steering_->set_epsilon((real)0.01);
+    priority_steering_->set_epsilon((real)0.1);
     priority_steering_->set_character(kinematic_);
 
     for(std::size_t i = 0; i < number_of_obstacles; ++i) {
@@ -96,21 +96,22 @@ bool priority_demo::key(unsigned char key) {
 
 void priority_demo::update() {
     auto duration = timer::get().last_frame_duration * 0.01f;
-
+    
     auto wander_steer = std::make_shared<steering>();
     auto steer = std::make_shared<steering>();
 
     wander_->get_steering(wander_steer);
     steer->clear();
 
+    
     if(is_blended) {
         blended_steering_->get_steering(steer);
     } else {
         priority_steering_->get_steering(steer);
 
     }
-    
-    kinematic_->integrate(*steer, (real)0.1, duration);
+   
+    kinematic_->integrate(*steer, (real)1.0, duration);
     kinematic_->update_to_face_velocity();
     kinematic_->trim_max_speed((real)20.0);
     kinematic_->set_position(trim_world(kinematic_->get_position(), width_, height_));
@@ -128,7 +129,7 @@ void priority_demo::update() {
 			kinematic_->set_position(s.center_ - offset);
 		}
     }
-
+    
     glutPostRedisplay();
 }
 
@@ -150,7 +151,8 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	// Draw a spot where the avoid steering's target was.
-	if (!is_blended && priority_steering_->get_last_used())
+    auto last_used = priority_steering_->get_last_used();
+	if (!is_blended && last_used && last_used != wander_)
 	{
 		glColor3f(1,0,0);
         auto seek_ptr = std::static_pointer_cast<seek>(priority_steering_->get_last_used());
