@@ -36,7 +36,7 @@ private:
     bool is_blended; 
 };
 
-priority_demo::priority_demo() : application(), is_blended(false) {
+priority_demo::priority_demo() : application(), is_blended(true) {
     static const real accel = (real) 50.0;
     kinematic_ = std::make_shared<kinematic>();
     kinematic_->set_position(vector((real)5.0,(real)5.0,(real)0.0));
@@ -51,8 +51,8 @@ priority_demo::priority_demo() : application(), is_blended(false) {
 
     for(std::size_t i = 0; i < number_of_obstacles; ++i) {
         spheres_[i] = std::make_shared<sphere>();
-        spheres_[i]->center_ = vector(random_real(800), random_real(600), (real)0.0);
-        spheres_[i]->radius_ = random_real(20.0);
+        spheres_[i]->center_ = vector(random_real(700), random_real(500), (real)0.0);
+        spheres_[i]->radius_ = random_real((real)10.0, (real)20.0);
 
         avoids_[i] = std::make_shared<avoid_sphere>();
         avoids_[i]->set_sphere(spheres_[i]);
@@ -140,30 +140,14 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3f(0.6f, 0.0f, 0.0f);
     render_agent(kinematic_);
 
-    // Create the obstacle quadric
-    GLUquadricObj* qobj = gluNewQuadric();
-
     // Draw the obstacles
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
     glColor3f(0.4f, 0.4f, 0.4f);
     for (std::size_t i = 0; i < number_of_obstacles; ++i) {
 		auto s = spheres_[i];	
         glPushMatrix();
-        glTranslatef(s->center_[0], s->center_[1], s->center_[2]);
-        glRotatef(90, 0.0f, 0.0f, 1.0f);
-        gluCylinder(qobj,
-                    s->radius_, s->radius_*0.85f,
-                    1.0f,
-                    36, 1);
-        glTranslatef(0.0f, 0.0f, 1.0f);
-        gluDisk(qobj, 0.0f, s->radius_*0.85f, 36, 1);
+        circle(s->center_[0], s->center_[1], s->radius_, 20);
         glPopMatrix();
 	}
-    glDisable(GL_LIGHTING);
-
-	// Free the quadric
-	gluDeleteQuadric(qobj);
 
 	// Draw a spot where the avoid steering's target was.
 	if (!is_blended && priority_steering_->get_last_used())
