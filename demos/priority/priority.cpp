@@ -12,7 +12,7 @@ using namespace graphics_utils;
 using namespace asiant;
 
 namespace {
-    constexpr int number_of_obstacles = 50;
+    constexpr int number_of_obstacles = 38;
 }
 
 class priority_demo : public application {
@@ -47,37 +47,36 @@ priority_demo::priority_demo() : application(), is_blended(false) {
     wander_ = std::make_shared<wander>();
     wander_->set_max_acceleration(accel);
     wander_->set_character(kinematic_);
-    wander_->set_max_rotation(3.0);
+    wander_->set_max_rotation(2.0);
     wander_->set_max_speed(15.0);
 
     for(std::size_t i = 0; i < number_of_obstacles; ++i) {
         spheres_[i] = std::make_shared<sphere>();
         spheres_[i]->center_ = vector(random_real(800), random_real(600), (real)0.0);
-        spheres_[i]->radius_ = random_real((real)10.0, (real)20.0);
+        spheres_[i]->radius_ = random_real((real)20.0, (real)30.0);
 
         avoids_[i] = std::make_shared<avoid_sphere>();
         avoids_[i]->set_sphere(spheres_[i]);
         avoids_[i]->set_character(kinematic_);
         avoids_[i]->set_max_acceleration(accel);
         avoids_[i]->set_avoid_margin((real)2.0);
-        avoids_[i]->set_max_look_ahead((real)20.0);
+        avoids_[i]->set_max_look_ahead((real)50.0);
     }
 
     blended_steering_ = std::make_shared<blended_steering>();
     blended_steering_->set_character(kinematic_);
 
     priority_steering_ = std::make_shared<priority_steering>();
-    priority_steering_->set_epsilon((real)0.1);
+    priority_steering_->set_epsilon((real)0.01);
     priority_steering_->set_character(kinematic_);
 
     for(std::size_t i = 0; i < number_of_obstacles; ++i) {
-        auto baw = std::make_shared<blended_steering::behaviour_and_weight>(avoids_[i], (real)1.0);
+        auto baw = std::make_shared<blended_steering::behaviour_and_weight>(avoids_[i], (real)80.0);
         blended_steering_->behaviours_.push_back(baw);
         priority_steering_->add_behaviour(avoids_[i]);
     }
 
-    auto baw = std::make_shared<blended_steering::behaviour_and_weight>(wander_,
-                                                                        (real) number_of_obstacles);
+    auto baw = std::make_shared<blended_steering::behaviour_and_weight>(wander_, 30.0);
     blended_steering_->behaviours_.push_back(baw);
     priority_steering_->add_behaviour(wander_);
 
@@ -111,25 +110,11 @@ void priority_demo::update() {
 
     }
    
-    kinematic_->integrate(*wander_steer, (real)1.0, duration);
+    kinematic_->integrate(*steer, (real)1.0, duration);
     kinematic_->update_to_face_velocity();
     kinematic_->trim_max_speed((real)20.0);
     kinematic_->set_position(trim_world(kinematic_->get_position(), width_, height_));
 
-    // Avoid penetration of obstacles
-    for (std::size_t i = 0; i < number_of_obstacles; i++)
-    {
-		auto s = *(spheres_[i]);
-		auto distance = kinematic_->get_position().distance(s.center_);
-		if (distance < s.radius_ + 1.0f)
-		{
-			auto offset = s.center_ - kinematic_->get_position();
-			offset.normalize();
-			offset *= (s.radius_ + 1.0f);
-			kinematic_->set_position(s.center_ - offset);
-		}
-    }
-    
     glutPostRedisplay();
 }
 
@@ -159,13 +144,13 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         auto t = seek_ptr->get_target();
         render_spot(t);
 	}
-
 	// Draw a spot where the wander wants to go.
+    /*
 	glColor3f(0,0.5f,0.5f);
     if(wander_->get_target()) { 
 	    render_spot(wander_->get_target());
     }
-
+    */
     // Draw the help (the method decides if it should be displayed)
     display_help();
 }

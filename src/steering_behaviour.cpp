@@ -228,11 +228,6 @@ namespace asiant {
             angular_output += temp->get_angular() * baw->weight_;
             total_weight += baw->weight_;
         }
-        if(total_weight > 0.0) {
-            total_weight = (real)1.0/total_weight;
-            linear_output *= total_weight;
-            angular_output *= total_weight;
-        }
         steer->set_linear(linear_output);
         steer->set_angular(angular_output);
     }
