@@ -106,8 +106,8 @@ namespace asiant {
     public:
         real max_acceleration_;
         virtual std::shared_ptr<path_with_goal> create_path_object();
-		virtual void get_path(std::shared_ptr<path_with_goal>  path, const goal& goal);
-		virtual void get_steering(std::shared_ptr<steering> output, 
+        virtual void get_path(std::shared_ptr<path_with_goal>  path, const goal& goal);
+        virtual void get_steering(std::shared_ptr<steering> output, 
                                   const std::shared_ptr<path_with_goal> path);
     private:
         seek seek_;
