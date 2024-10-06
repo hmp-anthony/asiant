@@ -77,7 +77,7 @@ namespace asiant {
         unsigned constraint_steps_;
 
         std::shared_ptr<steering_behaviour> fallback_;
-        std::shared_ptr<path> path_;
+        std::shared_ptr<path_with_goal> path_;
 
     private:
         std::shared_ptr<actuator> actuator_;
@@ -88,7 +88,30 @@ namespace asiant {
         goal goal_;
         virtual goal get_goal();
     };
+    
+    class avoid_spheres_constraint : public constraint {
+    public:
+        std::vector<std::shared_ptr<sphere>> spheres_;
+        real avoid_margin_;
+        virtual real will_violate(const std::shared_ptr<path_with_goal> pwg, real max_priority);
+        virtual goal suggest(const std::shared_ptr<path_with_goal> pwg);
+    private:
+        goal suggestion_;
+        real will_violate(const std::shared_ptr<path_with_goal> p, 
+                          real max_priority,
+                          sphere& obstacle);
+    };
 
+    class basic_actuator : actuator {
+    public:
+        real max_acceleration_;
+        virtual std::shared_ptr<path_with_goal> create_path_object();
+		virtual void get_path(std::shared_ptr<path_with_goal>  path, const goal& goal);
+		virtual void get_steering(std::shared_ptr<steering> output, 
+                                  const std::shared_ptr<path_with_goal> path);
+    private:
+        seek seek_;
+    };
 };
 
 #endif
