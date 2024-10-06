@@ -1,7 +1,6 @@
 #ifndef STEERING_PIPELINE_HPP
 #define STEERING_PIPELINE_HPP
 
-#include <asiant/path.hpp>
 #include <asiant/steering_behaviour.hpp>
 
 #include <optional>
@@ -18,14 +17,14 @@ namespace asiant {
         // clears all channels from the goal.
         void clear();
         // updates the goal by adding additional channels from the given goal.
-        void update_goal();
+        void update_goal(const goal& g);
         // checks if the given goal can be merged. basically: if *this and `goal` have the
         // same channel set, we can not merge.
-        bool can_merge_goals(const goal& goal) const;
+        bool can_merge_goals(const goal& g) const;
     };
 
     struct path_with_goal {
-        path_character path_character_;
+        std::shared_ptr<kinematic> character_;
         goal goal_;
         real get_max_priority();
     };
