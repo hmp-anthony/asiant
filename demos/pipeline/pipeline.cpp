@@ -11,7 +11,7 @@ using namespace graphics_utils;
 using namespace asiant;
 
 namespace {
-    constexpr int number_of_obstacles = 38;
+    constexpr int number_of_obstacles = 100;
 }
 
 class pipeline_demo : public application {
@@ -40,23 +40,26 @@ private:
 };
 
 pipeline_demo::pipeline_demo() : application(), auto_new_goal(true) {
+    width_ = 800;
+    height_ = 600;
+
     auto accel = (real)50.0;
     kinematic_ = std::make_shared<kinematic>();
-    kinematic_->set_position(vector((real)100.0, (real)100.0, (real)1.0));
+    kinematic_->set_position(vector((real)width_, (real)height_, (real)1.0));
     kinematic_->set_orientation(random_real(pi));
-    kinematic_->set_velocity(vector((real)0.0, (real)0.0, (real)0.0));
+    kinematic_->set_velocity(vector((real)0.0, (real)20.0, (real)0.0));
     kinematic_->set_rotation((real)0.0);
 
     wander_ = std::make_shared<wander>();
     wander_->set_max_acceleration(accel);
     wander_->set_character(kinematic_);
     wander_->set_max_rotation(1.0);
-    wander_->set_max_speed(20.0);
+    wander_->set_max_speed(50.0);
     
     for(unsigned i = 0; i < number_of_obstacles; ++i) {
         spheres_[i] = std::make_shared<sphere>();
-        spheres_[i]->center_ = vector(random_real((real)700.0), random_real((real)500.0), 0.0);
-        spheres_[i]->radius_ = random_real((real)5.0, (real)20.0);
+        spheres_[i]->center_ = vector(random_real((real)width_), random_real((real)height_), 0.0);
+        spheres_[i]->radius_ = random_real((real)10.0, (real)20.0);
     }
     
     steering_pipe_ = std::make_shared<steering_pipe>();
@@ -84,7 +87,7 @@ pipeline_demo::pipeline_demo() : application(), auto_new_goal(true) {
 }
 
 void pipeline_demo::update() {
-    float duration = timer::get().last_frame_duration * 0.001f;
+    float duration = timer::get().last_frame_duration * 0.005f;
     auto steer = std::make_shared<steering>();
 
     steering_pipe_->get_steering(steer);
@@ -99,7 +102,7 @@ void pipeline_demo::update() {
 
 	// Check for proximity to the goal, and create a new one if we are near.
     auto distance = kinematic_->get_position().distance(targeter_->goal_.position_.value());
-	if (auto_new_goal && distance < 2.0f) {
+	if (auto_new_goal && distance < 5.0f) {
 		create_random_goal();
 	}
 
@@ -144,6 +147,7 @@ void pipeline_demo::create_random_goal() {
     do {
         okay = true;
         targeter_->goal_.position_ = vector(random_real(width_), random_real(height_), 0.0);
+        auto v = targeter_->goal_.position_.value();
         for(auto &  sphere : spheres_) {
             auto distance = (targeter_->goal_.position_.value() - sphere->center_).magnitude();
             if(distance < sphere->radius_ + 2.0f) {
