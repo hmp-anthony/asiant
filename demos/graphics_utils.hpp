@@ -32,5 +32,12 @@ namespace graphics_utils {
         circle(0.0, 0.0, 5.0, 9);
         glPopMatrix();
     } 
+
+    void render_spot(asiant::vector pos) {
+        glPushMatrix();
+        glTranslatef(pos[0], pos[1], 0);
+        circle(0.0, 0.0, 5.0, 9);
+        glPopMatrix();
+    } 
 }
 

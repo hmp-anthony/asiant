@@ -7,7 +7,6 @@
 #include <math.h> 
 #include <array>
 
-#include<iostream>
 using namespace graphics_utils;
 using namespace asiant;
 
@@ -20,12 +19,13 @@ public:
     pipeline_demo();
 
     //virtual bool key(unsigned char key);
-    //virtual void update();
-    //virtual void display();
+    virtual void update();
+    virtual void display();
     //virtual const char* get_title();
     //virtual void get_help_text(const char*** lines, unsigned *line_count);
     //virtual unsigned get_status_count();
     //virtual const char* get_status_text(unsigned slot);
+    virtual void create_random_goal();
 private:
     std::shared_ptr<kinematic> kinematic_;
     std::array<std::shared_ptr<sphere>, number_of_obstacles> spheres_;
@@ -67,8 +67,82 @@ pipeline_demo::pipeline_demo() : application(), auto_new_goal(true) {
 
     constraint_ = std::make_shared<avoid_spheres_constraint>();
     for(unsigned i = 0; i < number_of_obstacles; ++i) {
-        
+        constraint_->spheres_.push_back(spheres_[i]);
     }
+    constraint_->avoid_margin_ = (real)2.0;
+    steering_pipe_->constraints_.push_back(constraint_);
+
+    actuator_ = std::make_shared<basic_actuator>();
+    actuator_->max_acceleration_ = accel;
+    steering_pipe_->set_actuator(actuator_);
+
+    steering_pipe_->fallback_ = wander_;
+
+    steering_pipe_->register_components();
+
+    create_random_goal();
+}
+
+void pipeline_demo::update() {
+    float duration = timer::get().last_frame_duration * 0.001f;
+    auto steer = std::make_shared<steering>();
+
+    steering_pipe_->get_steering(steer);
+
+    // Update the kinematic
+    kinematic_->integrate(*steer, (real)1.0, duration);
+    kinematic_->update_to_face_velocity();
+
+    // Check for maximum speed
+    kinematic_->trim_max_speed((real)20.0);
+
+	// Check for proximity to the goal, and create a new one if we are near.
+	if (auto_new_goal && kinematic_->get_position().distance(targeter_->goal_.position_.value()) < 2.0f) {
+		create_random_goal();
+	}
+
+    glutPostRedisplay();
+}
+
+void pipeline_demo::display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Draw the characters.
+    glColor3f(0.0f, 0.3f, 0.6f);
+    render_agent(kinematic_);
+
+	// Draw the current goal
+	glColor3f(0.6f, 0.0f, 0.0f);
+	render_spot(targeter_->goal_.position_.value());
+
+	// Draw the path
+	if (steering_pipe_->path_)
+	{
+		auto path = steering_pipe_->path_;
+		glColor3f(0.0f, 0.6f, 0.0f);
+		glBegin(GL_LINES);
+		auto v = path->goal_.position_.value();
+	    auto u = path->character_->get_position();
+        glVertex3f(v[0], v[1], v[2]);
+        glVertex3f(u[0], u[1], u[2]);
+        glEnd();
+	}
+
+}
+
+void pipeline_demo::create_random_goal() {
+    bool okay;
+    do {
+        okay = true;
+        targeter_->goal_.position_ = vector(random_real(width_), random_real(height_), 0.0);
+        for(auto &  sphere : spheres_) {
+            auto distance = (targeter_->goal_.position_.value() - sphere->center_).magnitude();
+            if(distance < sphere->radius_ + 2.0f) {
+                okay = false;
+                break;
+            }
+        }
+    } while(!okay);
 }
 
 application* get_application() {

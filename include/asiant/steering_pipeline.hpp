@@ -102,7 +102,7 @@ namespace asiant {
                           sphere& s);
     };
 
-    class basic_actuator : actuator {
+    class basic_actuator : public actuator {
     public:
         real max_acceleration_;
         virtual std::shared_ptr<path_with_goal> create_path_object();
