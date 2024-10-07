@@ -6,3 +6,4 @@
 #include "steering_behaviour.hpp"
 #include "timer.hpp"
 #include "path.hpp"
+#include "steering_pipeline.hpp"
