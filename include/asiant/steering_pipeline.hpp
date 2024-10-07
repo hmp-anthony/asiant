@@ -44,12 +44,12 @@ namespace asiant {
 
     class decomposer : public steering_pipe_component {
     public:
-        virtual goal decompose_goal() = 0;
+        virtual goal decompose_goal(const goal& g) = 0;
     };
 
     class constraint : public steering_pipe_component {
     public:
-        bool suggestion_used;
+        bool suggestion_used_;
         virtual real will_violate(const std::shared_ptr<path_with_goal> pwg, real max_priority) = 0;
         virtual goal suggest(const std::shared_ptr<path_with_goal> pwg) = 0;
     };
@@ -59,10 +59,11 @@ namespace asiant {
         virtual std::shared_ptr<path_with_goal> create_path_object() = 0;
         virtual void get_path(std::shared_ptr<path_with_goal> p, const goal& goal) = 0;
         virtual void get_steering(std::shared_ptr<steering> steer,
-                                  const shared_ptr<path_with_goal> p) = 0;
+                                  const std::shared_ptr<path_with_goal> p) = 0;
     };
     
-    class steering_pipe : public steering_behaviour {
+    class steering_pipe : public steering_behaviour, 
+                          public std::enable_shared_from_this<steering_pipe> {
     public:
         steering_pipe();
         void set_actuator(std::shared_ptr<actuator> a);
@@ -98,7 +99,7 @@ namespace asiant {
         goal suggestion_;
         real will_violate(const std::shared_ptr<path_with_goal> p, 
                           real max_priority,
-                          sphere& obstacle);
+                          sphere& s);
     };
 
     class basic_actuator : actuator {
