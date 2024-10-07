@@ -42,7 +42,7 @@ private:
 pipeline_demo::pipeline_demo() : application(), auto_new_goal(true) {
     auto accel = (real)50.0;
     kinematic_ = std::make_shared<kinematic>();
-    kinematic_->set_position(vector((real)5.0, (real)5.0, (real)1.0));
+    kinematic_->set_position(vector((real)100.0, (real)100.0, (real)1.0));
     kinematic_->set_orientation(random_real(pi));
     kinematic_->set_velocity(vector((real)0.0, (real)0.0, (real)0.0));
     kinematic_->set_rotation((real)0.0);
@@ -55,7 +55,7 @@ pipeline_demo::pipeline_demo() : application(), auto_new_goal(true) {
     
     for(unsigned i = 0; i < number_of_obstacles; ++i) {
         spheres_[i] = std::make_shared<sphere>();
-        spheres_[i]->center_ = vector(random_real((real)800.0), random_real((real)600.0), 0.0);
+        spheres_[i]->center_ = vector(random_real((real)700.0), random_real((real)500.0), 0.0);
         spheres_[i]->radius_ = random_real((real)5.0, (real)20.0);
     }
     
@@ -95,9 +95,11 @@ void pipeline_demo::update() {
 
     // Check for maximum speed
     kinematic_->trim_max_speed((real)20.0);
+    kinematic_->set_position(trim_world(kinematic_->get_position(), width_, height_));
 
 	// Check for proximity to the goal, and create a new one if we are near.
-	if (auto_new_goal && kinematic_->get_position().distance(targeter_->goal_.position_.value()) < 2.0f) {
+    auto distance = kinematic_->get_position().distance(targeter_->goal_.position_.value());
+	if (auto_new_goal && distance < 2.0f) {
 		create_random_goal();
 	}
 
@@ -127,7 +129,14 @@ void pipeline_demo::display() {
         glVertex3f(u[0], u[1], u[2]);
         glEnd();
 	}
-
+    // Draw the obstacles
+    glColor3f(0.4f, 0.4f, 0.4f);
+    for (std::size_t i = 0; i < number_of_obstacles; ++i) {
+		auto s = spheres_[i];
+        glPushMatrix();
+        circle(s->center_[0], s->center_[1], s->radius_, 20);
+        glPopMatrix();
+	}
 }
 
 void pipeline_demo::create_random_goal() {
