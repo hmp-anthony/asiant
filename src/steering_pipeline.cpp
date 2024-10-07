@@ -110,7 +110,7 @@ namespace asiant {
         return goal_;
     }
 
-    real avoid_spheres_constraint::will_violate(const std::shared_ptr<path_with_goal_> path,
+    real avoid_spheres_constraint::will_violate(const std::shared_ptr<path_with_goal> path,
                                                 real max_priority) {
         real priority = std::numeric_limits<real>::max();
         real this_priority;
@@ -126,20 +126,20 @@ namespace asiant {
                                                 sphere& s) {
 
         // make sure we've got a positional goal
-		if (!path->goal.position_) return std::numerical_limits<real>::max();
+		if (!path->goal_.position_) return std::numeric_limits<real>::max();
 
 		// alias the character object
-		const std::shared_ptr<kinematic> character = pipe->character_;
+		const std::shared_ptr<kinematic> character = steering_pipe_->get_character();
 
 		// work out where we're going
-		vector direction = path->goal.position_ - character->get_position();
+		vector direction = path->goal_.position_.value() - character->get_position();
 
 		// make sure we're moving
 		if (direction.square_magnitude() > 0)
 		{
 			// find the distance from the line we're moving along to the sphere.
 			vector movement_normal = direction.unit();
-			vector character_to_sphere = s.position_ - character->get_position();
+			vector character_to_sphere = s.center_ - character->get_position();
 
 			real distance_squared = character_to_sphere * movement_normal;
 			distance_squared = character_to_sphere.square_magnitude() - 
@@ -157,11 +157,11 @@ namespace asiant {
 				{
 					// Find the closest point
 					vector closest_point = 
-						character->position + movement_normal*distance_to_closest;
+						character->get_position() + movement_normal*distance_to_closest;
 
 					// Find the point of avoidance
-					suggestion_.position = 
-						s.position_ + (closest_point - s.position_).unit() *
+					suggestion_.position_ = 
+						s.center_ + (closest_point - s.center_).unit() *
                         (s.radius_ + avoid_margin_);
 
 					return distance_to_closest;
@@ -169,37 +169,41 @@ namespace asiant {
 			}
 		}
 
-		return std::numerical_limits<real>::max();
+		return std::numeric_limits<real>::max();
 	}
 
-	Goal AvoidSpheresConstraint::suggest(const Path* path)
+	goal avoid_spheres_constraint::suggest(const std::shared_ptr<path_with_goal> pwg)
 	{
-		return suggestion;
+		return suggestion_;
 	}
 
-	Path* BasicActuator::createPathObject()
+    std::shared_ptr<path_with_goal> basic_actuator::create_path_object()
 	{
-		return new Path;
+        auto p = std::make_shared<path_with_goal>();
+		return p;
 	}
 
-	void BasicActuator::getPath(Path* path, const Goal& goal)
+	void basic_actuator::get_path(std::shared_ptr<path_with_goal> path, const goal& g)
 	{
-		path->character = pipe->character;
-		path->goal = goal;
+		path->character_ = steering_pipe_->get_character();
+		path->goal_ = g;
 	}
 
-	void BasicActuator::getSteering(SteeringOutput* output, const Path* path)
+	void basic_actuator::get_steering(std::shared_ptr<steering> steer, 
+                                     const std::shared_ptr<path_with_goal> path)
 	{
-		if (path->goal.positionSet) 
+		if (path->goal_.position_) 
 		{
-			seek.character = pipe->character;
-			seek.target = &path->goal.position;
-			seek.maxAcceleration = maxAcceleration;
-			seek.getSteering(output);
+			seek_.set_character(steering_pipe_->get_character());
+            // TODO - REALLY?! think about this.
+            auto t = std::make_shared<vector>(path->goal_.position_.value());
+			seek_.set_target(t);
+			seek_.set_max_acceleration(max_acceleration_);
+			seek_.get_steering(steer);
 		}
 		else
 		{
-			output->clear();
+			steer->clear();
 		}
 	}
 
