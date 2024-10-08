@@ -10,7 +10,7 @@ application* app;
 void create_window(const char* title)
 {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(800, 600);
+    glutInitWindowSize(800, 650);
     glutInitWindowPosition(0,0);
     glutCreateWindow(title);
 }
