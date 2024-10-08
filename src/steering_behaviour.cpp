@@ -82,7 +82,6 @@ namespace asiant {
         auto distance = direction.magnitude();
         // if we are inside the target radius then we do nothing.
         if(distance < target_radius_) {
-            steer->clear();
             return;
         }
 
@@ -106,8 +105,9 @@ namespace asiant {
             target_velocity.normalize();
             target_velocity *= max_acceleration_;
         }
-
-        steer->set_linear(target_velocity);
+        auto linear = steer->get_linear();
+        linear += target_velocity;
+        steer->set_linear(linear);
     }
 
     void flee_with_velocity_radius::get_steering(std::shared_ptr<steering> steer) {
@@ -115,7 +115,6 @@ namespace asiant {
         auto distance = direction.magnitude();
         // if we are outside the larger of the radi - do nothing.
         if(distance > velocity_radius_) {
-            steer->clear();
             return;
         }
 
@@ -141,7 +140,9 @@ namespace asiant {
             target_velocity *= max_acceleration_;
         }
 
-        steer->set_linear(target_velocity);
+        auto linear = steer->get_linear();
+        linear += target_velocity;
+        steer->set_linear(linear);
     }
 
     void avoid_sphere::set_sphere(std::shared_ptr<sphere> s) {
@@ -228,6 +229,14 @@ namespace asiant {
             angular_output += temp->get_angular() * baw->weight_;
             total_weight += baw->weight_;
         }
+        
+		if (total_weight > 0.0)
+		{
+			total_weight = (real)1.0 / total_weight;
+			linear_output *= total_weight;
+			angular_output *= total_weight;
+		}
+
         steer->set_linear(linear_output);
         steer->set_angular(angular_output);
     }
