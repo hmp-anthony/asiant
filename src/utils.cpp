@@ -1,20 +1,22 @@
 #include <asiant/utils.hpp>
 
+#include <random>
+
 asiant::real asiant::map_to_range_pi_minus_pi(real r) {
     auto x = fmod(r + pi, 2 * pi);
     if (x < 0) { x += 2 * pi; }
     return x - pi;
 }
 
-asiant::real asiant::random_real(asiant::real max) {
-    return max * (real(rand()) / RAND_MAX);
+asiant::real asiant::random_real(asiant::real min, asiant::real max) {
+    std::random_device rd;
+    std::mt19937 gen(rd()); 
+    std::uniform_real_distribution<> dis(min, max);
+    return dis(gen);
 }
 
-asiant::real asiant::random_real(asiant::real min, asiant::real max)
-{
-    asiant::real random = ((asiant::real) rand()) / (asiant::real) RAND_MAX;
-    asiant::real range = max - min;  
-    return (random*range) + min;
+asiant::real asiant::random_real(asiant::real max) {
+    return asiant::random_real(0.0, max);
 }
 
 asiant::real asiant::random_binomial(asiant::real max) {
