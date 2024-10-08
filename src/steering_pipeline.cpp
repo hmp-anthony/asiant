@@ -135,41 +135,33 @@ namespace asiant {
 		vector direction = path->goal_.position_.value() - character->get_position();
 
 		// make sure we're moving
-		if (direction.square_magnitude() > 0)
-		{
-			// find the distance from the line we're moving along to the sphere.
-			vector movement_normal = direction.unit();
-			vector character_to_sphere = s.center_ - character->get_position();
-
-			real distance_squared = character_to_sphere * movement_normal;
-			distance_squared = character_to_sphere.square_magnitude() - 
+		if (direction.square_magnitude() <=0 ) return std::numeric_limits<real>::max();
+	    // find the distance from the line we're moving along to the sphere.
+		vector movement_normal = direction.unit();
+	    vector character_to_sphere = s.center_ - character->get_position();
+ 
+		real distance_squared = character_to_sphere * movement_normal;
+		distance_squared = character_to_sphere.square_magnitude() - 
 				distance_squared*distance_squared;
 
-			// Check for collision
-			real radius = s.radius_ + avoid_margin_;
-			if (distance_squared < radius*radius)
-			{
-				// Find how far along our movement vector the closest pass is
-				real distance_to_closest = character_to_sphere * movement_normal;
+		// Check for collision
+		real radius = s.radius_ + avoid_margin_;
+		if (distance_squared > radius*radius) return std::numeric_limits<real>::max();
+		// Find how far along our movement vector the closest pass is
+		real distance_to_closest = character_to_sphere * movement_normal;
+       
+		// Make sure this isn't behind us and is closer than our lookahead.
+	    if (distance_to_closest < 0 || distance_to_closest > max_priority) {
+            return std::numeric_limits<real>::max();
+        }
+        // Find the closest point
+		vector closest_point = 
+			character->get_position() + movement_normal*distance_to_closest;
 
-				// Make sure this isn't behind us and is closer than our lookahead.
-				if (distance_to_closest > 0 && distance_to_closest < max_priority)
-				{
-					// Find the closest point
-					vector closest_point = 
-						character->get_position() + movement_normal*distance_to_closest;
-
-					// Find the point of avoidance
-					suggestion_.position_ = 
-						s.center_ + (closest_point - s.center_).unit() *
-                        (s.radius_ + avoid_margin_);
-
-					return distance_to_closest;
-				}
-			}
-		}
-
-		return std::numeric_limits<real>::max();
+		// Find the point of avoidance
+		suggestion_.position_ = 
+			s.center_ + (closest_point - s.center_).unit() * (s.radius_ + avoid_margin_);
+		return distance_to_closest;
 	}
 
 	goal avoid_spheres_constraint::suggest(const std::shared_ptr<path_with_goal> pwg)
