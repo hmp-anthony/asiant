@@ -44,10 +44,12 @@ private:
     std::shared_ptr<cohesion> cohesion_;
     std::shared_ptr<velocity_match_and_align> velocity_match_and_align_;
     std::shared_ptr<blended_steering> blended_steering_;
+    std::shared_ptr<priority_steering> priority_steering_;
+    bool is_priority;
 };
 
 flocking_demo::flocking_demo() : application(),
-    separation_on_(true), cohesion_on_(true), velocity_match_on_(true) {
+    separation_on_(true), cohesion_on_(true), velocity_match_on_(true), is_priority(false) {
 
     static const real accel = (real) 10.0;
 
@@ -118,27 +120,32 @@ flocking_demo::flocking_demo() : application(),
     velocity_match_and_align_->the_flock_ = flock_;
 
     blended_steering_ = std::make_shared<blended_steering>();
+    priority_steering_ = std::make_shared<priority_steering>();
 
     auto baw_sep = std::make_shared<blended_steering::behaviour_and_weight>();
     baw_sep->behaviour_ = separation_;
     baw_sep->weight_ = separation_weight;
     blended_steering_->behaviours_.push_back(baw_sep);
+    priority_steering_->add_behaviour(separation_);
 
     auto baw_coh = std::make_shared<blended_steering::behaviour_and_weight>();
     baw_coh->behaviour_ = cohesion_;
     baw_coh->weight_ = cohesion_weight;
     blended_steering_->behaviours_.push_back(baw_coh);
+    priority_steering_->add_behaviour(cohesion_);
 
     auto baw_vma = std::make_shared<blended_steering::behaviour_and_weight>();
     baw_vma->behaviour_ = velocity_match_and_align_;
     baw_vma->weight_ = vma_weight;
     blended_steering_->behaviours_.push_back(baw_vma);
+    priority_steering_->add_behaviour(velocity_match_and_align_);
 
     for(unsigned i = 0; i < number_of_boids; ++i) {
         auto baw_follow = std::make_shared<blended_steering::behaviour_and_weight>();
         baw_follow->behaviour_ = follow_path_[i];
         baw_follow->weight_ = follow_path_weight;
         blended_steering_->behaviours_.push_back(baw_follow);
+        priority_steering_->add_behaviour(follow_path_[i]);
     }
 }
 
@@ -150,6 +157,8 @@ static const char *default_help[] = {
     "Q - Separation",
     "W - Cohesion",
     "E - Velocity Match / Align",
+    "B - Toggle behaviour blending / priority",
+    "In priority mode, all behaviour elements are present."
 };
 
 void flocking_demo::display() {
@@ -172,8 +181,13 @@ void flocking_demo::update() {
     auto boids_ = flock_->boids_;
     auto steer = std::make_shared<steering>();
     for(auto & boid : boids_) {
-        blended_steering_->set_character(boid);
-        blended_steering_->get_steering(steer);
+        if(is_priority) {
+            priority_steering_->set_character(boid);
+            priority_steering_->get_steering(steer);
+        } else {
+            blended_steering_->set_character(boid);
+            blended_steering_->get_steering(steer);
+        }
         boid->integrate(*steer, 0.8, duration);
         boid->update_to_face_velocity();
         boid->trim_max_speed(3.0);
@@ -205,6 +219,9 @@ bool flocking_demo::key(unsigned char key) {
             weight = velocity_match_on_ ? vma_weight : 0;
             blended_steering_->behaviours_[2]->weight_ = weight;
             return true;
+        case 'b':
+            is_priority = !is_priority;
+            return true;
     }
     return false;
 }
@@ -220,22 +237,27 @@ const char* flocking_demo::get_title()
 }
 
 unsigned flocking_demo::get_status_count() {
-    return 3;
+    if(is_priority) return 1;
+    else return 3;
 }
 
 const char* flocking_demo::get_status_text(unsigned slot) {
     glColor3f(0.0f, 0.0f, 0.0f);
     
-    switch(slot) {
-    case 0:
-        if (separation_on_) return "Separation On";
-        else return "Separation Off";
-    case 1:
-        if (cohesion_on_) return "Cohesion On";
-        else return "Cohesion Off";
-    case 2:
-        if (velocity_match_on_) return "Velocity Match / Align On";
-        else return "Velocity Match / Align Off";
+    if(is_priority) {
+        return "priority";
+    } else {
+        switch(slot) {
+        case 0:
+            if (separation_on_) return "Separation On";
+            else return "Separation Off";
+        case 1:
+            if (cohesion_on_) return "Cohesion On";
+            else return "Cohesion Off";
+        case 2:
+            if (velocity_match_on_) return "Velocity Match / Align On";
+            else return "Velocity Match / Align Off";
+        }
     }
     return "";
 }

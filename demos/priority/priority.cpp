@@ -12,7 +12,7 @@ using namespace graphics_utils;
 using namespace asiant;
 
 namespace {
-    constexpr int number_of_obstacles = 38;
+    constexpr int number_of_obstacles = 50;
 }
 
 class priority_demo : public application {
@@ -71,12 +71,12 @@ priority_demo::priority_demo() : application(), is_blended(false) {
     priority_steering_->set_character(kinematic_);
 
     for(std::size_t i = 0; i < number_of_obstacles; ++i) {
-        auto baw = std::make_shared<blended_steering::behaviour_and_weight>(avoids_[i], (real)80.0);
+        auto baw = std::make_shared<blended_steering::behaviour_and_weight>(avoids_[i], (real)1000.0);
         blended_steering_->behaviours_.push_back(baw);
         priority_steering_->add_behaviour(avoids_[i]);
     }
 
-    auto baw = std::make_shared<blended_steering::behaviour_and_weight>(wander_, 30.0);
+    auto baw = std::make_shared<blended_steering::behaviour_and_weight>(wander_, 0.0001);
     blended_steering_->behaviours_.push_back(baw);
     priority_steering_->add_behaviour(wander_);
 
