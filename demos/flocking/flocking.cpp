@@ -10,12 +10,12 @@
 #include <array>
 
 namespace {
-    constexpr int number_of_boids = 22;
-    constexpr real separation_weight = 10.0;
-    constexpr real cohesion_weight = 0.1;
-    constexpr real vma_weight = 1.5;
+    constexpr int number_of_boids = 15;
+    constexpr real separation_weight = 30.0;
+    constexpr real cohesion_weight = 1.0;
+    constexpr real vma_weight = 0.0;
     constexpr real follow_path_weight = 1.0;
-    constexpr real wander_weight = 1.0;
+    constexpr real wander_weight = 2.0;
 }
 
 using namespace graphics_utils;
@@ -98,9 +98,9 @@ flocking_demo::flocking_demo() : application(),
         follow_path_[i] = std::make_shared<follow_path_seek>();
         follow_path_[i]->set_path_character(path_character_);
         follow_path_[i]->set_max_acceleration(20.0);
-        follow_path_[i]->set_target_radius(300.0);
-        follow_path_[i]->set_velocity_radius(500.0);
-        follow_path_[i]->set_time_to_target(0.5);
+        follow_path_[i]->set_target_radius(100.0);
+        follow_path_[i]->set_velocity_radius(400.0);
+        follow_path_[i]->set_time_to_target(0.001);
         follow_path_[i]->set_max_speed(20.0);
 
         wanders_[i] = std::make_shared<wander>();
@@ -118,13 +118,13 @@ flocking_demo::flocking_demo() : application(),
 
     cohesion_ = std::make_shared<cohesion>();
     cohesion_->max_acceleration_ = accel;
-    cohesion_->neighbourhood_size_ = (real)20.0;
+    cohesion_->neighbourhood_size_ = (real)25.0;
     cohesion_->neighbourhood_minimum_dot_product_ = (real)0.0;
     cohesion_->the_flock_ = flock_;
 
     velocity_match_and_align_ = std::make_shared<velocity_match_and_align>();
     velocity_match_and_align_->max_acceleration_ = accel;
-    velocity_match_and_align_->neighbourhood_size_ = (real)100.0;
+    velocity_match_and_align_->neighbourhood_size_ = (real)10.0;
     velocity_match_and_align_->neighbourhood_minimum_dot_product_ = (real)0.0;
     velocity_match_and_align_->the_flock_ = flock_;
 
@@ -204,11 +204,11 @@ void flocking_demo::update() {
             blended_steering_->set_character(boid);
             blended_steering_->get_steering(steer);
         }
-        boid->integrate(*steer, 0.8, duration);
+        boid->integrate(*steer, 0.7, duration);
         boid->update_to_face_velocity();
-        boid->trim_max_speed(3.0);
+        boid->trim_max_speed(10.0);
         
-        path_character_->update(0.8, duration);
+        path_character_->update(1.5, duration);
         auto pos_in = boid->get_position();
         auto pos_out = trim_world(pos_in, width_, height_);
         boid->set_position(pos_out);
