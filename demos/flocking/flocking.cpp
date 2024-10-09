@@ -10,12 +10,12 @@
 #include <array>
 
 namespace {
-    constexpr int number_of_boids = 15;
+    constexpr int number_of_boids = 10;
     constexpr real separation_weight = 30.0;
-    constexpr real cohesion_weight = 1.0;
+    constexpr real cohesion_weight = 0.0;
     constexpr real vma_weight = 0.0;
-    constexpr real follow_path_weight = 1.0;
-    constexpr real wander_weight = 2.0;
+    constexpr real follow_path_weight = 2.0;
+    constexpr real wander_weight = 0.5;
 }
 
 using namespace graphics_utils;
@@ -58,7 +58,7 @@ private:
 flocking_demo::flocking_demo() : application(),
     separation_on_(true), cohesion_on_(true), velocity_match_on_(true), is_priority(false) {
 
-    static const real accel = (real) 10.0;
+    static const real accel = (real) 20.0;
 
     flock_ = std::make_shared<flock>();
 
@@ -206,9 +206,9 @@ void flocking_demo::update() {
         }
         boid->integrate(*steer, 0.7, duration);
         boid->update_to_face_velocity();
-        boid->trim_max_speed(10.0);
+        boid->trim_max_speed(20.0);
         
-        path_character_->update(1.5, duration);
+        path_character_->update(2.5, duration);
         auto pos_in = boid->get_position();
         auto pos_out = trim_world(pos_in, width_, height_);
         boid->set_position(pos_out);
