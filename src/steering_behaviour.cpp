@@ -212,6 +212,24 @@ namespace asiant {
         seek_with_velocity_radius::get_steering(steer);
     }
 
+    avoid_path_flee::avoid_path_flee() {
+        target_ = std::make_shared<vector>();
+    }
+
+    void avoid_path_flee::set_path_character(std::shared_ptr<path_character> p) {
+        path_character_ = p;
+    }
+
+    std::shared_ptr<path_character> avoid_path_flee::get_path_character() {
+        return path_character_;
+    }
+        
+    void avoid_path_flee::get_steering(std::shared_ptr<steering> steer) {
+        auto position = path_character_->get_position();
+        *target_ = position;
+        flee_with_velocity_radius::get_steering(steer);
+    }
+
     void blended_steering::get_steering(std::shared_ptr<steering> steer) {
         steer->clear();
         real total_weight = 0;

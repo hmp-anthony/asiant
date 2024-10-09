@@ -10,10 +10,10 @@
 #include <array>
 
 namespace {
-    constexpr int number_of_boids = 25;
+    constexpr int number_of_boids = 22;
     constexpr real separation_weight = 10.0;
     constexpr real cohesion_weight = 0.1;
-    constexpr real vma_weight = 0.5;
+    constexpr real vma_weight = 1.5;
     constexpr real follow_path_weight = 1.0;
     constexpr real wander_weight = 1.0;
 }
@@ -50,6 +50,9 @@ private:
     std::shared_ptr<blended_steering> blended_steering_;
     std::shared_ptr<priority_steering> priority_steering_;
     bool is_priority;
+
+    real update_time_;
+    bool update_;
 };
 
 flocking_demo::flocking_demo() : application(),
@@ -66,21 +69,11 @@ flocking_demo::flocking_demo() : application(),
     path_character_ = std::make_shared<path_character>();
 
     // create and set path for path_character to follow
-    auto p = std::make_shared<asiant::path>();
-    asiant::line_segment l1(asiant::vector(100, 100, 0), asiant::vector(700, 100, 0));
-    p->add_line_segment(l1);
-    asiant::line_segment l2(asiant::vector(700, 100, 0), asiant::vector(700, 600, 0));
-    p->add_line_segment(l2);
-    asiant::line_segment l3(asiant::vector(700, 600, 0), asiant::vector(100, 600, 0));
-    p->add_line_segment(l3);
-    asiant::line_segment l4(asiant::vector(100, 600, 0), asiant::vector(100, 100, 0));
-    p->add_line_segment(l4);
-    asiant::line_segment l5(asiant::vector(100, 100, 0), asiant::vector(700, 600, 0));
-    p->add_line_segment(l5);
-    asiant::line_segment l6(asiant::vector(700, 600, 0), asiant::vector(100, 600, 0));
-    p->add_line_segment(l6);
-    asiant::line_segment l7(asiant::vector(100, 600, 0), asiant::vector(100, 100, 0));
-    p->add_line_segment(l7);
+    std::vector<vector> path_list;
+    for(std::size_t i = 0; i < 200; ++i) {
+        path_list.push_back(vector(random_real(800), random_real(600), 0));
+    }
+    auto p = create_path(path_list, true);
     path_character_->set_path(p);
 
    
@@ -107,7 +100,7 @@ flocking_demo::flocking_demo() : application(),
         follow_path_[i]->set_max_acceleration(20.0);
         follow_path_[i]->set_target_radius(300.0);
         follow_path_[i]->set_velocity_radius(500.0);
-        follow_path_[i]->set_time_to_target(0.4);
+        follow_path_[i]->set_time_to_target(0.5);
         follow_path_[i]->set_max_speed(20.0);
 
         wanders_[i] = std::make_shared<wander>();

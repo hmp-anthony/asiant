@@ -88,6 +88,16 @@ namespace asiant {
         std::shared_ptr<path_character> path_character_;
     };
 
+    class avoid_path_flee: public flee_with_velocity_radius {
+    public:
+        avoid_path_flee();
+        void set_path_character(std::shared_ptr<path_character> p);
+        std::shared_ptr<path_character> get_path_character();
+        virtual void get_steering(std::shared_ptr<steering> steer);
+    protected:
+        std::shared_ptr<path_character> path_character_;
+    };
+
     class blended_steering : public steering_behaviour {
     public:
         struct behaviour_and_weight {

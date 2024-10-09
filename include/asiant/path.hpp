@@ -40,7 +40,9 @@ namespace asiant {
     private:
         std::vector<line_segment> line_segments; 
     };
-    
+
+    std::shared_ptr<path> create_path(std::vector<vector> points, bool loop);
+
     class path_character {
     public:
         path_character() {
