@@ -43,6 +43,7 @@ private:
     std::shared_ptr<separation> separation_;
     std::shared_ptr<cohesion> cohesion_;
     std::shared_ptr<velocity_match_and_align> velocity_match_and_align_;
+
     std::shared_ptr<blended_steering> blended_steering_;
     std::shared_ptr<priority_steering> priority_steering_;
     bool is_priority;
@@ -71,6 +72,12 @@ flocking_demo::flocking_demo() : application(),
     p->add_line_segment(l3);
     asiant::line_segment l4(asiant::vector(100, 600, 0), asiant::vector(100, 100, 0));
     p->add_line_segment(l4);
+    asiant::line_segment l5(asiant::vector(100, 100, 0), asiant::vector(700, 600, 0));
+    p->add_line_segment(l5);
+    asiant::line_segment l6(asiant::vector(700, 600, 0), asiant::vector(100, 600, 0));
+    p->add_line_segment(l6);
+    asiant::line_segment l7(asiant::vector(100, 600, 0), asiant::vector(100, 100, 0));
+    p->add_line_segment(l7);
     path_character_->set_path(p);
 
    
@@ -95,10 +102,10 @@ flocking_demo::flocking_demo() : application(),
         follow_path_[i] = std::make_shared<follow_path_seek>();
         follow_path_[i]->set_path_character(path_character_);
         follow_path_[i]->set_max_acceleration(20.0);
-        follow_path_[i]->set_target_radius(50.0);
-        follow_path_[i]->set_velocity_radius(100.0);
-        follow_path_[i]->set_time_to_target(1.0);
-        follow_path_[i]->set_max_speed(10.0);
+        follow_path_[i]->set_target_radius(400.0);
+        follow_path_[i]->set_velocity_radius(500.0);
+        follow_path_[i]->set_time_to_target(0.4);
+        follow_path_[i]->set_max_speed(20.0);
     }
 
     separation_ = std::make_shared<separation>();
@@ -121,6 +128,7 @@ flocking_demo::flocking_demo() : application(),
 
     blended_steering_ = std::make_shared<blended_steering>();
     priority_steering_ = std::make_shared<priority_steering>();
+    priority_steering_->set_epsilon((real)0.1);
 
     auto baw_sep = std::make_shared<blended_steering::behaviour_and_weight>();
     baw_sep->behaviour_ = separation_;
