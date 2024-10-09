@@ -10,11 +10,12 @@
 #include <array>
 
 namespace {
-    constexpr int number_of_boids = 50;
-    constexpr real separation_weight = 100.0;
+    constexpr int number_of_boids = 25;
+    constexpr real separation_weight = 10.0;
     constexpr real cohesion_weight = 0.1;
     constexpr real vma_weight = 0.5;
-    constexpr real follow_path_weight = 0.01;
+    constexpr real follow_path_weight = 1.0;
+    constexpr real wander_weight = 1.0;
 }
 
 using namespace graphics_utils;
@@ -39,6 +40,8 @@ private:
 
     std::shared_ptr<path_character> path_character_;
     std::array<std::shared_ptr<follow_path_seek>, number_of_boids> follow_path_;
+
+    std::array<std::shared_ptr<wander>, number_of_boids> wanders_;
 
     std::shared_ptr<separation> separation_;
     std::shared_ptr<cohesion> cohesion_;
@@ -102,10 +105,16 @@ flocking_demo::flocking_demo() : application(),
         follow_path_[i] = std::make_shared<follow_path_seek>();
         follow_path_[i]->set_path_character(path_character_);
         follow_path_[i]->set_max_acceleration(20.0);
-        follow_path_[i]->set_target_radius(400.0);
+        follow_path_[i]->set_target_radius(300.0);
         follow_path_[i]->set_velocity_radius(500.0);
         follow_path_[i]->set_time_to_target(0.4);
         follow_path_[i]->set_max_speed(20.0);
+
+        wanders_[i] = std::make_shared<wander>();
+        wanders_[i]->set_max_acceleration(accel);
+        wanders_[i]->set_character(k);
+        wanders_[i]->set_max_rotation(3.0);
+        wanders_[i]->set_max_speed(25.0);
     }
 
     separation_ = std::make_shared<separation>();
@@ -154,6 +163,12 @@ flocking_demo::flocking_demo() : application(),
         baw_follow->weight_ = follow_path_weight;
         blended_steering_->behaviours_.push_back(baw_follow);
         priority_steering_->add_behaviour(follow_path_[i]);
+
+        auto baw_wander = std::make_shared<blended_steering::behaviour_and_weight>();
+        baw_wander->behaviour_ = wanders_[i];
+        baw_wander->weight_ = wander_weight;
+        blended_steering_->behaviours_.push_back(baw_wander);
+        priority_steering_->add_behaviour(wanders_[i]);
     }
 }
 
