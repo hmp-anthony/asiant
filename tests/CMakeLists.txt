@@ -17,3 +17,7 @@ add_test(NAME line_segment_test COMMAND line_segment_test)
 add_executable(path_test path_test.cpp)
 target_link_libraries(path_test gtest_main)
 add_test(NAME path_test COMMAND path_test)
+
+add_executable(graph_test graph_test.cpp)
+target_link_libraries(graph_test graph gtest_main)
+add_test(NAME graph_test COMMAND graph_test)

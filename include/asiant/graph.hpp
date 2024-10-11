@@ -1,9 +1,26 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
+#include <asiant/asiant.hpp>
+
+#include <vector>
+
+
 namespace asiant {
     class graph {
+    private:
+        struct node;
     public:
+        struct connection {
+            int v_, w_;
+            real cost_;
+            connection(int v = -1, int w = -1, real cost = 0) {
+                v_ = v; w_ = w; cost_ = cost;
+            }
+            int get_cost(){ return cost_; }
+            int get_from_node(){ return v_; }
+            int get_to_node(){ return w_; }
+        };
         graph(int vertex_count, bool directed_graph = false);
         int get_vertex_count();
         int get_connection_count();
@@ -13,20 +30,12 @@ namespace asiant {
     private:
         struct node {
             int v_;
-            std::shared_ptr<node> next_;
-            node(int x, std::shared_ptr<node> t) { v_ = x; next_ = t; }
-        };
-        struct connection {
-            int v_, w_;
             real cost_;
-            connection(int v = -1, int w = -1, real cost = 0) {
-                v_ = v; w_ = w; cost_ = cost;
+            std::shared_ptr<node> next_;
+            node(int x, std::shared_ptr<node> t, real cost) { 
+                v_ = x; next_ = t; cost_ = cost;
             }
-            int get_cost(): return cost_;
-            int get_from_node(): return v_;
-            int get_to_node(): return w_;
         };
-
         typedef std::shared_ptr<node> link;
     
         int vertex_count_;
