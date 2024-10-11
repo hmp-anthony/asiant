@@ -21,8 +21,6 @@ namespace asiant {
         return directed_graph_;
     }
 
-#include<iostream>
-
     void graph::insert(connection c) {
         int v = c.v_, w = c.w_;
         real cost = c.cost_;
@@ -35,12 +33,12 @@ namespace asiant {
     std::vector<graph::connection> graph::get_connections(int from_node) {
         auto connection_vector = std::vector<connection>();
         auto t = adj_list_[from_node];
-        //std::cout << t->v_ << std::endl;
         if(t == nullptr){ return connection_vector; }
         do {
             auto c = connection(from_node, t->v_, t->cost_);
             connection_vector.push_back(c);
             t = t->next_;
         } while(t != nullptr) ;
+        return connection_vector;
     }
 };

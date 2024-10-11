@@ -17,10 +17,11 @@ namespace asiant {
             connection(int v = -1, int w = -1, real cost = 0) {
                 v_ = v; w_ = w; cost_ = cost;
             }
-            int get_cost(){ return cost_; }
+            real get_cost(){ return cost_; }
             int get_from_node(){ return v_; }
             int get_to_node(){ return w_; }
         };
+
         graph(int vertex_count, bool directed_graph = false);
         int get_vertex_count();
         int get_connection_count();
