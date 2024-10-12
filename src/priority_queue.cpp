@@ -27,6 +27,8 @@ namespace asiant {
         --last_index;
         int parent_index = 0;
         while(true) {
+            // this line and the next make this operation ln(n) in time.
+            // that is, same as the cost of pushing. 
             int child_index = parent_index * 2 + 1;
             if(child_index > last_index) break;
             int next_child_index = child_index + 1;
