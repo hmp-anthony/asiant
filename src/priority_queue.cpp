@@ -46,4 +46,21 @@ namespace asiant {
     std::shared_ptr<node_record> priority_queue::top() {
         return heap_data_[0];
     }
+
+    int priority_queue::size() {
+        return heap_data_.size();
+    }
+
+    bool priority_queue::contains(int node_value) {
+        return find(node_value) != nullptr;
+    }
+
+    std::shared_ptr<node_record> priority_queue::find(int node_value) {
+        for(auto & node_rec : heap_data_) {
+            if(node_rec->node_.get_value() == node_value) {
+                return node_rec;
+            }
+        }
+        return nullptr;
+    }
 };

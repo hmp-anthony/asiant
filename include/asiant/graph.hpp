@@ -8,7 +8,8 @@
 namespace asiant {
     class node {
     public:
-        node(int x, std::shared_ptr<node> t, real cost) { 
+        node() {}
+        node(int x, std::shared_ptr<node> t, real cost = 1) { 
             v_ = x; next_ = t; cost_ = cost;
         }
         std::shared_ptr<node> get_next() { return next_; }

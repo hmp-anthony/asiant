@@ -1,16 +1,16 @@
 #ifndef PRIORITY_QUEUE_HPP
 #define PRIORITY_QUEUE_HPP
 
-#include <asiant/priority_queue.hpp>
 #include <asiant/precision.hpp>
+#include <asiant/graph.hpp>
 
 #include <memory>
 #include <vector>
 
 namespace asiant {
-    // each path finding algorithm has his own node_record
+
     struct node_record {
-        // all node_records must contain cost_so_far_
+        node node_;
         real cost_so_far_;
     };
 
@@ -24,11 +24,11 @@ namespace asiant {
         // accesses the top element
         std::shared_ptr<node_record> top();
         // returns the number of elements
-        //int size();
+        int size();
         // checks whether we have this node
-        //bool contains(int node);
+        bool contains(int node_value);
         // find and return the node_record corresponding to node
-        //std::shared_ptr<node_record> find(int node);
+        std::shared_ptr<node_record> find(int node_value);
     private:
         // used to store data
         // we use a min heap to store the node_records
