@@ -20,7 +20,7 @@ namespace asiant {
         // inserts element and sorts underlying vector
         void push(std::shared_ptr<node_record> nr);
         // removes the top element
-        int pop();
+        std::shared_ptr<node_record> pop();
         // accesses the top element
         std::shared_ptr<node_record> top();
         // returns the number of elements
@@ -31,7 +31,7 @@ namespace asiant {
         //std::shared_ptr<node_record> find(int node);
     private:
         // used to store data
-        // we use a max heap to store the node_records
+        // we use a min heap to store the node_records
         std::vector<std::shared_ptr<node_record>> heap_data_;
     };
 };
