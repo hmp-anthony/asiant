@@ -83,7 +83,7 @@ namespace asiant {
 
     class continuous_path_bezier {
     public:
-        continuous_path_bezier(std::vector<vector> control_points)
+        continuous_path_bezier(std::vector<vector>& control_points)
             : control_points_(control_points) {};
 
         std::vector<vector> get_path() {
@@ -106,6 +106,7 @@ namespace asiant {
                     path.push_back(position_on_curve);
                 }
             }
+            return path;
         }
     private:
         std::vector<vector> control_points_;
@@ -115,6 +116,45 @@ namespace asiant {
             real b1 = 3 * t * std::pow(1 - t, 2);
             real b2 = 3 * std::pow(t, 2) * (1 - t);
             real b3 = std::pow(t, 3);
+            return p0 * b0 + p1 * b1 + p2 * b2 + p3 * b3;
+        }
+    };
+
+    class continuous_path_catmull {
+    public:
+        continuous_path_catmull(std::vector<vector>& control_points)
+            : control_points_(control_points) {};
+
+        std::vector<vector> get_path() {
+            std::vector<vector> path;
+            auto number_of_control_points = control_points_.size();
+            if(number_of_control_points < 4) {
+                return path;
+            }
+            auto step_size = 0.01;
+            auto step_count = std::size_t(1/step_size);
+            auto segment_number = number_of_control_points - 3;
+            for(std::size_t i = 0; i < segment_number; ++i) {
+                auto p0 = control_points_[i];
+                auto p1 = control_points_[i + 1];
+                auto p2 = control_points_[i + 2];
+                auto p3 = control_points_[i + 3];
+                for(std::size_t k = 0; k < step_count + 1; ++k) {
+                    auto t = k * step_size;
+                    auto position_on_curve = obtain_catmull_interpolation(t, p0, p1, p2, p3);
+                    path.push_back(position_on_curve);
+                }
+            }
+            return path;
+        }
+    private:
+        std::vector<vector> control_points_;
+
+        vector obtain_catmull_interpolation(real t, vector& p0, vector& p1, vector& p2, vector& p3) {
+            real b0 = -t/2.0 + std::pow(t,2.0) - 0.5 * std::pow(t,3.0);
+            real b1 = 1.0 - (5.0/2.0) * std::pow(t,2) + (3.0/2.0) * std::pow(t,3);
+            real b2 = t/2.0 + 2 * std::pow(t,2) - 1.5 * std::pow(t, 3.0);
+            real b3 = - 0.5 * std::pow(t,2.0) + 0.5 * std::pow(t, 3.0);
             return p0 * b0 + p1 * b1 + p2 * b2 + p3 * b3;
         }
     };

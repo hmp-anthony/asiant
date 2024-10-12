@@ -19,24 +19,27 @@ public:
     virtual void display();
 private:
     // holds the kinematic of the agents.
-    std::shared_ptr<continuous_path_bezier> bezier_path_;
     std::vector<vector> control_points_;
-    std::vector<vector> path_;
+    std::shared_ptr<continuous_path_bezier> bezier_;
+    std::vector<vector> bezier_path_;
+    std::shared_ptr<continuous_path_catmull> catmull_;
+    std::vector<vector> catmull_path_;
 };
 
 continuous_path_following_demo::continuous_path_following_demo() : application() {
 
     control_points_.push_back(vector(100, 100, 0));
     control_points_.push_back(vector(300, 100, 0));
-    control_points_.push_back(vector(300, 300, 0));
-    control_points_.push_back(vector(100, 300, 0));
-    control_points_.push_back(vector(500, 500, 0));
-    control_points_.push_back(vector(500, 600, 0));
+    control_points_.push_back(vector(400, 400, 0));
     control_points_.push_back(vector(600, 600, 0));
-    control_points_.push_back(vector(700, 300, 0));
+    control_points_.push_back(vector(100, 600, 0));
+    control_points_.push_back(vector(100, 100, 0));
 
-    bezier_path_ = std::make_shared<continuous_path_bezier>(control_points_);
-    path_ = bezier_path_->get_path();
+    bezier_ = std::make_shared<continuous_path_bezier>(control_points_);
+    bezier_path_ = bezier_->get_path();
+    
+    catmull_ = std::make_shared<continuous_path_catmull>(control_points_);
+    catmull_path_ = catmull_->get_path();
 }
 
 void continuous_path_following_demo::update() {    
@@ -45,7 +48,11 @@ void continuous_path_following_demo::update() {
 void continuous_path_following_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3f(0.6f, 0.0f, 0.0f);
-    for(auto & v : path_) {
+    for(auto & v : bezier_path_) {
+        //render_spot(v);
+    }
+    glColor3f(0.6f, 0.0f, 1.0f);
+    for(auto & v : catmull_path_) {
         render_spot(v);
     }
     glColor3f(0.0f, 0.6f, 0.0f);
