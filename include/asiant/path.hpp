@@ -122,8 +122,9 @@ namespace asiant {
 
     class continuous_path_catmull {
     public:
-        continuous_path_catmull(std::vector<vector>& control_points)
-            : control_points_(control_points) {};
+        continuous_path_catmull(std::vector<vector>& control_points, bool is_circuit)
+            : control_points_(control_points),
+              is_circuit_(is_circuit) {};
 
         std::vector<vector> get_path() {
             std::vector<vector> path;
@@ -145,10 +146,34 @@ namespace asiant {
                     path.push_back(position_on_curve);
                 }
             }
+           
+            if(!is_circuit_) return path;
+
+            auto p0 = control_points_[number_of_control_points - 3];
+            auto p1 = control_points_[number_of_control_points - 2];
+            auto p2 = control_points_[number_of_control_points - 1];
+            auto p3 = control_points_[0];
+            for(std::size_t k = 0; k < step_count + 1; ++k) {
+                auto t = k * step_size;
+                auto position_on_curve = obtain_catmull_interpolation(t, p0, p1, p2, p3);
+                path.push_back(position_on_curve);
+            }
+
+            p0 = control_points_[number_of_control_points - 2];
+            p1 = control_points_[number_of_control_points - 1];
+            p2 = control_points_[0];
+            p3 = control_points_[1];
+            for(std::size_t k = 0; k < step_count + 1; ++k) {
+                auto t = k * step_size;
+                auto position_on_curve = obtain_catmull_interpolation(t, p0, p1, p2, p3);
+                path.push_back(position_on_curve);
+            }
+
             return path;
         }
     private:
         std::vector<vector> control_points_;
+        bool is_circuit_;
 
         vector obtain_catmull_interpolation(real t, vector& p0, vector& p1, vector& p2, vector& p3) {
             real b0 = -t/2.0 + std::pow(t,2.0) - 0.5 * std::pow(t,3.0);

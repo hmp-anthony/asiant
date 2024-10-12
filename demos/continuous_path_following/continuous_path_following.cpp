@@ -38,7 +38,7 @@ continuous_path_following_demo::continuous_path_following_demo() : application()
     bezier_ = std::make_shared<continuous_path_bezier>(control_points_);
     bezier_path_ = bezier_->get_path();
     
-    catmull_ = std::make_shared<continuous_path_catmull>(control_points_);
+    catmull_ = std::make_shared<continuous_path_catmull>(control_points_, true);
     catmull_path_ = catmull_->get_path();
 }
 
