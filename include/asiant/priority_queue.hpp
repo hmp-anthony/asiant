@@ -2,13 +2,17 @@
 #define PRIORITY_QUEUE_HPP
 
 #include <asiant/priority_queue.hpp>
+#include <asiant/precision.hpp>
 
 #include <memory>
 #include <vector>
 
 namespace asiant {
-
-    struct node_record {};
+    // each path finding algorithm has his own node_record
+    struct node_record {
+        // all node_records must contain cost_so_far_
+        real cost_so_far_;
+    };
 
     class priority_queue {
     public:
@@ -16,7 +20,7 @@ namespace asiant {
         // inserts element and sorts underlying vector
         void push(std::shared_ptr<node_record> nr);
         // removes the top element
-        //int pop();
+        int pop();
         // accesses the top element
         std::shared_ptr<node_record> top();
         // returns the number of elements
