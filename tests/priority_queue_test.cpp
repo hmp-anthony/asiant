@@ -20,13 +20,26 @@ TEST(set, insert) {
     nr_3->node_ = node(4, nullptr);
     nr_3->cost_so_far_ = 0.45;
     auto nr_4 = std::make_shared<node_record>();
-    nr_4->node_ = node(4, nullptr);
+    nr_4->node_ = node(2, nullptr);
     nr_4->cost_so_far_ = 0.59;
+    auto nr_5 = std::make_shared<node_record>();
+    nr_5->node_ = node(16, nullptr);
+    nr_5->cost_so_far_ = 0.59;
+    auto nr_6 = std::make_shared<node_record>();
+    nr_6->node_ = node(3, nullptr);
+    nr_6->cost_so_far_ = 0.59;
+    auto nr_7 = std::make_shared<node_record>();
+    nr_7->node_ = node(5, nullptr);
+    nr_7->cost_so_far_ = 0.59;
 
     s.insert(nr_1);
     s.insert(nr_2);
     s.insert(nr_3);
     s.insert(nr_4);
+    s.insert(nr_5);
+    s.insert(nr_6);
+    s.insert(nr_7);
+
     s.print();
 }
 

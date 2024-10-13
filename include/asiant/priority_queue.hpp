@@ -20,8 +20,8 @@ namespace asiant {
         set() : root_(nullptr) {};
         void insert(std::shared_ptr<node_record> val);
         void remove(std::shared_ptr<node_record> val);
+        std::shared_ptr<node_record> find(int node_value);
         void print();
-        //std::shared_ptr<node_record> find(real node_value);
     private:
         struct rb_node {
             std::shared_ptr<node_record> data_;
@@ -57,9 +57,9 @@ namespace asiant {
         // returns the number of elements
         int size();
         // checks whether we have this node
-        bool contains(real node_value);
+        bool contains(int node_value);
         // find and return the node_record corresponding to node
-        std::shared_ptr<node_record> find(real node_value);
+        std::shared_ptr<node_record> find(int node_value);
     private:
         // used to store data
         // we use a min heap to store the node_records

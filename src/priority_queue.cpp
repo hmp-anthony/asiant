@@ -13,7 +13,7 @@ namespace asiant {
         std::shared_ptr<rb_node> current = root_;
         while(current != nullptr) {
             parent = current;
-            if(new_node->data_->cost_so_far_ < current->data_->cost_so_far_)
+            if(new_node->data_->node_.get_value() < current->data_->node_.get_value())
                 current = current->left_;
             else
                 current = current->right_;
@@ -22,7 +22,7 @@ namespace asiant {
         new_node->parent_ = parent;
         if(parent == nullptr)
             root_ = new_node;
-        else if (new_node->data_->cost_so_far_ < parent->data_->cost_so_far_)
+        else if (new_node->data_->node_.get_value() < parent->data_->node_.get_value())
             parent->left_ = new_node;
         else
             parent->right_ = new_node;
@@ -34,13 +34,13 @@ namespace asiant {
         auto node = root_;
         std::shared_ptr<rb_node> z = nullptr;
         while(node != nullptr) {
-            if(std::abs(node->data_->cost_so_far_ - val->cost_so_far_) < 0.001) {
+            if(node->data_->node_.get_value() == val->node_.get_value()) {
                 z = node; break;
             }
-            else if (val->cost_so_far_ < node->data_->cost_so_far_)
-                node = node->left_;
-            else 
+            else if (node->data_->node_.get_value() <= val->node_.get_value())
                 node = node->right_;
+            else 
+                node = node->left_;
         }
         if(z == nullptr) return;
 
@@ -77,6 +77,10 @@ namespace asiant {
         if (y_original_color == BLACK) {
             fix_delete(x);
         }
+    }
+
+    std::shared_ptr<node_record> set::find(int node_value) {
+        return nullptr;
     }
 
     void set::print()
@@ -323,11 +327,11 @@ namespace asiant {
         return heap_data_.size();
     }
 
-    bool priority_queue::contains(real node_value) {
+    bool priority_queue::contains(int node_value) {
         return find(node_value) != nullptr;
     }
 
-    std::shared_ptr<node_record> priority_queue::find(real node_value) {
+    std::shared_ptr<node_record> priority_queue::find(int node_value) {
         for(auto & node_rec : heap_data_) {
             if(node_rec->node_.get_value() == node_value) {
                 return node_rec;
