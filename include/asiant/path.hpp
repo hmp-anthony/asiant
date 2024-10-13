@@ -169,6 +169,16 @@ namespace asiant {
                 path.push_back(position_on_curve);
             }
 
+            p0 = control_points_[number_of_control_points - 1];
+            p1 = control_points_[0];
+            p2 = control_points_[1];
+            p3 = control_points_[2];
+            for(std::size_t k = 0; k < step_count + 1; ++k) {
+                auto t = k * step_size;
+                auto position_on_curve = obtain_catmull_interpolation(t, p0, p1, p2, p3);
+                path.push_back(position_on_curve);
+            }
+
             return path;
         }
     private:
