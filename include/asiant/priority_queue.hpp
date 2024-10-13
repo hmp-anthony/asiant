@@ -19,8 +19,8 @@ namespace asiant {
         enum color { RED, BLACK };
         set() : root_(nullptr) {};
         void insert(std::shared_ptr<node_record> val);
-        //void remove(std::shared_ptr<node_record> val);
-        //std::shared_ptr<node_record> find(int node_value);
+        void remove(std::shared_ptr<node_record> val);
+        //std::shared_ptr<node_record> find(real node_value);
     private:
         struct rb_node {
             std::shared_ptr<node_record> data_;
@@ -37,8 +37,7 @@ namespace asiant {
         void rotate_right(std::shared_ptr<rb_node> x);
         void fix_insert(std::shared_ptr<rb_node> x);
         //void transplant(std::shared_ptr<rb_node> u, std::shared_ptr<rb_node> v);
-        //void delete_node(std::shared_ptr<rb_node> z);
-        //void fix_delete(std::shared_ptr<rb_node> x);
+        void fix_delete(std::shared_ptr<rb_node> z);
     };
 
     class priority_queue {
@@ -53,9 +52,9 @@ namespace asiant {
         // returns the number of elements
         int size();
         // checks whether we have this node
-        bool contains(int node_value);
+        bool contains(real node_value);
         // find and return the node_record corresponding to node
-        std::shared_ptr<node_record> find(int node_value);
+        std::shared_ptr<node_record> find(real node_value);
     private:
         // used to store data
         // we use a min heap to store the node_records
