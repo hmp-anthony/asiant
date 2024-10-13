@@ -31,11 +31,11 @@ namespace asiant {
             explicit rb_node(std::shared_ptr<node_record> val) 
             : data_(val), color_(RED), left_(nullptr), right_(nullptr), parent_(nullptr) {};
         };
-        rb_node root_;
+        std::shared_ptr<rb_node> root_;
 
-        //void left_rotate(std::shared_ptr<rb_node> x); 
-        //void right_rotate(std::shared_ptr<rb_node> x);
-        //void fix_insert(std::shared_ptr<rb_node> x);
+        void rotate_left(std::shared_ptr<rb_node> x); 
+        void rotate_right(std::shared_ptr<rb_node> x);
+        void fix_insert(std::shared_ptr<rb_node> x);
         //void transplant(std::shared_ptr<rb_node> u, std::shared_ptr<rb_node> v);
         //void delete_node(std::shared_ptr<rb_node> z);
         //void fix_delete(std::shared_ptr<rb_node> x);

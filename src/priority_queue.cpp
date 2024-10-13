@@ -4,6 +4,96 @@
 
 namespace asiant {
 
+    void set::insert(std::shared_ptr<node_record> val) {
+        auto new_node = std::make_shared<rb_node>(val);
+        // this node will become the parent
+        std::shared_ptr<rb_node> parent = nullptr;
+        // we start at the root and work our way down
+        std::shared_ptr<rb_node> current = root_;
+        while(current != nullptr) {
+            parent = current;
+            if(new_node->data_->cost_so_far_ < current->data_->cost_so_far_)
+                current = current->left_;
+            else
+                current = current->right_;
+        }
+        // at this point current is nullptr.
+        new_node->parent_ = parent;
+        if(parent == nullptr)
+            root_ = new_node;
+        else if (new_node->data_->cost_so_far_ < parent->data_->cost_so_far_)
+            parent->left_ = new_node;
+        else
+            parent->right_ = new_node;
+        
+        fix_insert(new_node);
+    }
+
+    void set::rotate_left(std::shared_ptr<rb_node> x) {
+        if (x == nullptr || x->right_ == nullptr)
+            return;
+
+        auto child = x->right_;
+        x->right_ = child->left_;
+        if (child->left_ != nullptr)
+            child->left_->parent_ = x;
+        child->parent_ = x->parent_;
+        if (x->parent_ == nullptr)
+            root_ = child;
+        else if (x == x->parent_->left_)
+            x->parent_->left_ = child;
+        else
+            x->parent_->right_ = child;
+        child->left_ = x;
+        x->parent_ = child;
+    }
+
+    void set::rotate_right(std::shared_ptr<rb_node> x) {
+
+    }
+
+    void set::fix_insert(std::shared_ptr<rb_node> x) {
+        while(x != root_ && x->parent_->color_ == RED) {
+            // p - parent, gp - grandparent
+            auto p = x->parent_; auto gp = x->parent_->parent_;
+            if(p == gp->left_) {
+                // u - uncle
+                auto u = gp->right_;
+                if(u != nullptr && u->color_ == RED) {
+                    gp->color_ = RED;
+                    p->color_ = BLACK;
+                    u->color_ = BLACK;
+                    x = gp;
+                } else {
+                    if(x == p->right_) {
+                        rotate_left(p);
+                        x = p; p = x->parent_;
+                    }
+                    rotate_right(gp);
+                    std::swap(p->color_, gp->color_);
+                    x = p;
+                }
+            } else {
+                auto u = gp->left_;
+                if(u != nullptr && u->color_ == RED) {
+                    gp->color_ = RED;
+                    p->color_ = BLACK;
+                    u->color_ = BLACK;
+                    x = gp;
+                } else {
+                    if(x == p->left_) {
+                        rotate_right(p);
+                        x = p; p = x->parent_;
+                    }
+                    rotate_left(gp);
+                    std::swap(p->color_, gp->color_);
+                    x = p;
+                }
+            }
+        }
+        root_->color_ = BLACK;
+    }   
+
     void priority_queue::push(std::shared_ptr<node_record> nr) {
         heap_data_.push_back(nr);
         int child_index = heap_data_.size() - 1;
