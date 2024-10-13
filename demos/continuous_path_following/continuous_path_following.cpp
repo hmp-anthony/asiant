@@ -24,8 +24,10 @@ private:
     std::vector<vector> catmull_path_;
 
     std::shared_ptr<kinematic> kinematic_;
-    int path_location_;
     std::shared_ptr<seek> seek_;
+
+    int path_location_;
+    real time_passed_;
 };
 
 continuous_path_following_demo::continuous_path_following_demo() : application() {
@@ -40,19 +42,40 @@ continuous_path_following_demo::continuous_path_following_demo() : application()
     catmull_path_ = catmull_->get_path();
 
     path_location_ = 0;
+    time_passed_ = 0;
     kinematic_ = std::make_shared<kinematic>();
-    kinematic_->set_position(catmull_path_[200]);
+    kinematic_->set_position(catmull_path_[path_location_]);
+    kinematic_->set_velocity(vector(0,0,0));
 }
 
 #include<iostream>
 void continuous_path_following_demo::update() {    
+    // find the displacement vector.
+    vector delta;
+    if(path_location_ < catmull_path_.size() - 1) {
+        delta = catmull_path_[path_location_ + 1] - catmull_path_[path_location_];
+    } else {
+        delta = catmull_path_[0] - catmull_path_.back();
+    }
+    auto delta_distance = delta.magnitude();
 
+    float duration = (float)asiant::timer::get().last_frame_duration * 0.01f;
+    time_passed_ += duration;
+    real velocity = 15;
+    if((time_passed_ * velocity) > delta_distance) {
+        path_location_++;
+        time_passed_ = 0;
+    }
+    if(path_location_ > catmull_path_.size()) {
+        path_location_ = 0;
+    }
+    application::update();
 }
 
 void continuous_path_following_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glColor3f(0.6f, 1.0f, 0.0f);
-    render_agent(kinematic_);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    render_spot(catmull_path_[path_location_]);
 
     glColor3f(0.0f, 0.6f, 0.0f);
     for(auto & v : control_points_) {
