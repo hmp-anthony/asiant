@@ -36,7 +36,10 @@ namespace asiant {
         void rotate_left(std::shared_ptr<rb_node> x); 
         void rotate_right(std::shared_ptr<rb_node> x);
         void fix_insert(std::shared_ptr<rb_node> x);
-        //void transplant(std::shared_ptr<rb_node> u, std::shared_ptr<rb_node> v);
+        std::shared_ptr<rb_node> min_value_node(std::shared_ptr<rb_node> node);
+        void transplant(std::shared_ptr<rb_node> root,
+                        std::shared_ptr<rb_node> u, 
+                        std::shared_ptr<rb_node> v);
         void fix_delete(std::shared_ptr<rb_node> z);
     };
 

@@ -45,6 +45,37 @@ namespace asiant {
 
         std::shared_ptr<rb_node> x = nullptr;
         std::shared_ptr<rb_node> y = nullptr;
+
+        y = z;
+        color y_original_color = y->color_;
+        if(z->left_ == nullptr) {
+            x = z->right_;
+            transplant(root_, z, z->right_);        
+        } else if (z->right_ == nullptr) {
+            x = z->left_;
+            transplant(root_, z, z->left_);
+        }
+        else {
+            y = min_value_node(z->right_);
+            y_original_color = y->color_;
+            x = y->right_;
+            if (y->parent_ == z) {
+                if (x != nullptr)
+                    x->parent_ = y;
+            }
+            else {
+                transplant(root_, y, y->right_);
+                y->right_ = z->right_;
+                y->right_->parent_ = y;
+            }
+            transplant(root_, z, y);
+            y->left_ = z->left_;
+            y->left_->parent_ = y;
+            y->color_ = z->color_;
+        }
+        if (y_original_color == BLACK) {
+            fix_delete(x);
+        }
     }
 
     void set::rotate_left(std::shared_ptr<rb_node> x) {
@@ -127,6 +158,26 @@ namespace asiant {
         root_->color_ = BLACK;
     }   
 
+    std::shared_ptr<set::rb_node> set::min_value_node(std::shared_ptr<rb_node> node) {
+        std::shared_ptr<rb_node> current = node;
+        while (current->left_ != nullptr)
+            current = current->left_;
+        return current;
+    }
+    
+    void set::transplant(std::shared_ptr<rb_node> root,
+                         std::shared_ptr<rb_node> u, 
+                         std::shared_ptr<rb_node> v) {
+        if (u->parent_ == nullptr)
+            root = v;
+        else if (u == u->parent_->left_)
+            u->parent_->left_ = v;
+        else
+            u->parent_->right_ = v;
+        if (v != nullptr)
+            v->parent_ = u->parent_;
+    }
+       
     void set::fix_delete(std::shared_ptr<rb_node> z) {
 
     }
