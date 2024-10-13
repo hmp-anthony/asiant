@@ -1,6 +1,7 @@
 #include <asiant/priority_queue.hpp>
 
-#include<iostream>
+#include <iostream>
+#include <string>
 
 namespace asiant {
 
@@ -77,6 +78,17 @@ namespace asiant {
             fix_delete(x);
         }
     }
+
+    void set::print()
+    {
+        if (root_ == nullptr)
+            std::cout << "Tree is empty." << std::endl;
+        else {
+            std::cout << "Red-Black Tree:" << std::endl;
+            print_helper(root_, "", true);
+        }
+    }
+
 
     void set::rotate_left(std::shared_ptr<rb_node> x) {
         if (x == nullptr || x->right_ == nullptr)
@@ -178,8 +190,88 @@ namespace asiant {
             v->parent_ = u->parent_;
     }
        
-    void set::fix_delete(std::shared_ptr<rb_node> z) {
+    void set::fix_delete(std::shared_ptr<rb_node> node) {
+        while (node != root_ && node->color_ == BLACK) {
+            if (node == node->parent_->left_) {
+                auto sibling = node->parent_->right_;
+                if (sibling->color_ == RED) {
+                    sibling->color_ = BLACK;
+                    node->parent_->color_ = RED;
+                    rotate_left(node->parent_);
+                    sibling = node->parent_->right_;
+                }
+                if ((sibling->left_ == nullptr || sibling->left_->color_ == BLACK)
+                 && (sibling->right_ == nullptr || sibling->right_->color_ == BLACK)) {
+                    sibling->color_ = RED;
+                    node = node->parent_;
+                } else {
+                    if (sibling->right_ == nullptr || sibling->right_->color_ == BLACK) {
+                        if (sibling->left_ != nullptr)
+                            sibling->left_->color_ = BLACK;
+                        sibling->color_ = RED;
+                        rotate_right(sibling);
+                        sibling = node->parent_->right_;
+                    }
+                    sibling->color_ = node->parent_->color_;
+                    node->parent_->color_ = BLACK;
+                    if (sibling->right_ != nullptr)
+                        sibling->right_->color_ = BLACK;
+                    rotate_left(node->parent_);
+                    node = root_;
+                }
+            }
+            else {
+                auto sibling = node->parent_->left_;
+                if (sibling->color_ == RED) {
+                    sibling->color_ = BLACK;
+                    node->parent_->color_ = RED;
+                    rotate_right(node->parent_);
+                    sibling = node->parent_->left_;
+                }
+                if ((sibling->left_ == nullptr || sibling->left_->color_ == BLACK)
+                 && (sibling->right_ == nullptr|| sibling->right_->color_ == BLACK)) {
+                    sibling->color_ = RED;
+                    node = node->parent_;
+                }
+                else {
+                    if (sibling->left_ == nullptr || sibling->left_->color_ == BLACK) {
+                        if (sibling->right_ != nullptr)
+                            sibling->right_->color_ = BLACK;
+                        sibling->color_ = RED;
+                        rotate_left(sibling);
+                        sibling = node->parent_->left_;
+                    }
+                    sibling->color_ = node->parent_->color_;
+                    node->parent_->color_ = BLACK;
+                    if (sibling->left_ != nullptr)
+                        sibling->left_->color_ = BLACK;
+                    rotate_right(node->parent_);
+                    node = root_;
+                }
+            }
+        }
+        node->color_ = BLACK;
+    }
 
+   void set::print_helper(std::shared_ptr<rb_node> root, std::string indent, bool last)
+    {
+        if (root != nullptr) {
+            std::cout << indent;
+            if (last) {
+                std::cout << "R----";
+                indent += "   ";
+            }
+            else {
+                std::cout << "L----";
+                indent += "|  ";
+            }
+            std::string sColor
+                = (root->color_ == RED) ? "RED" : "BLACK";
+            std::cout << root->data_ << "(" << sColor << ")"
+                 << std::endl;
+            print_helper(root->left_, indent, false);
+            print_helper(root->right_, indent, true);
+        }
     }
 
     void priority_queue::push(std::shared_ptr<node_record> nr) {

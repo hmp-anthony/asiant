@@ -8,6 +8,28 @@
 using namespace asiant;
 
 
+TEST(set, insert) {
+    set s;
+    auto nr_1 = std::make_shared<node_record>();
+    nr_1->node_ = node(1, nullptr);
+    nr_1->cost_so_far_ = 0.9;
+    auto nr_2 = std::make_shared<node_record>();
+    nr_2->node_ = node(9, nullptr);
+    nr_2->cost_so_far_ = 1.45;
+    auto nr_3 = std::make_shared<node_record>();
+    nr_3->node_ = node(4, nullptr);
+    nr_3->cost_so_far_ = 0.45;
+    auto nr_4 = std::make_shared<node_record>();
+    nr_4->node_ = node(4, nullptr);
+    nr_4->cost_so_far_ = 0.59;
+
+    s.insert(nr_1);
+    s.insert(nr_2);
+    s.insert(nr_3);
+    s.insert(nr_4);
+    s.print();
+}
+
 TEST(priority_queue, push) {
     auto nr_1 = std::make_shared<node_record>();
     nr_1->node_ = node(1, nullptr);

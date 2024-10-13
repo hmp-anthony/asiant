@@ -20,6 +20,7 @@ namespace asiant {
         set() : root_(nullptr) {};
         void insert(std::shared_ptr<node_record> val);
         void remove(std::shared_ptr<node_record> val);
+        void print();
         //std::shared_ptr<node_record> find(real node_value);
     private:
         struct rb_node {
@@ -40,7 +41,8 @@ namespace asiant {
         void transplant(std::shared_ptr<rb_node> root,
                         std::shared_ptr<rb_node> u, 
                         std::shared_ptr<rb_node> v);
-        void fix_delete(std::shared_ptr<rb_node> z);
+        void fix_delete(std::shared_ptr<rb_node> node);
+        void print_helper(std::shared_ptr<rb_node> root, std::string indent, bool last);
     };
 
     class priority_queue {
