@@ -183,11 +183,11 @@ TEST(priority_queue, pop) {
 
     auto nr_10 = std::make_shared<node_record>();
     nr_10->node_ = node(19, nullptr);
-    nr_10->cost_so_far_ = 11.59;
+    nr_10->cost_so_far_ = 0.09;
 
     auto nr_11 = std::make_shared<node_record>();
     nr_11->node_ = node(20, nullptr);
-    nr_11->cost_so_far_ = 11.59;
+    nr_11->cost_so_far_ = 0.059;
 
     auto pq = priority_queue();
     pq.push(nr_1);
@@ -203,23 +203,19 @@ TEST(priority_queue, pop) {
     pq.push(nr_11);
 
     auto top = pq.top();
-    ASSERT_NEAR(top->cost_so_far_, 0.45, 0.0001); 
-    pq.print();
+    ASSERT_NEAR(top->cost_so_far_, 0.059, 0.0001); 
 
     pq.pop(); 
-    pq.print();
+    top = pq.top();
+    ASSERT_NEAR(top->cost_so_far_, 0.09, 0.0001); 
+
+    pq.pop();
+    top = pq.top();
+    ASSERT_NEAR(top->cost_so_far_, 0.45, 0.0001); 
+
+    pq.pop();
     top = pq.top();
     ASSERT_NEAR(top->cost_so_far_, 0.59, 0.0001); 
-
-    pq.pop();
-    top = pq.top();
-    ASSERT_NEAR(top->cost_so_far_, 0.9, 0.0001); 
-
-    pq.print();
-    pq.pop();
-    pq.print();
-    top = pq.top();
-    ASSERT_NEAR(top->cost_so_far_, 1.45, 0.0001); 
 }
 
 TEST(priority_queue, find_and_contains) {
