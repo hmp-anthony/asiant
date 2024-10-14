@@ -29,4 +29,8 @@ namespace asiant {
     std::vector<std::shared_ptr<connection>> graph::get_connections(int from_node) {
         return connections_[from_node];
     }
+
+    void dijkstra(graph g, int start, int end) {
+        std::cout << "hello" << std::endl;
+    }
 };

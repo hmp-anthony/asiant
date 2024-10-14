@@ -67,3 +67,18 @@ TEST(graph, connection) {
     ASSERT_EQ(connections_zero[0]->get_from(), 0);
     ASSERT_EQ(connections_zero[0]->get_to(), 2);
 }
+
+TEST(graph, dijkstra) {
+    // let's start with a basic directed graph with unit path costs
+    auto g1 = graph(10, true);
+    g1.insert(std::make_shared<connection>(1, 2));
+    g1.insert(std::make_shared<connection>(1, 3));
+    g1.insert(std::make_shared<connection>(2, 7));
+    g1.insert(std::make_shared<connection>(0, 2));
+    g1.insert(std::make_shared<connection>(0, 9));
+    g1.insert(std::make_shared<connection>(9, 2));
+    g1.insert(std::make_shared<connection>(7, 4));
+    g1.insert(std::make_shared<connection>(3, 7));
+
+    dijkstra(g1, 0, 4);
+}

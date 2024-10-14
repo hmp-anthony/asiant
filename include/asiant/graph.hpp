@@ -44,6 +44,8 @@ namespace asiant {
         bool directed_graph_;
         std::vector<std::vector<std::shared_ptr<connection>>> connections_;
     };
+
+    void dijkstra(graph g, int start, int end);
 };
 
 #endif
