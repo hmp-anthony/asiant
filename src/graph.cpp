@@ -43,6 +43,8 @@ namespace asiant {
 
         while(open.size() > 0) {
             current = open.top();
+            std::cout << "current " << current->node_.get_value() << std::endl;
+            std::cout << "current cost " << current->cost_so_far_ << std::endl;
             if(current->node_.get_value() == goal) {
                 break;
             }
@@ -67,6 +69,8 @@ namespace asiant {
             }
             open.pop();
             closed.push(current);
+            std::cout << current->node_.get_value() << std::endl;;
         }
+        std::cout << current->node_.get_value() << std::endl;;
     }
 };
