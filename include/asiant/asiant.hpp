@@ -7,3 +7,4 @@
 #include "timer.hpp"
 #include "path.hpp"
 #include "steering_pipeline.hpp"
+#include "priority_queue.hpp"

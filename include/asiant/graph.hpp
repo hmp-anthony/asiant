@@ -32,6 +32,12 @@ namespace asiant {
         real cost_;
     };
 
+    struct node_record {
+        node node_;
+        connection connection_;
+        real cost_so_far_;
+    };
+
     class graph {
     public:
         graph(int node_count, bool directed_graph = false);

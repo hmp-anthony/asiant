@@ -351,4 +351,14 @@ namespace asiant {
     std::shared_ptr<node_record> priority_queue::find(int node_value) {
         return set_data_.find(node_value);
     }
+
+    void priority_queue::print() {
+        std::cout << "set_data" << std::endl;
+        set_data_.print();
+        std::cout << "heap_data" << std::endl;
+        for(auto & hd : heap_data_) {
+            std::cout << hd->node_.get_value() << " ";
+        }
+        std::cout << std::endl;
+    }
 };

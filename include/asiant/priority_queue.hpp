@@ -9,10 +9,7 @@
 
 namespace asiant {
 
-    struct node_record {
-        node node_;
-        real cost_so_far_;
-    };
+    struct node_record;
 
     class set {
     public:
@@ -60,15 +57,7 @@ namespace asiant {
         bool contains(int node_value);
         // find and return the node_record corresponding to node
         std::shared_ptr<node_record> find(int node_value);
-        void print() {
-            std::cout << "set_data" << std::endl;
-            set_data_.print();
-            std::cout << "heap_data" << std::endl;
-            for(auto & hd : heap_data_) {
-                std::cout << hd->node_.get_value() << " ";
-            }
-            std::cout << std::endl;
-        }
+        void print();
     private:
         // used to store data
         // we use a min heap to store the node_records
