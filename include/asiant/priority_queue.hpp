@@ -16,13 +16,13 @@ namespace asiant {
 
     class set {
     public:
-        enum color { RED, BLACK };
         set() : root_(nullptr) {};
         void insert(std::shared_ptr<node_record> val);
         void remove(std::shared_ptr<node_record> val);
         std::shared_ptr<node_record> find(int node_value);
         void print();
     private:
+        enum color { RED, BLACK };
         struct rb_node {
             std::shared_ptr<node_record> data_;
             color                    color_;

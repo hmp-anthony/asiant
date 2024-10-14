@@ -33,6 +33,9 @@ TEST(set, insert) {
     nr_7->cost_so_far_ = 0.59;
 
     s.insert(nr_1);
+    auto nr_find_1 = s.find(1);
+    ASSERT_EQ(nr_find_1->node_.get_value() , 1);
+
     s.insert(nr_2);
     s.insert(nr_3);
     s.insert(nr_4);
@@ -40,6 +43,11 @@ TEST(set, insert) {
     s.insert(nr_6);
     s.insert(nr_7);
 
+    nr_find_1 = s.find(1);
+    ASSERT_EQ(nr_find_1->node_.get_value() , 1);
+
+    auto nr_find_2 = s.find(5);
+    ASSERT_EQ(nr_find_2->node_.get_value() , 5);
 }
 
 TEST(set, remove) {
@@ -87,12 +95,25 @@ TEST(set, remove) {
     s.insert(nr_9);
     s.insert(nr_10);
 
+    auto nr_find_1 = s.find(6);
+    ASSERT_EQ(nr_find_1->node_.get_value() , 6);
+    auto nr_find_2 = s.find(5);
+    ASSERT_EQ(nr_find_2 , nullptr);
+    auto nr_find_3 = s.find(18);
+    ASSERT_EQ(nr_find_3->node_.get_value() , 18);
 
     s.remove(nr_3);
+    nr_find_3 = s.find(18);
+    ASSERT_EQ(nr_find_3, nullptr);
 
     s.remove(nr_7);
+    auto nr_find_7 = s.find(11);
+    ASSERT_EQ(nr_find_7, nullptr);
 
     s.remove(nr_2);
+    nr_find_2 = s.find(3);
+    ASSERT_EQ(nr_find_2, nullptr);
+
 }
 
 

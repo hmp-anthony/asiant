@@ -80,7 +80,16 @@ namespace asiant {
     }
 
     std::shared_ptr<node_record> set::find(int node_value) {
-        
+        auto node = root_;
+        while(node != nullptr) {
+            if(node->data_->node_.get_value() == node_value) {
+                return node->data_;
+            }
+            else if (node->data_->node_.get_value() <= node_value)
+                node = node->right_;
+            else 
+                node = node->left_;
+        }
         return nullptr;
     }
 
