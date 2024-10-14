@@ -1,44 +1,32 @@
 #include <asiant/graph.hpp>
 
 namespace asiant {
-    graph::graph(int vertex_count, bool directed_graph) : adj_list_(vertex_count),
-                                                          vertex_count_(vertex_count),
-                                                          connection_count_(0),
-                                                          directed_graph_(directed_graph) {
-                                                          adj_list_.assign(vertex_count, nullptr);
-                                                          };
+    graph::graph(int node_count, bool directed_graph) 
+        : connections_(node_count),
+          node_count_(node_count),
+          directed_graph_(directed_graph) { };
 
 
-    int graph::get_vertex_count() {
-        return vertex_count_;
-    }
-
-    int graph::get_connection_count() {
-        return connection_count_;
+    int graph::get_node_count() {
+        return node_count_;
     }
 
     bool graph::is_directed() {
         return directed_graph_;
     }
 
-    void graph::insert(connection c) {
-        int v = c.get_from(), w = c.get_to();
-        real cost = c.get_cost();
-        adj_list_[v] = std::make_shared<node>(w, adj_list_[v], cost);
-        if(!directed_graph_) {
-            adj_list_[w] = std::make_shared<node>(v, adj_list_[w], cost);
-        }
+    void graph::insert(std::shared_ptr<connection> c) {  
+        connections_[c->get_from()].push_back(c);
+        // if we have a directed graph we can end here
+        if(directed_graph_) return;
+        // if the graph is not directed. we need to add
+        // the opposite direction.
+        auto o = std::make_shared<connection>(c->get_to(), c->get_from(), c->get_cost());
+        connections_[o->get_from()].push_back(o);
+
     }
 
-    std::vector<connection> graph::get_connections(int from_node) {
-        auto connection_vector = std::vector<connection>();
-        auto t = adj_list_[from_node];
-        if(t == nullptr){ return connection_vector; }
-        do {
-            auto c = connection(from_node, t->get_value(), t->get_cost());
-            connection_vector.push_back(c);
-            t = t->get_next();
-        } while(t != nullptr) ;
-        return connection_vector;
+    std::vector<std::shared_ptr<connection>> graph::get_connections(int from_node) {
+        return connections_[from_node];
     }
 };

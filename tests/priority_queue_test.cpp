@@ -40,8 +40,61 @@ TEST(set, insert) {
     s.insert(nr_6);
     s.insert(nr_7);
 
-    s.print();
 }
+
+TEST(set, remove) {
+
+    set s;
+    auto nr_1 = std::make_shared<node_record>();
+    nr_1->node_ = node(7, nullptr);
+    nr_1->cost_so_far_ = 0.9;
+    auto nr_2 = std::make_shared<node_record>();
+    nr_2->node_ = node(3, nullptr);
+    nr_2->cost_so_far_ = 1.45;
+    auto nr_3 = std::make_shared<node_record>();
+    nr_3->node_ = node(18, nullptr);
+    nr_3->cost_so_far_ = 0.45;
+    auto nr_4 = std::make_shared<node_record>();
+    nr_4->node_ = node(10, nullptr);
+    nr_4->cost_so_far_ = 0.59;
+    auto nr_5 = std::make_shared<node_record>();
+    nr_5->node_ = node(22, nullptr);
+    nr_5->cost_so_far_ = 0.59;
+    auto nr_6 = std::make_shared<node_record>();
+    nr_6->node_ = node(8, nullptr);
+    nr_6->cost_so_far_ = 0.59;
+    auto nr_7 = std::make_shared<node_record>();
+    nr_7->node_ = node(11, nullptr);
+    nr_7->cost_so_far_ = 0.59;
+    auto nr_8 = std::make_shared<node_record>();
+    nr_8->node_ = node(26, nullptr);
+    nr_8->cost_so_far_ = 0.59;
+    auto nr_9 = std::make_shared<node_record>();
+    nr_9->node_ = node(2, nullptr);
+    nr_9->cost_so_far_ = 0.59;
+    auto nr_10 = std::make_shared<node_record>();
+    nr_10->node_ = node(6, nullptr);
+    nr_10->cost_so_far_ = 0.59;
+
+    s.insert(nr_1);
+    s.insert(nr_2);
+    s.insert(nr_3);
+    s.insert(nr_4);
+    s.insert(nr_5);
+    s.insert(nr_6);
+    s.insert(nr_7);
+    s.insert(nr_8);
+    s.insert(nr_9);
+    s.insert(nr_10);
+
+
+    s.remove(nr_3);
+
+    s.remove(nr_7);
+
+    s.remove(nr_2);
+}
+
 
 TEST(priority_queue, push) {
     auto nr_1 = std::make_shared<node_record>();

@@ -80,6 +80,7 @@ namespace asiant {
     }
 
     std::shared_ptr<node_record> set::find(int node_value) {
+        
         return nullptr;
     }
 
@@ -271,7 +272,7 @@ namespace asiant {
             }
             std::string sColor
                 = (root->color_ == RED) ? "RED" : "BLACK";
-            std::cout << root->data_ << "(" << sColor << ")"
+            std::cout << root->data_->node_.get_value() << "(" << sColor << ")"
                  << std::endl;
             print_helper(root->left_, indent, false);
             print_helper(root->right_, indent, true);
