@@ -143,6 +143,7 @@ TEST(priority_queue, push) {
     ASSERT_NEAR(top->cost_so_far_, 0.45, 0.0001); 
 }
 
+#include <iostream>
 TEST(priority_queue, pop) {
     auto nr_1 = std::make_shared<node_record>();
     nr_1->node_ = node(1, nullptr);
@@ -160,16 +161,53 @@ TEST(priority_queue, pop) {
     nr_4->node_ = node(6, nullptr);
     nr_4->cost_so_far_ = 0.59;
 
+    auto nr_5 = std::make_shared<node_record>();
+    nr_5->node_ = node(8, nullptr);
+    nr_5->cost_so_far_ = 1.9;
+
+    auto nr_6 = std::make_shared<node_record>();
+    nr_6->node_ = node(9, nullptr);
+    nr_6->cost_so_far_ = 2.45;
+
+    auto nr_7 = std::make_shared<node_record>();
+    nr_7->node_ = node(11, nullptr);
+    nr_7->cost_so_far_ = 3.45;
+
+    auto nr_8 = std::make_shared<node_record>();
+    nr_8->node_ = node(3, nullptr);
+    nr_8->cost_so_far_ = 4.59;
+
+    auto nr_9 = std::make_shared<node_record>();
+    nr_9->node_ = node(5, nullptr);
+    nr_9->cost_so_far_ = 14.59;
+
+    auto nr_10 = std::make_shared<node_record>();
+    nr_10->node_ = node(19, nullptr);
+    nr_10->cost_so_far_ = 11.59;
+
+    auto nr_11 = std::make_shared<node_record>();
+    nr_11->node_ = node(20, nullptr);
+    nr_11->cost_so_far_ = 11.59;
+
     auto pq = priority_queue();
     pq.push(nr_1);
     pq.push(nr_2);
     pq.push(nr_3);
     pq.push(nr_4);
+    pq.push(nr_5);
+    pq.push(nr_6);
+    pq.push(nr_7);
+    pq.push(nr_8);
+    pq.push(nr_9);
+    pq.push(nr_10);
+    pq.push(nr_11);
 
     auto top = pq.top();
     ASSERT_NEAR(top->cost_so_far_, 0.45, 0.0001); 
+    pq.print();
 
-    pq.pop();
+    pq.pop(); 
+    pq.print();
     top = pq.top();
     ASSERT_NEAR(top->cost_so_far_, 0.59, 0.0001); 
 
@@ -177,7 +215,9 @@ TEST(priority_queue, pop) {
     top = pq.top();
     ASSERT_NEAR(top->cost_so_far_, 0.9, 0.0001); 
 
+    pq.print();
     pq.pop();
+    pq.print();
     top = pq.top();
     ASSERT_NEAR(top->cost_so_far_, 1.45, 0.0001); 
 }

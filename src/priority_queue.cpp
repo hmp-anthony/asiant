@@ -74,6 +74,7 @@ namespace asiant {
             y->left_->parent_ = y;
             y->color_ = z->color_;
         }
+        if(x == nullptr) return;
         if (y_original_color == BLACK) {
             fix_delete(x);
         }
@@ -205,6 +206,9 @@ namespace asiant {
     }
        
     void set::fix_delete(std::shared_ptr<rb_node> node) {
+        auto x = node == nullptr;
+        bool a = node->color_ == BLACK;
+        bool b =  node != root_; 
         while (node != root_ && node->color_ == BLACK) {
             if (node == node->parent_->left_) {
                 auto sibling = node->parent_->right_;
@@ -290,6 +294,7 @@ namespace asiant {
 
     void priority_queue::push(std::shared_ptr<node_record> nr) {
         heap_data_.push_back(nr);
+        set_data_.insert(nr);
         int child_index = heap_data_.size() - 1;
         while(child_index > 0) {
             int parent_index = (child_index - 1) / 2;
@@ -299,15 +304,17 @@ namespace asiant {
             std::swap(heap_data_[child_index], heap_data_[parent_index]);
             child_index = parent_index;
         }
-       
     }
 
     std::shared_ptr<node_record> priority_queue::pop() {
         int last_index = heap_data_.size() - 1;
+        
+        set_data_.remove(heap_data_[0]);
+
         auto front = heap_data_[0];
         heap_data_[0] = heap_data_[last_index];
         heap_data_.pop_back();
-
+        
         --last_index;
         int parent_index = 0;
         while(true) {
@@ -342,11 +349,6 @@ namespace asiant {
     }
 
     std::shared_ptr<node_record> priority_queue::find(int node_value) {
-        for(auto & node_rec : heap_data_) {
-            if(node_rec->node_.get_value() == node_value) {
-                return node_rec;
-            }
-        }
-        return nullptr;
+        return set_data_.find(node_value);
     }
 };
