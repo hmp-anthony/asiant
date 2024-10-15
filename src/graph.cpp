@@ -99,12 +99,27 @@ std::shared_ptr<node_record> dijkstra(graph g, int start, int goal) {
                 return record;
             }
         
-            // need to implement expand !
+            // from these connections we need to form children
             auto connections = g.get_connections(record->node_.get_value());
-            for(auto & c : connections) {
-                std::cout << c->get_from() << " " << c->get_to() << std::endl;
+
+            std::vector<std::shared_ptr<node_record>> children(connections.size());
+            for(int i = 0; i < children.size(); ++i) {
+                children[i] = std::make_shared<node_record>();
+                children[i]->node_ = node(connections[i]->get_to(), nullptr);
+                children[i]->previous_ = record;
+                children[i]->connection_ = *(connections[i]);
+                children[i]->cost_so_far_ = record->cost_so_far_ + connections[i]->get_cost();
             }
+            for(auto & child: children) {
+                auto s = child->node_.get_value();
+                if(reached[s] == nullptr || child->cost_so_far_ < reached[s]->cost_so_far_) {
+                    reached[s] = child;
+                    frontier.push(child);
+                }
+            }
+
         }
+        return nullptr;
     }
 
 };

@@ -2,7 +2,7 @@
 
 #include "gtest/gtest.h"
 
-#include <iostream>
+#include <algorithm>
 
 using namespace asiant;
 
@@ -79,6 +79,38 @@ TEST(graph, dijkstra) {
     g1.insert(std::make_shared<connection>(7, 4));
     g1.insert(std::make_shared<connection>(3, 7));
     g1.insert(std::make_shared<connection>(0, 1));
+    g1.insert(std::make_shared<connection>(0, 2));
 
-    dijkstra(g1, 0, 4);
+    auto end_record = dijkstra(g1, 0, 4);
+
+    auto path = std::vector<int>(); 
+    std::vector<int> correct_path = {0, 2, 7, 4};
+    while(end_record != nullptr) {
+        path.push_back(end_record->node_.get_value());
+        end_record = end_record->previous_;
+    }
+    std::ranges::reverse(path);
+    ASSERT_EQ(path, correct_path);
+
+    auto g2 = graph(10, true);
+    g2.insert(std::make_shared<connection>(1, 2));
+    g2.insert(std::make_shared<connection>(1, 3, 0.0001));
+    g2.insert(std::make_shared<connection>(2, 7));
+    g2.insert(std::make_shared<connection>(0, 9));
+    g2.insert(std::make_shared<connection>(9, 2));
+    g2.insert(std::make_shared<connection>(7, 4));
+    g2.insert(std::make_shared<connection>(3, 7));
+    g2.insert(std::make_shared<connection>(0, 1, 0.001));
+    g2.insert(std::make_shared<connection>(0, 2));
+
+    end_record = dijkstra(g2, 0, 4);
+
+    path = std::vector<int>(); 
+    correct_path = {0, 1, 3, 7, 4};
+    while(end_record != nullptr) {
+        path.push_back(end_record->node_.get_value());
+        end_record = end_record->previous_;
+    }
+    std::ranges::reverse(path);
+    ASSERT_EQ(path, correct_path);
 }

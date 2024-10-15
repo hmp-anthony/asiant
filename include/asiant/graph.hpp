@@ -14,7 +14,6 @@ namespace asiant {
         }
         std::shared_ptr<node> get_next() { return next_; }
         int get_value(){ return v_; }
-        std::shared_ptr<node> parent_;
     private:
         int v_;
         std::shared_ptr<node> next_;
