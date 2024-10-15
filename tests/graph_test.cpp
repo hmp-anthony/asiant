@@ -74,11 +74,11 @@ TEST(graph, dijkstra) {
     g1.insert(std::make_shared<connection>(1, 2));
     g1.insert(std::make_shared<connection>(1, 3));
     g1.insert(std::make_shared<connection>(2, 7));
-    g1.insert(std::make_shared<connection>(0, 2));
     g1.insert(std::make_shared<connection>(0, 9));
     g1.insert(std::make_shared<connection>(9, 2));
     g1.insert(std::make_shared<connection>(7, 4));
     g1.insert(std::make_shared<connection>(3, 7));
+    g1.insert(std::make_shared<connection>(0, 1));
 
     dijkstra(g1, 0, 4);
 }

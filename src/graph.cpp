@@ -30,7 +30,7 @@ namespace asiant {
         return connections_[from_node];
     }
 
-    void dijkstra(graph g, int start, int goal) {
+/*    void dijkstra(graph g, int start, int goal) {
         auto start_record = std::make_shared<node_record>();
         start_record->node_ = node(start, nullptr);
         start_record->cost_so_far_ = 0;
@@ -42,7 +42,9 @@ namespace asiant {
         auto current = std::make_shared<node_record>();
 
         while(open.size() > 0) {
+            auto previous_current = current;
             current = open.top();
+            current->previous_ = previous_current;
             std::cout << "current " << current->node_.get_value() << std::endl;
             std::cout << "current cost " << current->cost_so_far_ << std::endl;
             if(current->node_.get_value() == goal) {
@@ -67,10 +69,42 @@ namespace asiant {
                     open.push(end_node_record);
                 }
             }
+            std::cout << "before pop" << std::endl;
+            std::cout << "current : " << current->node_.get_value() << std::endl;
+            open.print();
             open.pop();
+            std::cout << "after pop" << std::endl;
             closed.push(current);
-            std::cout << current->node_.get_value() << std::endl;;
         }
-        std::cout << current->node_.get_value() << std::endl;;
+        while(current != nullptr) {
+            std::cout << current->node_.get_value() << std::endl;;
+            current = current->previous_;
+        }
     }
+};*/
+std::shared_ptr<node_record> dijkstra(graph g, int start, int goal) {
+        auto record = std::make_shared<node_record>();
+        record->node_ = node(start, nullptr);
+        record->cost_so_far_ = 0;
+
+        auto frontier = priority_queue();
+        frontier.push(record);
+
+        auto reached = std::vector<std::shared_ptr<node_record>>(g.get_node_count());
+        reached[start] = record;
+
+        while(frontier.size() > 0) {
+            record = frontier.top(); frontier.pop();
+            if(record->node_.get_value() == goal) {
+                return record;
+            }
+        
+            // need to implement expand !
+            auto connections = g.get_connections(record->node_.get_value());
+            for(auto & c : connections) {
+                std::cout << c->get_from() << " " << c->get_to() << std::endl;
+            }
+        }
+    }
+
 };

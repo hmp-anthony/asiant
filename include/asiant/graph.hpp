@@ -14,6 +14,7 @@ namespace asiant {
         }
         std::shared_ptr<node> get_next() { return next_; }
         int get_value(){ return v_; }
+        std::shared_ptr<node> parent_;
     private:
         int v_;
         std::shared_ptr<node> next_;
@@ -36,6 +37,7 @@ namespace asiant {
         node node_;
         connection connection_;
         real cost_so_far_;
+        std::shared_ptr<node_record> previous_;
     };
 
     class graph {
@@ -51,7 +53,7 @@ namespace asiant {
         std::vector<std::vector<std::shared_ptr<connection>>> connections_;
     };
 
-    void dijkstra(graph g, int start, int end);
+    std::shared_ptr<node_record> dijkstra(graph g, int start, int end);
 };
 
 #endif

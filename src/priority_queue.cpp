@@ -37,13 +37,12 @@ namespace asiant {
             if(node->data_->node_.get_value() == val->node_.get_value()) {
                 z = node; break;
             }
-            else if (node->data_->node_.get_value() <= val->node_.get_value())
+            else if (node->data_->node_.get_value() < val->node_.get_value())
                 node = node->right_;
             else 
                 node = node->left_;
         }
         if(z == nullptr) return;
-
         std::shared_ptr<rb_node> x = nullptr;
         std::shared_ptr<rb_node> y = nullptr;
 
@@ -206,9 +205,6 @@ namespace asiant {
     }
        
     void set::fix_delete(std::shared_ptr<rb_node> node) {
-        auto x = node == nullptr;
-        bool a = node->color_ == BLACK;
-        bool b =  node != root_; 
         while (node != root_ && node->color_ == BLACK) {
             if (node == node->parent_->left_) {
                 auto sibling = node->parent_->right_;
@@ -294,7 +290,7 @@ namespace asiant {
 
     void priority_queue::push(std::shared_ptr<node_record> nr) {
         heap_data_.push_back(nr);
-        set_data_.insert(nr);
+        //set_data_.insert(nr);
         int child_index = heap_data_.size() - 1;
         while(child_index > 0) {
             int parent_index = (child_index - 1) / 2;
@@ -309,8 +305,7 @@ namespace asiant {
     std::shared_ptr<node_record> priority_queue::pop() {
         int last_index = heap_data_.size() - 1;
         
-        set_data_.remove(heap_data_[0]);
-
+        //set_data_.remove(heap_data_[0]);
         auto front = heap_data_[0];
         heap_data_[0] = heap_data_[last_index];
         heap_data_.pop_back();
@@ -349,7 +344,12 @@ namespace asiant {
     }
 
     std::shared_ptr<node_record> priority_queue::find(int node_value) {
-        return set_data_.find(node_value);
+        for(auto & node_rec : heap_data_) {
+            if(node_rec->node_.get_value() == node_value) {
+                return node_rec;
+            }
+        }
+        return nullptr;
     }
 
     void priority_queue::print() {
