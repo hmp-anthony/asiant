@@ -18,6 +18,8 @@ namespace asiant {
     }
 
     void level::print() {
+        std::cout << rows_ << " " << cols_ << std::endl;
+
         for(int j = 0; j < rows_; ++j) {
             for(int i = 0; i < cols_; ++i) {
                 std::cout << data_[j * cols_ + i] << " ";

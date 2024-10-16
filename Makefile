@@ -9,7 +9,7 @@ all: ${BUILDDIR}/Makefile
 .PHONY: all
 
 test:
-	make && cd ${BUILDDIR} && ctest
+		make && cd ${BUILDDIR} && cp -r ../test_levels tests/test_levels && ctest
 .PHONY: test
 
 clean:

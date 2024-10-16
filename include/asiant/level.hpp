@@ -9,7 +9,7 @@ namespace asiant {
     public:
         level(std::string file, int width, int height);
        // std::shared_ptr<graph> get_graph();
-       // std::vector<vector> get_node_to_vertex_map();
+       // std::shared_ptr<std::vector<vector>> get_node_to_vertex_map();
        void print();
     private:
         std::vector<int> data_;        
