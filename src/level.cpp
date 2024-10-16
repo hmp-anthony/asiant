@@ -5,13 +5,24 @@
 
 namespace asiant {
     level::level(std::string file, int width, int height) {
-        int m , n;
-        std::cout << "creating level" << std::endl;
-
         std::ifstream f(file);
-        f >> m >> n;
+        f >> rows_ >> cols_;
 
-        std::cout << m <<  " " << n << std::endl;
+        data_.assign(rows_ * cols_, 0);
 
+        for(int j = 0; j < rows_; ++j) {
+            for(int i = 0; i < cols_; ++i) {
+                f >> data_[j * cols_ + i];
+            }
+        }
+    }
+
+    void level::print() {
+        for(int j = 0; j < rows_; ++j) {
+            for(int i = 0; i < cols_; ++i) {
+                std::cout << data_[j * cols_ + i] << " ";
+            }
+            std::cout << std::endl;
+        }
     }
 };
