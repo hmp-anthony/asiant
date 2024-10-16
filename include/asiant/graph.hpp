@@ -52,7 +52,7 @@ namespace asiant {
         std::vector<std::vector<std::shared_ptr<connection>>> connections_;
     };
 
-    std::shared_ptr<node_record> dijkstra(graph g, int start, int end);
+    std::vector<int> dijkstra(graph g, int start, int end);
 };
 
 #endif

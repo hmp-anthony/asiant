@@ -1,5 +1,7 @@
 #include <asiant/graph.hpp>
 
+#include <algorithm>
+
 namespace asiant {
     graph::graph(int node_count, bool directed_graph) 
         : connections_(node_count),
@@ -31,7 +33,9 @@ namespace asiant {
     }
 
 
-    std::shared_ptr<node_record> dijkstra(graph g, int start, int goal) {
+    std::vector<int> dijkstra(graph g, int start, int goal) {
+        std::vector<int> path;
+
         auto record = std::make_shared<node_record>();
         record->node_ = node(start, nullptr);
         record->cost_so_far_ = 0;
@@ -45,7 +49,12 @@ namespace asiant {
         while(frontier.size() > 0) {
             record = frontier.top(); frontier.pop();
             if(record->node_.get_value() == goal) {
-                return record;
+                while(record != nullptr) {
+                    path.push_back(record->node_.get_value());
+                    record = record->previous_;
+                }
+                std::ranges::reverse(path);
+                return path;
             }
         
             // from these connections we need to form children
@@ -68,7 +77,7 @@ namespace asiant {
             }
 
         }
-        return nullptr;
+        return path;
     }
 
 };

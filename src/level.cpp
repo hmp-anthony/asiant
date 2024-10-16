@@ -15,6 +15,55 @@ namespace asiant {
                 f >> data_[j * cols_ + i];
             }
         }
+    
+        // this data will be used to give the graphics a location.
+        std::vector<std::pair<int, int>> locations;
+        // we also update the data_ vector to take negative 1
+        // for a non attainable square.
+        int index = 0;
+        for(int j = 0; j < rows_; ++j) {
+            for(int i = 0; i < cols_; ++i) {
+                if(data_[j * cols_ + i] == 1) {
+                    locations.push_back(std::make_pair(j, i));
+                    data_[j * cols_ + i] = index++;
+                } else {
+                    data_[j * cols_ + i] = -1;
+                }
+            }
+        }
+
+        begin_ = 0;
+        end_ = locations.size() - 1;
+
+        // now we assemble the graph
+        graph_ = std::make_shared<graph>(locations.size(), false);
+        for(int j = 1; j < rows_ - 1; ++j) {
+            for(int i = 1; i < cols_ - 1; ++i) {
+                auto c = j * cols_ + i;
+                auto u = (j - 1) * cols_ + i;
+                auto d = (j + 1) * cols_ + i;
+                auto r = j * cols_ + i + 1;
+                auto l = j * cols_ + i - 1;
+                if(data_[c] == -1) continue; 
+                
+                if(data_[u] != -1) {
+                    graph_->insert(std::make_shared<connection>(data_[c], data_[u]));
+                }
+                if(data_[d] != -1) {
+                    graph_->insert(std::make_shared<connection>(data_[c], data_[d]));
+                }
+                if(data_[r] != -1) {
+                    graph_->insert(std::make_shared<connection>(data_[c], data_[r]));
+                }
+                if(data_[l] != -1) {
+                    graph_->insert(std::make_shared<connection>(data_[c], data_[l]));
+                }
+            }
+        }
+    }
+
+    std::shared_ptr<graph> level::get_graph() {
+        return graph_;
     }
 
     void level::print() {
@@ -26,5 +75,13 @@ namespace asiant {
             }
             std::cout << std::endl;
         }
+    }
+
+    int level::get_begin() {
+        return begin_;
+    }
+
+    int level::get_end() {
+        return end_;
     }
 };

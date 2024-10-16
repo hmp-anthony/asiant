@@ -2,8 +2,6 @@
 
 #include "gtest/gtest.h"
 
-#include <algorithm>
-
 using namespace asiant;
 
 TEST(graph, basic_graph_creation) {
@@ -81,15 +79,8 @@ TEST(graph, dijkstra) {
     g1.insert(std::make_shared<connection>(0, 1));
     g1.insert(std::make_shared<connection>(0, 2));
 
-    auto end_record = dijkstra(g1, 0, 4);
-
-    auto path = std::vector<int>(); 
+    auto path = dijkstra(g1, 0, 4);
     std::vector<int> correct_path = {0, 2, 7, 4};
-    while(end_record != nullptr) {
-        path.push_back(end_record->node_.get_value());
-        end_record = end_record->previous_;
-    }
-    std::ranges::reverse(path);
     ASSERT_EQ(path, correct_path);
 
     auto g2 = graph(10, true);
@@ -103,14 +94,7 @@ TEST(graph, dijkstra) {
     g2.insert(std::make_shared<connection>(0, 1, 0.001));
     g2.insert(std::make_shared<connection>(0, 2));
 
-    end_record = dijkstra(g2, 0, 4);
-
-    path = std::vector<int>(); 
+    path = dijkstra(g2, 0, 4);
     correct_path = {0, 1, 3, 7, 4};
-    while(end_record != nullptr) {
-        path.push_back(end_record->node_.get_value());
-        end_record = end_record->previous_;
-    }
-    std::ranges::reverse(path);
     ASSERT_EQ(path, correct_path);
 }
