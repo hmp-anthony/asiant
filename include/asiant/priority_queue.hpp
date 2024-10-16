@@ -11,37 +11,6 @@ namespace asiant {
 
     struct node_record;
 
-    class set {
-    public:
-        set() : root_(nullptr) {};
-        void insert(std::shared_ptr<node_record> val);
-        void remove(std::shared_ptr<node_record> val);
-        std::shared_ptr<node_record> find(int node_value);
-        void print();
-    private:
-        enum color { RED, BLACK };
-        struct rb_node {
-            std::shared_ptr<node_record> data_;
-            color                    color_;
-            std::shared_ptr<rb_node> left_;
-            std::shared_ptr<rb_node> right_;
-            std::shared_ptr<rb_node> parent_;
-            explicit rb_node(std::shared_ptr<node_record> val) 
-            : data_(val), color_(RED), left_(nullptr), right_(nullptr), parent_(nullptr) {};
-        };
-        std::shared_ptr<rb_node> root_;
-
-        void rotate_left(std::shared_ptr<rb_node> x); 
-        void rotate_right(std::shared_ptr<rb_node> x);
-        void fix_insert(std::shared_ptr<rb_node> x);
-        std::shared_ptr<rb_node> min_value_node(std::shared_ptr<rb_node> node);
-        void transplant(std::shared_ptr<rb_node> root,
-                        std::shared_ptr<rb_node> u, 
-                        std::shared_ptr<rb_node> v);
-        void fix_delete(std::shared_ptr<rb_node> node);
-        void print_helper(std::shared_ptr<rb_node> root, std::string indent, bool last);
-    };
-
     class priority_queue {
     public:
         priority_queue() {};
@@ -62,9 +31,6 @@ namespace asiant {
         // used to store data
         // we use a min heap to store the node_records
         std::vector<std::shared_ptr<node_record>> heap_data_;
-        // we use a set to implement contains and find 
-        // in log time instead of linear time.
-        set                                       set_data_;
     };
 };
 
