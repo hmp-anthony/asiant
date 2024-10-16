@@ -22,3 +22,7 @@ target_link_libraries(steering_pipeline utils)
 add_library(path path.cpp ../include/asiant/path.hpp)
 target_include_directories(path PUBLIC ../include)
 target_link_libraries(path utils)
+
+add_library(level level.cpp ../include/asiant/level.hpp)
+target_include_directories(level PUBLIC ../include)
+target_link_libraries(level utils)

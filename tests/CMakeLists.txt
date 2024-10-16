@@ -25,3 +25,7 @@ add_test(NAME graph_test COMMAND graph_test)
 add_executable(priority_queue_test priority_queue_test.cpp)
 target_link_libraries(priority_queue_test priority_queue gtest_main)
 add_test(NAME priority_queue_test COMMAND priority_queue_test)
+
+add_executable(level_test level_test.cpp)
+target_link_libraries(level_test level gtest_main)
+add_test(NAME level_test COMMAND level_test)
