@@ -24,7 +24,7 @@ namespace asiant {
         for(int j = 0; j < rows_; ++j) {
             for(int i = 0; i < cols_; ++i) {
                 if(data_[j * cols_ + i] > 0) {
-                    locations_.push_back(std::make_pair(j, i));
+                    locations_.push_back(j * cols_ + i);
                     cost[j * cols_ + i] = data_[j * cols_ + i]; 
                     data_[j * cols_ + i] = index++;
                 } else {
@@ -69,7 +69,7 @@ namespace asiant {
         return graph_;
     }
 
-    std::vector<std::pair<int, int>> level::get_locations() {
+    std::vector<int> level::get_locations() {
         return locations_;
     }
 
@@ -99,6 +99,14 @@ namespace asiant {
             }
             std::cout << std::endl;
         }
+    }
+
+    int level::get_rows() {
+        return rows_;
+    }
+
+    int level::get_cols() {
+        return cols_;
     }
 
     int level::get_begin() {
