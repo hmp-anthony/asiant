@@ -9,8 +9,9 @@
 namespace asiant {
     class level {
     public:
-        level(std::string file, int width, int height);
+        level(std::string file);
         std::shared_ptr<graph> get_graph();
+        std::vector<std::pair<int, int>> get_locations();
         void print_path(std::vector<int> path);
         void print();
         int get_begin();

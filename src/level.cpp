@@ -5,7 +5,7 @@
 #include <algorithm>
 
 namespace asiant {
-    level::level(std::string file, int width, int height) {
+    level::level(std::string file) {
         std::ifstream f(file);
         f >> rows_ >> cols_;
 
@@ -67,6 +67,10 @@ namespace asiant {
 
     std::shared_ptr<graph> level::get_graph() {
         return graph_;
+    }
+
+    std::vector<std::pair<int, int>> level::get_locations() {
+        return locations_;
     }
 
     void level::print_path(std::vector<int> path) { 
