@@ -17,7 +17,8 @@ namespace asiant {
                 f >> data_[j * cols_ + i];
             }
         }
-    
+
+
         // we also update the data_ vector to take negative 1
         // for a non attainable square.
         int index = 0;
@@ -115,5 +116,9 @@ namespace asiant {
 
     int level::get_end() {
         return end_;
+    }
+
+    std::vector<int> level::get_index_to_node_map() {
+        return data_;
     }
 };

@@ -19,12 +19,15 @@ struct square {
     real x;
     real y;
     bool is_walkable;
+    bool on_solution_path;
 
     void render() {
-        if(is_walkable) {
-            glColor3f(0.6f, 0.6f, 0.0f);
+        if(is_walkable && on_solution_path) {
+            glColor3f(1.0f, 0.0f, 0.0f);
+        } else if(is_walkable || on_solution_path) {
+            glColor3f(0.0f, 1.0f, 0.0f);
         } else {
-            glColor3f(0.6f, 0.0f, 0.6f);
+            glColor3f(0.0f, 0.0f, 1.0f);
         }
         glBegin(GL_QUADS);
         glVertex2f(x,               y              );
@@ -42,6 +45,8 @@ public:
     std::shared_ptr<level> level_;
     std::shared_ptr<graph> graph_;
     std::vector<std::shared_ptr<square>> squares_;
+    std::vector<int> path_;
+    std::vector<std::shared_ptr<square>> path_squares_;
 
     virtual void update();
     virtual void display();
@@ -52,9 +57,10 @@ find_path_demo::find_path_demo() {
     // create the level, obtain graph and shortest path.
     level_ = std::make_shared<level>("test_levels/level_3.txt");
     graph_ = level_->get_graph();
-    auto path = dijkstra(*graph_, level_->get_begin(), level_->get_end());
+    path_ = dijkstra(*graph_, level_->get_begin(), level_->get_end());
     auto locations = level_->get_locations();
-   
+    auto index_to_node_map = level_->get_index_to_node_map();
+  
     // fill the squares container
     for(int j = 0; j < level_->get_rows(); ++j) {
         for(int i = 0; i < level_->get_cols(); ++i) {
@@ -65,12 +71,24 @@ find_path_demo::find_path_demo() {
             } else {
                 s->is_walkable = false;
             }
+            s->on_solution_path = false;
             s->x = i * square_size + square_start_x;
             s->y = j * square_size + square_start_y;
             squares_.push_back(s);
+
+            auto ps = std::make_shared<square>();
+            auto node = index_to_node_map[index];
+
+            if(std::find(path_.begin(), path_.end() , node) != path_.end()) {
+                ps->x = i * square_size + square_start_x;
+                ps->y = j * square_size + square_start_y;
+                ps->is_walkable = true;
+                ps->on_solution_path = true;
+                path_squares_.push_back(ps);
+            }
+
         }
     }
-
 }
 
 void find_path_demo::update() {
@@ -83,6 +101,9 @@ void find_path_demo::update() {
 void find_path_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    for(auto & s : path_squares_) {
+        s->render();
+    }
     for(auto & s : squares_) {
         s->render();
     }

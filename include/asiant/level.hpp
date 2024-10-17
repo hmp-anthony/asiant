@@ -13,6 +13,7 @@ namespace asiant {
         level(std::string file);
         std::shared_ptr<graph> get_graph();
         std::vector<int> get_locations();
+        std::vector<int> get_index_to_node_map();
         void print_path(std::vector<int> path);
         void print();
         int get_rows();
