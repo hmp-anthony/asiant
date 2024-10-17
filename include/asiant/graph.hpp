@@ -1,9 +1,11 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
-#include <asiant/asiant.hpp>
+#include <asiant/precision.hpp>
+#include <asiant/priority_queue.hpp>
 
 #include <vector>
+#include <memory>
 
 namespace asiant {
     class node {
