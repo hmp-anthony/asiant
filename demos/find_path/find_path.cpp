@@ -47,6 +47,9 @@ public:
     std::vector<std::shared_ptr<square>> squares_;
     std::vector<int> path_;
     std::vector<std::shared_ptr<square>> path_squares_;
+    std::vector<std::shared_ptr<vector>> targets_;
+    int target_index_;
+    seek seek_;
 
     virtual void update();
     virtual void display();
@@ -60,7 +63,7 @@ find_path_demo::find_path_demo() {
     path_ = dijkstra(*graph_, level_->get_begin(), level_->get_end());
     auto locations = level_->get_locations();
     auto index_to_node_map = level_->get_index_to_node_map();
-  
+ 
     // fill the squares container
     for(int j = 0; j < level_->get_rows(); ++j) {
         for(int i = 0; i < level_->get_cols(); ++i) {
@@ -82,6 +85,10 @@ find_path_demo::find_path_demo() {
             if(std::find(path_.begin(), path_.end() , node) != path_.end()) {
                 ps->x = i * square_size + square_start_x;
                 ps->y = j * square_size + square_start_y;
+                auto v = std::make_shared<vector>(ps->x + 0.5 * square_size, 
+                                                  ps->y + 0.5 * square_size, 
+                                                  0.0);
+                targets_.push_back(v);
                 ps->is_walkable = true;
                 ps->on_solution_path = true;
                 path_squares_.push_back(ps);
@@ -89,18 +96,41 @@ find_path_demo::find_path_demo() {
 
         }
     }
+
+    // fill out the seek object
+    auto character = std::make_shared<asiant::kinematic>();
+    character->set_position(asiant::vector((*targets_[0])[0],(*targets_[0])[1], 0));
+    character->set_velocity(asiant::vector(0, 0, 0));
+    seek_.set_character(character);
+    seek_.set_max_acceleration(10.0);
+    target_index_ = 1;
+    seek_.set_target(targets_[target_index_]);
 }
 
 void find_path_demo::update() {
-    application::update();
+    float duration = asiant::timer::get().last_frame_duration * 0.005f;
+    auto steer = std::make_shared<steering>();
+    seek_.get_steering(steer);
+    seek_.get_character()->integrate(*steer, (real)0.5, duration);
+    seek_.get_character()->update_to_face_velocity();
+    seek_.get_character()->trim_max_speed((real)10.0);
+    auto delta = (*targets_[target_index_] - seek_.get_character()->get_position()).magnitude(); 
+    if(delta < 1) {
+        target_index_++;
+        if(target_index_ < targets_.size())
+            seek_.set_target(targets_[target_index_]);
+    }
     glutPostRedisplay();
-
 }
 
 
 void find_path_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    render_agent(seek_.get_character());
+    
+    glColor3f(0.0f, 0.0f, 0.0f);
+    render_spot(seek_.get_target());
     for(auto & s : path_squares_) {
         s->render();
     }
