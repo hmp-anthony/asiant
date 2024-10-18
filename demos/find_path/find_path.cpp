@@ -45,7 +45,7 @@ public:
     std::shared_ptr<level> level_;
     std::shared_ptr<graph> graph_;
     std::vector<std::shared_ptr<square>> squares_;
-    std::vector<int> path_;
+    std::vector<std::pair<int, vector>> path_;
     std::vector<std::shared_ptr<square>> path_squares_;
     std::vector<std::shared_ptr<vector>> targets_;
     int target_index_;
@@ -60,7 +60,7 @@ find_path_demo::find_path_demo() {
     // create the level, obtain graph and shortest path.
     level_ = std::make_shared<level>("test_levels/level_3.txt");
     graph_ = level_->get_graph();
-    path_ = dijkstra(*graph_, level_->get_begin(), level_->get_end());
+    auto path = dijkstra(*graph_, level_->get_begin(), level_->get_end());
     auto locations = level_->get_locations();
     auto index_to_node_map = level_->get_index_to_node_map();
  
@@ -82,7 +82,7 @@ find_path_demo::find_path_demo() {
             auto ps = std::make_shared<square>();
             auto node = index_to_node_map[index];
 
-            if(std::find(path_.begin(), path_.end() , node) != path_.end()) {
+            if(std::find(path.begin(), path.end() , node) != path.end()) {
                 ps->x = i * square_size + square_start_x;
                 ps->y = j * square_size + square_start_y;
                 auto v = std::make_shared<vector>(ps->x + 0.5 * square_size, 
@@ -115,7 +115,8 @@ void find_path_demo::update() {
     seek_.get_character()->update_to_face_velocity();
     seek_.get_character()->trim_max_speed((real)10.0);
     auto delta = (*targets_[target_index_] - seek_.get_character()->get_position()).magnitude(); 
-    if(delta < 1) {
+    if(delta < 3) {
+        std::cout << target_index_ << std::endl;
         target_index_++;
         if(target_index_ < targets_.size())
             seek_.set_target(targets_[target_index_]);
@@ -128,9 +129,9 @@ void find_path_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     render_agent(seek_.get_character());
-    
     glColor3f(0.0f, 0.0f, 0.0f);
     render_spot(seek_.get_target());
+
     for(auto & s : path_squares_) {
         s->render();
     }
