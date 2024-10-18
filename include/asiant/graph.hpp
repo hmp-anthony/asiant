@@ -55,6 +55,16 @@ namespace asiant {
     };
 
     std::vector<int> dijkstra(graph g, int start, int end);
+    
+    class heuristic {
+    public:
+        heuristic(int goal_node);
+        real estimate(int node_value);
+    protected:      
+        int goal_;
+    };
+
+    std::vector<int> a_star(graph g, int start, int end, heuristic h);
 };
 
 #endif

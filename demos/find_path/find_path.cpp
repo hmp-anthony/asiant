@@ -54,15 +54,39 @@ public:
     virtual void display();
 };
 
+class euclidean_heuristic : public heuristic {
+public:
+    euclidean_heuristic(int goal_node) : heuristic(goal_node) {} 
+    real estimate(int node_value) {
+        return (map_[node_value] - map_[goal_]).magnitude();
+    }
+    void set_location_map(std::vector<vector> & map) {
+        map_ = map;
+    }
+private:
+    std::vector<vector> map_;
+};
+
 find_path_demo::find_path_demo() {
 
     // create the level, obtain graph and shortest path.
     level_ = std::make_shared<level>("test_levels/level_3.txt");
     graph_ = level_->get_graph();
-    auto path = dijkstra(*graph_, level_->get_begin(), level_->get_end());
     auto locations = level_->get_locations();
-    auto index_to_node_map = level_->get_index_to_node_map();
- 
+    std::vector<vector> node_to_location_map;
+
+    for(auto & location : locations) {
+        auto dv = std::div(location, level_->get_cols()); 
+        auto j = dv.quot;
+        auto i = dv.rem;
+        auto x = (i + 0.5) * square_size + square_start_x;
+        auto y = (j + 0.5) * square_size + square_start_y;
+        node_to_location_map.push_back(vector(x, y, 0));
+    }
+    
+    euclidean_heuristic h(level_->get_end());
+    h.set_location_map(node_to_location_map);
+
     // fill the squares container
     for(int j = 0; j < level_->get_rows(); ++j) {
         for(int i = 0; i < level_->get_cols(); ++i) {
@@ -80,6 +104,7 @@ find_path_demo::find_path_demo() {
         }
     }
 
+    auto path = a_star(*graph_, level_->get_begin(), level_->get_end(), h);
     for(auto & node : path) {
         auto dv = std::div(locations[node], level_->get_cols()); 
         auto j = dv.quot;

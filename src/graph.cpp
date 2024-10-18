@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include<iostream>
 namespace asiant {
     graph::graph(int node_count, bool directed_graph) 
         : connections_(node_count),
@@ -80,4 +81,61 @@ namespace asiant {
         return path;
     }
 
+    heuristic::heuristic(int goal_node) {
+        goal_ = goal_node;
+    }
+
+    real heuristic::estimate(int node_value) {
+        return 0;
+    }
+    
+    std::vector<int> a_star(graph g, int start, int goal, heuristic h) {
+        std::vector<int> path;
+
+        auto record = std::make_shared<node_record>();
+        record->node_ = node(start, nullptr);
+        record->cost_so_far_ = 0;
+
+        auto frontier = priority_queue();
+        frontier.push(record);
+
+        auto reached = std::vector<std::shared_ptr<node_record>>(g.get_node_count());
+        reached[start] = record;
+
+        while(frontier.size() > 0) {
+            record = frontier.top(); frontier.pop();
+            if(record->node_.get_value() == goal) {
+                while(record != nullptr) {
+                    path.push_back(record->node_.get_value());
+                    record = record->previous_;
+                }
+                std::ranges::reverse(path);
+                return path;
+            }
+        
+            // from these connections we need to form children
+            auto connections = g.get_connections(record->node_.get_value());
+
+            std::vector<std::shared_ptr<node_record>> children(connections.size());
+            for(int i = 0; i < children.size(); ++i) {
+                children[i] = std::make_shared<node_record>();
+                auto to_node = connections[i]->get_to();
+                children[i]->node_ = node(to_node, nullptr);
+                children[i]->previous_ = record;
+                children[i]->connection_ = *(connections[i]);
+                children[i]->cost_so_far_ = record->cost_so_far_ + connections[i]->get_cost() 
+                    + h.estimate(to_node);
+                std::cout << h.estimate(to_node) << std::endl;
+            }
+            for(auto & child: children) {
+                auto s = child->node_.get_value();
+                if(reached[s] == nullptr || child->cost_so_far_ < reached[s]->cost_so_far_) {
+                    reached[s] = child;
+                    frontier.push(child);
+                }
+            }
+
+        }
+        return path;
+    }
 };
