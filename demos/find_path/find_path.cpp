@@ -38,6 +38,20 @@ struct square {
     }
 };
 
+class euclidean_heuristic : public heuristic {
+public:
+    euclidean_heuristic(int goal_node) : heuristic(goal_node) {} 
+    real estimate(int node_value) {
+        return (map_[node_value] - map_[goal_]).magnitude();
+    }
+    void set_location_map(std::vector<vector> & map) {
+        map_ = map;
+    }
+private:
+    std::vector<vector> map_;
+};
+
+
 class find_path_demo : public application {
 public:
     find_path_demo();
@@ -54,18 +68,6 @@ public:
     virtual void display();
 };
 
-class euclidean_heuristic : public heuristic {
-public:
-    euclidean_heuristic(int goal_node) : heuristic(goal_node) {} 
-    real estimate(int node_value) {
-        return (map_[node_value] - map_[goal_]).magnitude();
-    }
-    void set_location_map(std::vector<vector> & map) {
-        map_ = map;
-    }
-private:
-    std::vector<vector> map_;
-};
 
 find_path_demo::find_path_demo() {
 
@@ -84,8 +86,8 @@ find_path_demo::find_path_demo() {
         node_to_location_map.push_back(vector(x, y, 0));
     }
     
-    euclidean_heuristic h(level_->get_end());
-    h.set_location_map(node_to_location_map);
+    auto h = std::make_shared<euclidean_heuristic>(level_->get_end());
+    h->set_location_map(node_to_location_map);
 
     // fill the squares container
     for(int j = 0; j < level_->get_rows(); ++j) {

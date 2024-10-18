@@ -59,12 +59,12 @@ namespace asiant {
     class heuristic {
     public:
         heuristic(int goal_node);
-        real estimate(int node_value);
+        virtual real estimate(int node_value) = 0;
     protected:      
         int goal_;
     };
 
-    std::vector<int> a_star(graph g, int start, int end, heuristic h);
+    std::vector<int> a_star(graph g, int start, int end, std::shared_ptr<heuristic> h);
 };
 
 #endif

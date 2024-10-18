@@ -85,11 +85,7 @@ namespace asiant {
         goal_ = goal_node;
     }
 
-    real heuristic::estimate(int node_value) {
-        return 0;
-    }
-    
-    std::vector<int> a_star(graph g, int start, int goal, heuristic h) {
+    std::vector<int> a_star(graph g, int start, int goal, std::shared_ptr<heuristic> h) {
         std::vector<int> path;
 
         auto record = std::make_shared<node_record>();
@@ -124,8 +120,7 @@ namespace asiant {
                 children[i]->previous_ = record;
                 children[i]->connection_ = *(connections[i]);
                 children[i]->cost_so_far_ = record->cost_so_far_ + connections[i]->get_cost() 
-                    + h.estimate(to_node);
-                std::cout << h.estimate(to_node) << std::endl;
+                    + h->estimate(to_node);
             }
             for(auto & child: children) {
                 auto s = child->node_.get_value();
