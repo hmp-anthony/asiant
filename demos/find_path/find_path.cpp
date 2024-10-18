@@ -45,9 +45,8 @@ public:
     std::shared_ptr<level> level_;
     std::shared_ptr<graph> graph_;
     std::vector<std::shared_ptr<square>> squares_;
-    std::vector<std::pair<int, vector>> path_;
+    std::vector<std::shared_ptr<vector>> path_;
     std::vector<std::shared_ptr<square>> path_squares_;
-    std::vector<std::shared_ptr<vector>> targets_;
     int target_index_;
     seek seek_;
 
@@ -78,48 +77,49 @@ find_path_demo::find_path_demo() {
             s->x = i * square_size + square_start_x;
             s->y = j * square_size + square_start_y;
             squares_.push_back(s);
-
-            auto ps = std::make_shared<square>();
-            auto node = index_to_node_map[index];
-
-            if(std::find(path.begin(), path.end() , node) != path.end()) {
-                ps->x = i * square_size + square_start_x;
-                ps->y = j * square_size + square_start_y;
-                auto v = std::make_shared<vector>(ps->x + 0.5 * square_size, 
-                                                  ps->y + 0.5 * square_size, 
-                                                  0.0);
-                targets_.push_back(v);
-                ps->is_walkable = true;
-                ps->on_solution_path = true;
-                path_squares_.push_back(ps);
-            }
-
         }
+    }
+
+    for(auto & node : path) {
+        auto dv = std::div(locations[node], level_->get_cols()); 
+        auto j = dv.quot;
+        auto i = dv.rem;
+
+        auto ps = std::make_shared<square>();
+        ps->x = i * square_size + square_start_x;
+        ps->y = j * square_size + square_start_y;
+        ps->on_solution_path = true;
+        ps->is_walkable = true;
+        path_squares_.push_back(ps);
+
+        auto v = std::make_shared<vector>(ps->x + 0.5 * square_size,
+                                          ps->y + 0.5 * square_size,
+                                          0.0);
+        path_.push_back(v);
     }
 
     // fill out the seek object
     auto character = std::make_shared<asiant::kinematic>();
-    character->set_position(asiant::vector((*targets_[0])[0],(*targets_[0])[1], 0));
+    character->set_position(*path_[0]);
     character->set_velocity(asiant::vector(0, 0, 0));
     seek_.set_character(character);
     seek_.set_max_acceleration(10.0);
     target_index_ = 1;
-    seek_.set_target(targets_[target_index_]);
+    seek_.set_target(path_[target_index_]);
 }
 
 void find_path_demo::update() {
     float duration = asiant::timer::get().last_frame_duration * 0.005f;
     auto steer = std::make_shared<steering>();
     seek_.get_steering(steer);
-    seek_.get_character()->integrate(*steer, (real)0.5, duration);
+    seek_.get_character()->integrate(*steer, (real)0.3, duration);
     seek_.get_character()->update_to_face_velocity();
     seek_.get_character()->trim_max_speed((real)10.0);
-    auto delta = (*targets_[target_index_] - seek_.get_character()->get_position()).magnitude(); 
-    if(delta < 3) {
-        std::cout << target_index_ << std::endl;
+    auto delta = (*path_[target_index_] - seek_.get_character()->get_position()).magnitude(); 
+    if(delta < 4) {
         target_index_++;
-        if(target_index_ < targets_.size())
-            seek_.set_target(targets_[target_index_]);
+        if(target_index_ < path_.size())
+            seek_.set_target(path_[target_index_]);
     }
     glutPostRedisplay();
 }
