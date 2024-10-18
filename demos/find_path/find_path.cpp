@@ -10,7 +10,7 @@
 using namespace asiant;
 using namespace graphics_utils;
 
-constexpr real square_size = 20;
+constexpr real square_size = 15;
 constexpr real square_start_x = 100;
 constexpr real square_start_y = 20;
 
@@ -72,7 +72,7 @@ public:
 find_path_demo::find_path_demo() {
 
     // create the level, obtain graph and shortest path.
-    level_ = std::make_shared<level>("test_levels/level_3.txt");
+    level_ = std::make_shared<level>("test_levels/level_4.txt");
     graph_ = level_->get_graph();
     auto locations = level_->get_locations();
     std::vector<vector> node_to_location_map;
@@ -155,6 +155,7 @@ void find_path_demo::update() {
 void find_path_demo::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    glColor3f(1.0f, 1.0f, 0.0f);
     render_agent(seek_.get_character());
     glColor3f(0.0f, 0.0f, 0.0f);
     render_spot(seek_.get_target());
