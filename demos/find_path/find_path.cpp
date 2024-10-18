@@ -143,7 +143,7 @@ void find_path_demo::update() {
     seek_.get_character()->update_to_face_velocity();
     seek_.get_character()->trim_max_speed((real)10.0);
     auto delta = (*path_[target_index_] - seek_.get_character()->get_position()).magnitude(); 
-    if(delta < 4) {
+    if(delta < 5) {
         target_index_++;
         if(target_index_ < path_.size())
             seek_.set_target(path_[target_index_]);

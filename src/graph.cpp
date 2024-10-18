@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include<iostream>
 namespace asiant {
     graph::graph(int node_count, bool directed_graph) 
         : connections_(node_count),
@@ -133,4 +132,5 @@ namespace asiant {
         }
         return path;
     }
+
 };
