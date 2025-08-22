@@ -10,3 +10,6 @@ My code improves on that suggested in the book in the following ways:
 - I have improved the demo code for steering to use more advanced techniques. 
 
 To build and execute just type `make` and then `./build/demos/steering/steering`, for instance.
+
+see: 
+https://www.youtube.com/watch?v=IRAj87HZuck
