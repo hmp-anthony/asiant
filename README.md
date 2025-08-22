@@ -12,4 +12,11 @@ My code improves on that suggested in the book in the following ways:
 To build and execute just type `make` and then `./build/demos/steering/steering`, for instance.
 
 see: 
+
 https://www.youtube.com/watch?v=IRAj87HZuck
+
+https://www.youtube.com/watch?v=QM3deeFbrEw
+
+https://www.youtube.com/watch?v=4cZTtm-B108
+
+Along with others on the same channel :)
